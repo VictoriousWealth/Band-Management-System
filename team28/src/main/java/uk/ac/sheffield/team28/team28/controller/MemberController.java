@@ -13,8 +13,8 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 
-@RestController
-@RequestMapping("/home/member")
+@RestController()
+@RequestMapping("/")
 public class MemberController {
     private final MemberService memberService;
     private final static Logger logger = LoggerFactory.getLogger(MemberController.class);
@@ -23,17 +23,19 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<String> login(
-            @RequestBody String email,
-            @RequestBody String password) {
+    @GetMapping(value = "/login", params = {"email", "password"})
+    public String login(
+            @RequestParam String email,
+            @RequestParam String password) {
+        String temp;
         if (memberService.authenticate(email, password)) {
             logger.info("login successful");
-            return ResponseEntity.ok("login successful");
+            temp = "login successful";
         } else {
             logger.info("login failed");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("login failed");
+            temp = "login failed";
         }
+        return temp+" attempted with "+email+" and "+password;
     }
 
 
@@ -52,19 +54,17 @@ public class MemberController {
         }
 
         if (!memberService.isPasswordValid(member.getPassword())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("password contains unacceptable characters");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("password contains unacceptable characters " +
+                    "or not strong enough. Follow the rules");
         }
 
-        if (!memberService.isPasswordStrongEnough(member.getPassword())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("password is not strong enough. Follow the rules");
-        }
 
         if (memberService.isNameValid(member.getFullName())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Name can only contain alphabet characters and dashes");
         }
 
-        //TODO need to add code that adds it to the member table
+        //TODO; need to add code that adds it to the member table
 
         return ResponseEntity.ok("sign-up successful");
     }
