@@ -10,9 +10,6 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "itemId", nullable = false)
-    private Long itemId;
-
     @Column(name = "itemType", nullable = false)
     private ItemType itemType;
 
@@ -32,9 +29,8 @@ public class Item {
 
     public Item(){}
 
-    public Item(Long itemId, ItemType itemType, String nameTypeOrTitle, String makeOrComposer, String note){
+    public Item(ItemType itemType, String nameTypeOrTitle, String makeOrComposer, String note){
 
-        this.itemId = itemId;
         this.itemType = itemType;
         this.nameTypeOrTitle = nameTypeOrTitle;
         this.makeOrComposer = makeOrComposer;
@@ -46,9 +42,6 @@ public class Item {
         return id;
     }
 
-    public Long getItemId(){
-        return itemId;
-    }
 
     public ItemType getItemType(){
         return itemType;
