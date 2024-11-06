@@ -14,7 +14,7 @@ public class Item {
     private Long itemId;
 
     @Column(name = "itemType", nullable = false)
-    //private Enum itemType;
+    private ItemType itemType;
 
     @Column(name = "nameTypeOrTitle", nullable = false)
     private String nameTypeOrTitle;
@@ -27,5 +27,7 @@ public class Item {
 
     @Column(name = "note", nullable = true)
     private String note;
+
+    //Getters and setters
 
 }
