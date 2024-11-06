@@ -30,4 +30,43 @@ public class Item {
 
     //Getters and setters
 
+    public Item(){}
+
+    public Item(Long itemId, ItemType itemType, String nameTypeOrTitle, String makeOrComposer, String note){
+
+        this.itemId = itemId;
+        this.itemType = itemType;
+        this.nameTypeOrTitle = nameTypeOrTitle;
+        this.makeOrComposer = makeOrComposer;
+        inStorage = true;
+        this.note = note;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getItemId(){
+        return itemId;
+    }
+
+    public ItemType getItemType(){
+        return itemType;
+    }
+
+    public String getNameTypeOrTitle(){
+        return nameTypeOrTitle;
+    }
+
+    public String getMakeOrComposer(){
+        return makeOrComposer;
+    }
+
+    public Boolean getInStorage(){
+        return inStorage;
+    }
+
+    public String getNote(){
+        return note;
+    }
 }
