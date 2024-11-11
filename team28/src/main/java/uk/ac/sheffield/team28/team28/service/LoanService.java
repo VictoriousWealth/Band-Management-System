@@ -1,14 +1,19 @@
 package uk.ac.sheffield.team28.team28.service;
 
 import org.springframework.stereotype.Service;
+import uk.ac.sheffield.team28.team28.model.Loan;
 import uk.ac.sheffield.team28.team28.repository.LoanRepository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LoanService {
 
-    private final LoanRepository LoanRepository;
 
-    public LoanService(LoanRepository loanRepository){
+    private final LoanRepository loanRepository;
+
+    public LoanService(LoanRepository loanRepository) {
         this.loanRepository = loanRepository;
     }
 
@@ -33,5 +38,9 @@ public class LoanService {
     // Delete a loan by ID
     public void deleteLoan(Long id) {
         loanRepository.deleteById(id);
+    }
+
+    public Loan save(Loan loan) {
+        return loan;
     }
 }
