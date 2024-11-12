@@ -19,24 +19,23 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/register", "/login").permitAll() // Public access to register and login
-                .requestMatchers("/dashboard").authenticated()      // Require authentication for /dashboard
+                .requestMatchers("/auth/register", "/auth/login").permitAll() // Public access to register and login
                 .anyRequest().authenticated()                       // Require authentication for all other endpoints
             )
             .formLogin((form) -> form
-                .loginProcessingUrl("/login")                       // URL to submit login data
-                .loginPage("/login")                                // Custom login page URL
+                .loginProcessingUrl("/auth/login")                       // URL to submit login data
+                .loginPage("/auth/login")                                // Custom login page URL
                 .defaultSuccessUrl("/dashboard")                    // Redirect to /dashboard on successful login
-                // .failureHandler(authenticationFailureHandler())     // Custom failure handler (define separately if needed)
                 .permitAll()
             )
             .logout((logout) -> logout
-                .logoutUrl("/logout")                               // URL to trigger logout
-                .logoutSuccessUrl("/login")                         // Redirect to /login after logout
+                .logoutUrl("/auth/logout")                               // URL to trigger logout
+                .logoutSuccessUrl("/auth/login")                         // Redirect to /login after logout
                 .invalidateHttpSession(true)                        // Invalidate session on logout
                 .clearAuthentication(true)                          // Clear authentication details on logout
                 .permitAll()
             );
+            // .csrf().disable(); // Disable CSRF for testing in Postman (re-enable in production)
 
         return http.build();
     }
