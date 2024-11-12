@@ -1,6 +1,8 @@
 package uk.ac.sheffield.team28.team28.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "Member")
@@ -8,11 +10,14 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @Column(name = "email", nullable = false, unique = true)
+    @NotBlank(message = "Please enter a valid email address")
     private String email;
 
     @Column(name = "password", nullable = false)
+    @NotBlank(message = "Please enter a password")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
     @Column(name = "memberType")
@@ -57,5 +62,26 @@ public class Member {
     public String getFullName() {
         return fullName;
     }
+
+
+public void setEmail(String email) {
+    this.email = email;
+}
+
+public void setPassword(String password) {
+    this.password = password;
+}
+
+public void setMemberType(MemberType memberType) {
+    this.memberType = memberType;
+}
+
+public void setPhone(String phone) {
+    this.phone = phone;
+}
+
+public void setFullName(String fullName) {
+    this.fullName = fullName;
+}
 }
 
