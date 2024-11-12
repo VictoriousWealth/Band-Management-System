@@ -13,7 +13,7 @@ import uk.ac.sheffield.team28.team28.service.MemberService;
 
 
 @RestController
-@RequestMapping("auth/")
+@RequestMapping("/auth")
 public class AuthController {
     private final MemberService memberService;
 
@@ -21,7 +21,7 @@ public class AuthController {
         this.memberService = memberService;
     }
 
-   @PostMapping("register")
+   @PostMapping("/register")
     public ResponseEntity<String> registerMember(@RequestBody MemberRegistrationDto registrationDto) {
         try {
             memberService.registerMember(registrationDto);

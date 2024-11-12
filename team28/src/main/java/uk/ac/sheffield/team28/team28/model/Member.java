@@ -1,8 +1,6 @@
 package uk.ac.sheffield.team28.team28.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "Member")
@@ -12,12 +10,9 @@ public class Member {
     private Long id;
     
     @Column(name = "email", nullable = false, unique = true)
-    @NotBlank(message = "Please enter a valid email address")
     private String email;
 
     @Column(name = "password", nullable = false)
-    @NotBlank(message = "Please enter a password")
-    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
     @Column(name = "memberType")
@@ -26,21 +21,25 @@ public class Member {
     @Column(name="phone")
     private String phone;
 
-    @Column(name="fullName")
-    private String fullName;
+    @Column(name="firstName", nullable = false)
+    private String firstName;
+
+    @Column(name="lastName", nullable = false)
+    private String lastName;
 
     public Member() {}
-    public Member(Long id, String email, String password, String memberType, String phone, String fullName) {
+    public Member(Long id, String email, String password, String memberType, String phone, String firstName, String lastName) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.memberType = MemberType.fromString(memberType);
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phone = phone;
     }
 
-    public Member(Long id, String email, String password, String phone, String fullName) {
-        this(id, email, password, "Adult", phone, fullName);
+    public Member(Long id, String email, String password, String phone, String firstName, String lastName) {
+        this(id, email, password, "Adult", phone, firstName, lastName);
     }
 
     public String getEmail() {
@@ -59,14 +58,27 @@ public class Member {
         return phone;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
 
 public void setEmail(String email) {
     this.email = email;
 }
+
+public void setFirstName(String firstName) {
+    this.firstName = firstName;
+}
+
+public void setLastName(String lastName) {
+    this.lastName = lastName;
+}
+
 
 public void setPassword(String password) {
     this.password = password;
@@ -78,10 +90,6 @@ public void setMemberType(MemberType memberType) {
 
 public void setPhone(String phone) {
     this.phone = phone;
-}
-
-public void setFullName(String fullName) {
-    this.fullName = fullName;
 }
 }
 

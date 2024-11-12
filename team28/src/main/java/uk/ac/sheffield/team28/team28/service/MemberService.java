@@ -41,8 +41,8 @@ public class MemberService {
         member.setPassword(hashedPassword);
         // member.setMemberType(dto.getMemberType() != null ? dto.getMemberType() : MemberType.ADULT);
         member.setPhone(dto.getPhone());
-        member.setFullName(dto.getFullName());
-
+        member.setFirstName(dto.getFirstName());
+        member.setLastName(dto.getLastName());
         // Save and return the registered member
         return memberRepository.save(member);
     }
