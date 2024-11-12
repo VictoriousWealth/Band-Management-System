@@ -2,6 +2,7 @@ package uk.ac.sheffield.team28.team28.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import uk.ac.sheffield.team28.team28.model.MemberType;
 
@@ -11,25 +12,30 @@ public class MemberRegistrationDto {
     @Email(message = "Invalid email format")
     private String email;
 
+    @NotEmpty(message = "Please enter a password")
     @NotBlank(message = "Please enter a password")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
     private MemberType memberType;
-    
+
     private String phone;
 
-    @NotBlank(message = "Full name is required")
-    private String fullName;
+    @NotBlank(message = "First name is required")
+    private String firstName;
+
+    @NotBlank(message = "Last name is required")
+    private String lastName;
 
     public MemberRegistrationDto() {}
 
-    public MemberRegistrationDto(String email, String password, MemberType memberType, String phone, String fullName) {
+    public MemberRegistrationDto(String email, String password, MemberType memberType, String phone, String firstName, String lastName) {
         this.email = email;
         this.password = password;
         this.memberType = memberType;
         this.phone = phone;
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -64,11 +70,20 @@ public class MemberRegistrationDto {
         this.phone = phone;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public String getLastName() {
+        return lastName;
     }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    
 }
