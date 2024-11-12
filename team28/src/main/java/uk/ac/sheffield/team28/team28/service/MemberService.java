@@ -35,7 +35,6 @@ public class MemberService {
         // Hashing the password
         String hashedPassword = passwordEncoder.encode(dto.getPassword());
 
-        // Creating a new Member object from the register member DTO
         Member member = new Member();
         member.setEmail(dto.getEmail());
         member.setPassword(hashedPassword);
@@ -43,7 +42,8 @@ public class MemberService {
         member.setPhone(dto.getPhone());
         member.setFirstName(dto.getFirstName());
         member.setLastName(dto.getLastName());
-        // Save and return the registered member
+  
+
         return memberRepository.save(member);
     }
 
