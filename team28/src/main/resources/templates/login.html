@@ -6,10 +6,26 @@
     <title>Login - Sludgate Brass Band</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
         body {
-            padding-top: 200px;
             background-color: #f7f7f7;
         }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 70px;
+        }
+
         .login-container {
             width: 100%;
             max-width: 400px;
@@ -18,44 +34,59 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .btn-submit {
             width: 100%;
         }
+
         .success-message, .error-message {
             font-size: 14px;
             margin-bottom: 10px;
             text-align: center;
         }
+
         .success-message {
             color: #5cb85c;
         }
+
         .error-message {
             color: #d9534f;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="container login-container mt-5">
-        <h2 class="text-center">Login</h2>
+    <div class="content-wrapper">
+        <div class="container login-container">
+            <h2 class="text-center">Login</h2>
 
-        <div th:if="${successMessage}" class="alert alert-success success-message" th:text="${successMessage}"></div>
+            <div th:if="${successMessage}" class="alert alert-success success-message" th:text="${successMessage}"></div>
 
-        <div th:if="${errorMessage}" class="alert alert-danger error-message" th:text="${errorMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger error-message" th:text="${errorMessage}"></div>
 
-        <form th:action="@{/auth/login}" method="post">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-submit">Login</button>
-        </form>
+            <form th:action="@{/auth/login}" method="post">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-submit">Login</button>
+            </form>
+        </div>
     </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
