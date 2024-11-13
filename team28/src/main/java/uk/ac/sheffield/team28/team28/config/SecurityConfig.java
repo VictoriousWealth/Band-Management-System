@@ -17,7 +17,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/auth/register", "/auth/login").permitAll() // Public access to register and login
+                .requestMatchers("/auth/register", "/auth/login", "/").permitAll() // Public access to register and login
                 .anyRequest().authenticated()                       // Require authentication for all other endpoints
             )
             .formLogin((form) -> form
@@ -28,7 +28,7 @@ public class SecurityConfig {
             )
             .logout((logout) -> logout
                 .logoutUrl("/auth/logout")                               // URL to trigger logout
-                .logoutSuccessUrl("/auth/login")                         // Redirect to /login after logout
+                .logoutSuccessUrl("/")                         // Redirect to /login after logout
                 .invalidateHttpSession(true)                        // Invalidate session on logout
                 .clearAuthentication(true)                          // Clear authentication details on logout
                 .permitAll()
