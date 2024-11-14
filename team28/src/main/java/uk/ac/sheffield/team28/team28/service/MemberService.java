@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
+import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
@@ -56,6 +57,43 @@ public class MemberService {
     }
 
 
+    public Member addMemberToBand(Long memberId, BandInPractice newBand) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
 
+        if (member.getBand() != newBand && member.getBand() != BandInPractice.None && member.getBand() != BandInPractice.Both) {
+            member.setBand(BandInPractice.Both);
+        } else if (member.getBand() == BandInPractice.None){
+            member.setBand((newBand));
+        } else {
+            throw new Exception("Member is already in this band.");
+        }
+        //Save it
+        memberRepository.save(member);
+        return member;
+    }
+
+
+
+
+
+    public Member removeMemberFromBand(Long memberId, BandInPractice oldBand) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+
+        if (member.getBand() != BandInPractice.None && member.getBand() == oldBand) {
+            member.setBand(BandInPractice.None);
+        } else if (member.getBand() == BandInPractice.Both && oldBand == BandInPractice.Training) {
+            member.setBand(BandInPractice.Senior);
+
+        } else if (member.getBand() == BandInPractice.Both && oldBand == BandInPractice.Senior) {
+            member.setBand(BandInPractice.Training);
+
+        } else
+            throw new Exception("Member is already not assigned to any band.");
+        //Save changes
+        memberRepository.save(member);
+        return member;
+    }
 
 }

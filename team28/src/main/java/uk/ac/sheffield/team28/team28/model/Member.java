@@ -18,6 +18,9 @@ public class Member {
     @Column(name = "memberType")
     private MemberType memberType;
 
+    @Column(name = "band")
+    private BandInPractice band;
+
     @Column(name="phone")
     private String phone;
 
@@ -36,10 +39,11 @@ public class Member {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.band = BandInPractice.None;
     }
 
     public Member(Long id, String email, String password, String phone, String firstName, String lastName) {
-        this(id, email, password, "Adult", phone, firstName, lastName);
+        this(id, email, password, "Adult", phone, firstName, lastName); //Add band member here
     }
 
     public String getEmail() {
@@ -66,6 +70,10 @@ public class Member {
         return lastName;
     }
 
+    public BandInPractice getBand() {
+        return band;
+    }
+
 
 public void setEmail(String email) {
     this.email = email;
@@ -87,6 +95,10 @@ public void setPassword(String password) {
 public void setMemberType(MemberType memberType) {
     this.memberType = memberType;
 }
+
+public void setBand(BandInPractice band) {
+        this.band = band;
+    }
 
 public void setPhone(String phone) {
     this.phone = phone;
