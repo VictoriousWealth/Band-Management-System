@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
+import uk.ac.sheffield.team28.team28.dto.MemberLoginDto;
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 
@@ -20,6 +21,13 @@ public class AuthController {
     public AuthController(MemberService memberService) {
         this.memberService = memberService;
     }
+
+    @GetMapping("/login")
+    public String showLoginForm(Model model) {
+        model.addAttribute("member", new MemberLoginDto());
+        return "login";
+    }
+
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
