@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 import uk.ac.sheffield.team28.team28.dto.MemberLoginDto;
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
+import uk.ac.sheffield.team28.team28.exception.MemberRegistrationException;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 
 
@@ -36,21 +37,27 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String performRegister(@Valid @ModelAttribute("member") MemberRegistrationDto registrationDto, 
-                                  BindingResult result, 
-                                  Model model) {
+    public String performRegister(
+            @Valid @ModelAttribute("member") MemberRegistrationDto registrationDto,
+            BindingResult result,
+            Model model) {
+        // Check for validation errors in the DTO
         if (result.hasErrors()) {
-            return "register"; 
+            return "register";
         }
 
         try {
+            // Attempt to register the member
             memberService.registerMember(registrationDto);
-        } catch (Exception e) {
+        } catch (MemberRegistrationException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "register"; 
+            return "register";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "An unexpected error occurred. Please try again later.");
+            return "register";
         }
 
-        model.addAttribute("successMessage", "Registration completed successfully, please login.");
-        return "/login"; 
+        model.addAttribute("successMessage", "Registration completed successfully. Please login.");
+        return "redirect:/auth/login"; // to avoid form resubmission issues
     }
 }

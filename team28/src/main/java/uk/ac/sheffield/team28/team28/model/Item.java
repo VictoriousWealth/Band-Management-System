@@ -10,27 +10,24 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "itemType", nullable = false)
+    @Column(name = "item_type", nullable = false)
     private ItemType itemType;
 
-    @Column(name = "nameTypeOrTitle", nullable = false)
+    @Column(name = "name_type_or_title", nullable = false)
     private String nameTypeOrTitle;
 
-    @Column(name = "makeOrComposer", nullable = true)
+    @Column(name = "make_or_Composer", nullable = true)
     private String makeOrComposer;
 
-    @Column(name = "inStorage", nullable = true)
+    @Column(name = "in_storage", nullable = true)
     private Boolean inStorage;
 
     @Column(name = "note", nullable = true)
     private String note;
 
-    //Getters and setters
-
     public Item(){}
 
     public Item(ItemType itemType, String nameTypeOrTitle, String makeOrComposer, String note){
-
         this.itemType = itemType;
         this.nameTypeOrTitle = nameTypeOrTitle;
         this.makeOrComposer = makeOrComposer;
@@ -38,10 +35,10 @@ public class Item {
         this.note = note;
     }
 
+    //Getters and setters
     public Long getId() {
         return id;
     }
-
 
     public ItemType getItemType(){
         return itemType;

@@ -14,10 +14,10 @@ public class Music {
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
-    @Column(name = "Arranger")
+    @Column(name = "arranger")
     private String arranger;
 
-    @Column(name = "BandInPractice")
+    @Column(name = "band_in_practice")
     private BandInPractice bandInPractice;
 
     //Getters and setters
