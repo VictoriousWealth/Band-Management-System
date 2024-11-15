@@ -1,7 +1,9 @@
 package uk.ac.sheffield.team28.team28.service;
 
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uk.ac.sheffield.team28.team28.dto.MemberLoginDto;
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
 import uk.ac.sheffield.team28.team28.exception.MemberRegistrationException;
 import uk.ac.sheffield.team28.team28.model.Member;
@@ -9,6 +11,7 @@ import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
@@ -63,4 +66,16 @@ public class MemberService {
     public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
+
+    public Member authenticateMember(MemberLoginDto loginDto) throws Exception {
+        Member member = memberRepository.findByEmail(loginDto.getEmail());
+
+        if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
+            System.out.println(member.getPassword() +","+ loginDto.getPassword());
+            throw new Exception("Invalid email or password");
+        }
+
+        return member;
+    }
+
 }

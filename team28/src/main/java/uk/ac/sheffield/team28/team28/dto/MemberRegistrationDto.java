@@ -15,20 +15,18 @@ public class MemberRegistrationDto {
 
     @NotBlank(message = "Please enter a password")
     @Size(min = 8, message = "Password must be at least 8 characters long")
-    // Optional: Add regex for complexity
     @Pattern(
             regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).+$",
             message = "Password must contain at least one uppercase letter, one lowercase letter, and one digit"
     )
     private String password;
 
-    // Optional: Password confirmation field
     @NotBlank(message = "Please confirm your password")
     private String confirmPassword;
 
 
     @NotNull(message = "Member type is required")
-    private MemberType memberType;
+    private MemberType memberType = MemberType.Adult;
 
     @Pattern(
             regexp = "^\\+?\\d{10,15}$",
