@@ -1,100 +1,71 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <title>Sludgate Brass Band</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
     <style>
-        /* Ensure the body and html take up full height */
-        html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+      }
 
-        /* Main content wrapper to fill available space and center content */
-        .content-wrapper {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
+      .content-wrapper {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
 
-        .hero-section {
-            /* background-color: #f8f9fa; */
-            padding: 60px 0;
-        }
+      .hero-section {
+        padding: 60px 0;
+      }
 
-        .hero-section h1 {
-            font-size: 48px;
-            font-weight: bold;
-            color: #343a40;
-        }
+      .hero-section h1 {
+        font-size: 48px;
+        font-weight: bold;
+        color: #343a40;
+      }
 
-        .hero-section p {
-            font-size: 20px;
-            color: #6c757d;
-        }
-
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 24px;
-        }
-
-        .footer {
-            background-color: #343a40;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-        }
+      .hero-section p {
+        font-size: 20px;
+        color: #6c757d;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">Sludgate Brass Band</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/auth/register}">Register</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/auth/login}">Login</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<!-- Main Content Wrapper to Center Content -->
-<div class="content-wrapper">
-    <!-- Hero Section -->
-    <div class="hero-section">
+    <div class="content-wrapper">
+      <div class="hero-section">
         <div class="container">
-            <h1>Welcome to Sludgate Brass Band</h1>
-            <p>Experience the powerful sounds and vibrant spirit of the Sludgate Brass Band.</p>
+          <h1>Welcome to Sludgate Brass Band</h1>
+          <p>
+            Experience the powerful sounds and vibrant spirit of the Sludgate
+            Brass Band.
+          </p>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- Footer -->
-<div class="footer">
-    <div class="container">
-        <p>&copy; 2024 Sludgate Brass Band. All Rights Reserved.</p>
-    </div>
-</div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
-<!-- Bootstrap JS, Popper.js, and jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-</body>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>

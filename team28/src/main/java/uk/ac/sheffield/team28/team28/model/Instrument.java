@@ -14,7 +14,7 @@ public class Instrument {
     @JoinColumn(name= "Item_Id", nullable = false)
     private Item item;
 
-    @Column(name = "SerialNumber")
+    @Column(name = "Serial_number")
     private String serialNumber;
 
     //Getters and setters
