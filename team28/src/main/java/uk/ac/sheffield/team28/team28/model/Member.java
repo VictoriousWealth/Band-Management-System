@@ -67,29 +67,30 @@ public class Member {
     }
 
 
-public void setEmail(String email) {
+    public void setEmail(String email) {
     this.email = email;
 }
 
-public void setFirstName(String firstName) {
+    public void setFirstName(String firstName) {
     this.firstName = firstName;
 }
 
-public void setLastName(String lastName) {
+    public void setLastName(String lastName) {
     this.lastName = lastName;
 }
 
 
-public void setPassword(String password) {
+    public void setPassword(String password) {
     this.password = password;
 }
 
-public void setMemberType(MemberType memberType) {
+    public void setMemberType(MemberType memberType) {
     this.memberType = memberType;
 }
 
-public void setPhone(String phone) {
+    public void setPhone(String phone) {
     this.phone = phone;
 }
+
 }
 
