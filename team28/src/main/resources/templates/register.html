@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Register</title>
     <style>
         /* Basic reset */
@@ -75,6 +76,9 @@
             font-size: 14px;
             margin-bottom: 10px;
         }
+        .hidden{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -107,8 +111,29 @@
                 <label for="phone">Phone</label>
                 <input type="text" id="phone" th:field="*{phone}">
             </div>
+
+            <!-- Section to add a child account-->
+            <div class="form-group">
+                <label for="addChildAccount">Add a child account?</label>
+                <input type="checkbox" id="addChildAccount" name="addChildAccount">
+            </div>
+
+            <!-- Shown if checkbox is ticked -->
+            <div class="hidden" id="childAccountRegistration">
+                <div class="form-group">
+                    <label for="childFirstName">Child's First Name:</label>
+                    <input type="text" id="childFirstName" name="childFirstName">
+                </div>
+
+                <div class="form-group">
+                    <label for="childLastName">Child's Last Name:</label>
+                    <input type="text" id="childLastName" name="childLastName">
+                </div>
+            </div>
+            
             <button type="submit" class="btn-submit">Register</button>
         </form>
     </div>
+    <script src="/js/registrationFormJS.js"></script>
 </body>
 </html>
