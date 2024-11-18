@@ -58,6 +58,11 @@
             Experience the powerful sounds and vibrant spirit of the Sludgate
             Brass Band.
           </p>
+
+          <div th:if="${currentUser != null and currentUser.memberType == T(uk.ac.sheffield.team28.team28.model.MemberType).Director}">
+            <p>You are the director!</p>
+          </div>
+
         </div>
       </div>
     </div>

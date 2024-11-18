@@ -18,7 +18,7 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "member_type", nullable = false)
     private MemberType memberType;
 
