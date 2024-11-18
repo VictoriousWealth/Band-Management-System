@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import uk.ac.sheffield.team28.team28.service.CustomUserDetailsService;
+import uk.ac.sheffield.team28.team28.security.CustomAuthenticationFailureHandler;
+
 
 @Configuration
 @EnableWebSecurity
@@ -63,5 +65,12 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
+    @Bean
+    public CustomAuthenticationFailureHandler customAuthenticationFailureHandler() {
+    return new CustomAuthenticationFailureHandler();
+
+
+}
+
 }

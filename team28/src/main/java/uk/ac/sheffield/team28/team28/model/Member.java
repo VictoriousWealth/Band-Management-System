@@ -31,6 +31,10 @@ public class Member {
     @Column(name="last_name", nullable = false)
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
+    @Column
+    private BandInPractice bandInPractice;
+
     // Parent can have multiple children
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Member> children = new HashSet<>();
@@ -49,6 +53,7 @@ public class Member {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.bandInPractice = BandInPractice.None;
     }
 
     public Member(Long id, String email, String password, String phone, String firstName, String lastName) {
