@@ -10,6 +10,7 @@ import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 @Service
 public class MemberService {
@@ -95,6 +96,16 @@ public class MemberService {
 
     public List<Member> getCommitteeMembers() {
         return memberRepository.findByMemberType(MemberType.Committee);
+    }
+
+    public boolean authorise(Long memberId, String password) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+        //Compares the passwords and returns the boolean result
+        return Objects.equals(member.getPassword(), password);
+
+
+
     }
 
 }

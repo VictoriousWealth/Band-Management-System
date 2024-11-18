@@ -40,4 +40,14 @@ public class MemberController {
         }
     }
 
+    @PostMapping("/{memberId}/authorise")
+    public ResponseEntity<Member> authorise(@PathVariable Long memberId, @PathVariable String password) {
+        try {
+            boolean authorised = memberService.authorise(memberId, password);
+            return ResponseEntity.ok(null); //May need changing
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
 }

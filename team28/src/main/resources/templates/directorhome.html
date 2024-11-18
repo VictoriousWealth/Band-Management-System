@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Director</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Center the container on the page */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        /* Container styling */
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Title styling */
+        h2 {
+            text-align: center;
+            color: #495057;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* Nav tabs styling */
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs .nav-link {
+            color: #555555;
+            font-weight: bold;
+            border: none;
+            border-radius: 0;
+        }
+
+        /* Active tab styling */
+        .nav-tabs .nav-link.active {
+            /*background-color: #0d6efd;*/
+            color: #000000;
+        }
+
+        /* Alert styling */
+        .alert {
+            font-size: 0.9rem;
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    <div class="container">
+        <!-- Page title -->
+        <h2>Director</h2>
+
+        <!-- Display error and success messages -->
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" id="directorTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" href="dcommittee.html" role="tab">Committee</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="directorseniorbandview.html" role="tab">Senior Band</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="directortrainingbandsview.html" role="tab">Training Band</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="directorparentsview.html" role="tab">Parents</a>
+            </li>
+        </ul>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
