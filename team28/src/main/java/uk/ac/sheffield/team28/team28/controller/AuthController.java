@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import jakarta.validation.Valid;
 import uk.ac.sheffield.team28.team28.dto.MemberLoginDto;
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
@@ -23,11 +25,13 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        model.addAttribute("member", new MemberLoginDto());
-        return "login";
-    }
-
+public String showLoginForm(@RequestParam(value = "success", required = false) String successMessage,
+                            @RequestParam(value = "error", required = false) String errorMessage,
+                            Model model) {
+    model.addAttribute("successMessage", successMessage);
+    model.addAttribute("errorMessage", errorMessage);
+    return "login"; 
+}
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
