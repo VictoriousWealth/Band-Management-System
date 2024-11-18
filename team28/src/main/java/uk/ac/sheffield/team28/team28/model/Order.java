@@ -58,7 +58,7 @@ public class Order {
         return isFulfilled;
     }
 
-    public void setReturnDate(boolean isFulfilled) {
+    public void setIsFulfilled(boolean isFulfilled) {
         this.isFulfilled = isFulfilled;
     }
 }
