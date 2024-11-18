@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.Member;
+import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.util.List;
@@ -73,10 +74,6 @@ public class MemberService {
         return member;
     }
 
-
-
-
-
     public Member removeMemberFromBand(Long memberId, BandInPractice oldBand) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
@@ -94,6 +91,10 @@ public class MemberService {
         //Save changes
         memberRepository.save(member);
         return member;
+    }
+
+    public List<Member> getCommitteeMembers() {
+        return memberRepository.findByMemberType(MemberType.Committee);
     }
 
 }
