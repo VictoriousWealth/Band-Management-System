@@ -18,10 +18,10 @@ public class Loan {
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
-    @Column(name = "loanDate", nullable = false)
+    @Column(name = "loan_date", nullable = false)
     private LocalDate loanDate;
 
-    @Column(name = "returnDate")
+    @Column(name = "return_date")
     private LocalDate returnDate;
 
     public Loan() {}

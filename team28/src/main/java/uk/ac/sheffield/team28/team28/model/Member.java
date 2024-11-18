@@ -2,6 +2,9 @@ package uk.ac.sheffield.team28.team28.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "Member")
 public class Member {
@@ -15,7 +18,8 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "memberType")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "member_type", nullable = false)
     private MemberType memberType;
 
     @Column(name = "band")
@@ -24,11 +28,24 @@ public class Member {
     @Column(name="phone")
     private String phone;
 
-    @Column(name="firstName", nullable = false)
+    @Column(name="first_name", nullable = false)
     private String firstName;
 
-    @Column(name="lastName", nullable = false)
+    @Column(name="last_name", nullable = false)
     private String lastName;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private BandInPractice bandInPractice;
+
+    // Parent can have multiple children
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Member> children = new HashSet<>();
+
+    // Each child has one parent
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Member parent;
 
     public Member() {}
     public Member(Long id, String email, String password, String memberType, String phone, String firstName, String lastName) {
@@ -40,6 +57,7 @@ public class Member {
         this.lastName = lastName;
         this.phone = phone;
         this.band = BandInPractice.None;
+
     }
 
     public Member(Long id, String email, String password, String phone, String firstName, String lastName) {
@@ -103,5 +121,14 @@ public void setBand(BandInPractice band) {
 public void setPhone(String phone) {
     this.phone = phone;
 }
+
+    public Set<Member> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<Member> children) {
+        this.children = children;
+    }
+
 }
 

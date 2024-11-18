@@ -14,13 +14,13 @@ public class Misc {
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
-    @Column(name = "Quantity")
+    @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "SubClass")
+    @Column(name = "sub_class")
     private String subClass;
 
-    @Column(name = "AmountOnLoan")
+    @Column(name = "amount_on_loan")
     private int amountOnLoan;
 
     //Getters and setters

@@ -3,7 +3,7 @@ package uk.ac.sheffield.team28.team28.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "PerformanceAvailability")
+@Table(name = "performance_availability")
 public class PerformanceAvailability {
 
     @Id
