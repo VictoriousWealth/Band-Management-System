@@ -27,6 +27,11 @@ public class MemberRegistrationDto {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
+    //Child Member fields
+    private String childFirstName;
+
+    private String childLastName;
+
     public MemberRegistrationDto() {}
 
     public MemberRegistrationDto(String email, String password, MemberType memberType, String phone, String firstName, String lastName) {
@@ -85,5 +90,20 @@ public class MemberRegistrationDto {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
+    public String getChildFirstName() {
+        return childFirstName;
+    }
+
+    public String getChildLastName() {
+        return childLastName;
+    }
+
+    public void setChildFirstName(String childFirstName) {
+        this.childFirstName = childFirstName;
+    }
+
+    public void setChildLastName(String childLastName) {
+        this.childLastName = childLastName;
+    }
 }

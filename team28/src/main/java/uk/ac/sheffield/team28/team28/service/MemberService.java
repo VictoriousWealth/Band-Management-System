@@ -4,7 +4,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
+import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
+import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.util.List;
@@ -12,12 +14,15 @@ import java.util.regex.Pattern;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final ChildMemberRepository childMemberRepository;
      private final PasswordEncoder passwordEncoder;
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z]).{8,}$");
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder,
+                         ChildMemberRepository childMemberRepository) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
+        this.childMemberRepository = childMemberRepository;
     }
 
      public Member registerMember(MemberRegistrationDto dto) throws Exception {
@@ -44,7 +49,19 @@ public class MemberService {
         member.setLastName(dto.getLastName());
   
 
-        return memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
+
+        //Check for child fields and create child member if needed
+         if (dto.getChildFirstName() != null && dto.getChildLastName() != null){
+             ChildMember child = new ChildMember(
+                     dto.getChildFirstName(),
+                     dto.getChildLastName(),
+                     member
+             );
+             childMemberRepository.save(child);
+         }
+
+         return savedMember;
     }
 
     private boolean isValidPassword(String password) {

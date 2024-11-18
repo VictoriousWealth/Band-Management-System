@@ -66,7 +66,6 @@ public class Member {
         return lastName;
     }
 
-
     public void setEmail(String email) {
     this.email = email;
 }

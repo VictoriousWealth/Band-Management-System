@@ -122,12 +122,12 @@
             <div class="hidden" id="childAccountRegistration">
                 <div class="form-group">
                     <label for="childFirstName">Child's First Name:</label>
-                    <input type="text" id="childFirstName" name="childFirstName">
+                    <input type="text" id="childFirstName" th:field="*{childFirstName}">
                 </div>
 
                 <div class="form-group">
                     <label for="childLastName">Child's Last Name:</label>
-                    <input type="text" id="childLastName" name="childLastName">
+                    <input type="text" id="childLastName" th:field="*{childLastName}">
                 </div>
             </div>
             
