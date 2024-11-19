@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
 import uk.ac.sheffield.team28.team28.model.Member;
+import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class MemberService {
         Member member = new Member();
         member.setEmail(dto.getEmail());
         member.setPassword(hashedPassword);
-        // member.setMemberType(dto.getMemberType() != null ? dto.getMemberType() : MemberType.ADULT);
+        member.setMemberType(dto.getMemberType() != null ? dto.getMemberType() : MemberType.Adult);
         member.setPhone(dto.getPhone());
         member.setFirstName(dto.getFirstName());
         member.setLastName(dto.getLastName());
