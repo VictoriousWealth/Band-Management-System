@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
+import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
@@ -43,7 +44,7 @@ public class MemberService {
         Member member = new Member();
         member.setEmail(dto.getEmail());
         member.setPassword(hashedPassword);
-        // member.setMemberType(dto.getMemberType() != null ? dto.getMemberType() : MemberType.ADULT);
+        member.setMemberType(MemberType.Adult);
         member.setPhone(dto.getPhone());
         member.setFirstName(dto.getFirstName());
         member.setLastName(dto.getLastName());
@@ -51,14 +52,19 @@ public class MemberService {
 
         Member savedMember = memberRepository.save(member);
 
-        //Check for child fields and create child member if needed
-         if (dto.getChildFirstName() != null && dto.getChildLastName() != null){
-             ChildMember child = new ChildMember(
-                     dto.getChildFirstName(),
-                     dto.getChildLastName(),
-                     member
-             );
-             childMemberRepository.save(child);
+        //Check to see if child is to be added
+         if(dto.getAddChild()){
+             //Validate entries
+             if(dto.getChildFirstName().isBlank() || dto.getChildLastName().isBlank()){
+                 throw new IllegalStateException("Child first and/or last name cannot be empty");
+             } else {
+                 //Create child entry
+                 ChildMember child = new ChildMember(
+                         dto.getChildFirstName(),
+                         dto.getChildLastName(),
+                         member);
+                 childMemberRepository.save(child);
+             }
          }
 
          return savedMember;
