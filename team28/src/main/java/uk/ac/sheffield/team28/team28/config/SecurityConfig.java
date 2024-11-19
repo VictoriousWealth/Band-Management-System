@@ -25,8 +25,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/auth/register", "/auth/login", "/").permitAll() // Public access to register and login
-                .requestMatchers("/dashboard").authenticated() 
+                .requestMatchers("/auth/register", "/auth/login", "/", "/js/registrationFormJS.js").permitAll() // Public access to register and login
+                .requestMatchers("/dashboard").authenticated()
                 .anyRequest().authenticated()                       // Require authentication for all other endpoints
             )
             .formLogin((form) -> form
@@ -65,9 +65,7 @@ public class SecurityConfig {
 
     @Bean
     public CustomAuthenticationFailureHandler customAuthenticationFailureHandler() {
-    return new CustomAuthenticationFailureHandler();
+        return new CustomAuthenticationFailureHandler();
 
-    
-}
-    
+    }
 }

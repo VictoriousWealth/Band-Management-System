@@ -35,9 +35,10 @@ public class Member {
     @Column
     private BandInPractice bandInPractice;
 
+    //To fix and link!!
     // Parent can have multiple children
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Member> children = new HashSet<>();
+    //@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //private Set<Member> children = new HashSet<>();
 
     // Each child has one parent
     @ManyToOne(fetch = FetchType.LAZY)
@@ -84,39 +85,30 @@ public class Member {
         return lastName;
     }
 
-
-public void setEmail(String email) {
+    public void setEmail(String email) {
     this.email = email;
-}
+    }
 
-public void setFirstName(String firstName) {
+    public void setFirstName(String firstName) {
     this.firstName = firstName;
-}
+    }
 
-public void setLastName(String lastName) {
+    public void setLastName(String lastName) {
     this.lastName = lastName;
-}
+    }
 
 
-public void setPassword(String password) {
+    public void setPassword(String password) {
     this.password = password;
-}
+    }
 
-public void setMemberType(MemberType memberType) {
+    public void setMemberType(MemberType memberType) {
     this.memberType = memberType;
-}
+    }
 
-public void setPhone(String phone) {
+    public void setPhone(String phone) {
     this.phone = phone;
-}
-
-    public Set<Member> getChildren() {
-        return children;
     }
-
-    public void setChildren(Set<Member> children) {
-        this.children = children;
-    }
-
+    //Add function to get children from parents and vice versa
 }
 
