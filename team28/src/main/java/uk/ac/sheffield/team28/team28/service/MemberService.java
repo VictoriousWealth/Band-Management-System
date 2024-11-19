@@ -38,6 +38,16 @@ public class MemberService {
             throw new IllegalArgumentException("Password must be at least 8 characters long and contain at least one uppercase letter.");
         }
 
+         // Check if child member is to be added and validate fields
+         boolean addChild = true;
+         if (dto.getAddChild()){
+             //Validate fields
+             if (dto.getChildFirstName().isBlank() || dto.getChildLastName().isBlank()){
+                 addChild = false;
+                 throw new IllegalStateException("Child first and/or last name cannot be empty");
+             }
+         }
+
         // Hashing the password
         String hashedPassword = passwordEncoder.encode(dto.getPassword());
 
@@ -53,19 +63,15 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
 
         //Check to see if child is to be added
-         if(dto.getAddChild()){
-             //Validate entries
-             if(dto.getChildFirstName().isBlank() || dto.getChildLastName().isBlank()){
-                 throw new IllegalStateException("Child first and/or last name cannot be empty");
-             } else {
-                 //Create child entry
-                 ChildMember child = new ChildMember(
-                         dto.getChildFirstName(),
-                         dto.getChildLastName(),
-                         member);
-                 childMemberRepository.save(child);
-             }
+         if(addChild){
+             //Create child entry
+             ChildMember child = new ChildMember(
+                     dto.getChildFirstName(),
+                     dto.getChildLastName(),
+                     member);
+             childMemberRepository.save(child);
          }
+
 
          return savedMember;
     }
