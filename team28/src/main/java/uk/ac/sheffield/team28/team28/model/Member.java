@@ -35,16 +35,6 @@ public class Member {
     @Column
     private BandInPractice bandInPractice;
 
-    //To fix and link!!
-    // Parent can have multiple children
-    //@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    //private Set<Member> children = new HashSet<>();
-
-    // Each child has one parent
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Member parent;
-
     public Member() {}
     public Member(Long id, String email, String password, String memberType, String phone, String firstName, String lastName) {
         this.id = id;
@@ -109,6 +99,6 @@ public class Member {
     public void setPhone(String phone) {
     this.phone = phone;
     }
-    //Add function to get children from parents and vice versa
+
 }
 
