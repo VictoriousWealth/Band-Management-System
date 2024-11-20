@@ -17,24 +17,24 @@ import uk.ac.sheffield.team28.team28.security.CustomAuthenticationFailureHandler
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    private final CustomUserDetailsService customUserDetailsService;
-
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
-        this.customUserDetailsService = customUserDetailsService;
+    private final CustomUserDetailsService userDetailsService;
+     public SecurityConfig(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/auth/register", "/auth/login", "/").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/auth/register", "/auth/login", "/", "/js/registrationFormJS.js").permitAll() // Public access to register and login
+                .requestMatchers("/dashboard").authenticated()
+                .anyRequest().authenticated()                       // Require authentication for all other endpoints
             )
             .formLogin((form) -> form
-                .loginProcessingUrl("/auth/login")
-                .loginPage("/auth/login")
-                .defaultSuccessUrl("/dashboard")                // Redirect to /dashboard on successful login
+                .loginProcessingUrl("/auth/login")                       // URL to submit login data
+                .loginPage("/auth/login")                                // Custom login page URL
+                .defaultSuccessUrl("/dashboard")                    // Redirect to /dashboard on successful login
+                .failureHandler(customAuthenticationFailureHandler())
                 .permitAll()
             )
             .logout((logout) -> logout
@@ -50,16 +50,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder
-                .userDetailsService(customUserDetailsService)
+                .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
-
         return authenticationManagerBuilder.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -68,9 +66,8 @@ public class SecurityConfig {
 
     @Bean
     public CustomAuthenticationFailureHandler customAuthenticationFailureHandler() {
-    return new CustomAuthenticationFailureHandler();
+        return new CustomAuthenticationFailureHandler();
 
-
-}
+    }
 
 }

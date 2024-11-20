@@ -46,6 +46,9 @@
             padding: 20px 0;
             text-align: center;
         }
+        .hidden{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -56,7 +59,7 @@
     <div class="content-wrapper">
         <div class="container register-container">
             <h2 class="text-center">Register</h2>
-            
+
             <div th:if="${errorMessage}" class="alert alert-danger mt-3" th:text="${errorMessage}"></div>
             <div th:if="${successMessage}" class="alert alert-success mt-3" th:text="${successMessage}"></div>
 
@@ -81,6 +84,26 @@
                     <label for="phone">Phone</label>
                     <input type="text" class="form-control" id="phone" th:field="*{phone}">
                 </div>
+
+                <!-- Section to add a child account-->
+                <div class="form-group">
+                    <label for="addChildAccount">Add a child account?</label>
+                    <input type="checkbox" class="form-control" id="addChildAccount" th:field="*{addChild}">
+                </div>
+
+                <!-- Shown if checkbox is ticked -->
+                <div class="hidden" id="childAccountRegistration">
+                    <div class="form-group">
+                        <label for="childFirstName">Child's First Name:</label>
+                        <input type="text" class="form-control" id="childFirstName" th:field="*{childFirstName}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="childLastName">Child's Last Name:</label>
+                        <input type="text" class="form-control" id="childLastName" th:field="*{childLastName}">
+                    </div>
+                </div>
+
                 <button type="submit" class="btn btn-primary btn-submit">Register</button>
             </form>
         </div>
@@ -93,5 +116,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Script for showing / hiding child fields -->
+    <script src="/js/registrationFormJS.js"></script>
 </body>
 </html>

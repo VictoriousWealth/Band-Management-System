@@ -27,15 +27,26 @@ public class MemberRegistrationDto {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
+    //Child Member fields
+    private Boolean addChild;
+    private String childFirstName;
+
+    private String childLastName;
+
     public MemberRegistrationDto() {}
 
-    public MemberRegistrationDto(String email, String password, MemberType memberType, String phone, String firstName, String lastName) {
+    public MemberRegistrationDto(String email, String password, MemberType memberType, String phone, String firstName, String lastName,
+                                 Boolean addChild, String childFirstName, String childLastName) {
         this.email = email;
         this.password = password;
         this.memberType = memberType;
         this.phone = phone;
         this.firstName = firstName;
         this.lastName = lastName;
+
+        this.addChild = addChild;
+        this.childFirstName = childFirstName;
+        this.childLastName = childLastName;
     }
 
     public String getEmail() {
@@ -85,5 +96,28 @@ public class MemberRegistrationDto {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
+    public String getChildFirstName() {
+        return childFirstName;
+    }
+
+    public String getChildLastName() {
+        return childLastName;
+    }
+
+    public void setChildFirstName(String childFirstName) {
+        this.childFirstName = childFirstName;
+    }
+
+    public void setChildLastName(String childLastName) {
+        this.childLastName = childLastName;
+    }
+
+    public Boolean getAddChild() {
+        return addChild;
+    }
+
+    public void setAddChild(Boolean addChild) {
+        this.addChild = addChild;
+    }
 }
