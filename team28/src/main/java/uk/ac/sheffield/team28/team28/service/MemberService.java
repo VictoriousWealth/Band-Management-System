@@ -39,12 +39,13 @@ public class MemberService {
         }
 
          // Check if child member is to be added and validate fields
-         boolean addChild = true;
+         boolean addChild = false;
          if (dto.getAddChild()){
              //Validate fields
              if (dto.getChildFirstName().isBlank() || dto.getChildLastName().isBlank()){
-                 addChild = false;
                  throw new IllegalStateException("Child first and/or last name cannot be empty");
+             } else {
+                 addChild = true;
              }
          }
 
@@ -54,7 +55,7 @@ public class MemberService {
         Member member = new Member();
         member.setEmail(dto.getEmail());
         member.setPassword(hashedPassword);
-        member.setMemberType(dto.getMemberType() != null ? dto.getMemberType() : MemberType.Adult);
+        member.setMemberType(MemberType.Adult);
         member.setPhone(dto.getPhone());
         member.setFirstName(dto.getFirstName());
         member.setLastName(dto.getLastName());

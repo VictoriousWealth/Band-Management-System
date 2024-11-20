@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
-import uk.ac.sheffield.team28.team28.enums.Enums.MemberType;
+import uk.ac.sheffield.team28.team28.model.MemberType;
 @Entity
 @Table(name = "Member")
 public class Member {
@@ -20,7 +20,7 @@ public class Member {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "member_type", nullable = false)
-    private MemberType memberType = MemberType.MEMBER;
+    private MemberType memberType = MemberType.Adult;
 
     @Column(name="phone")
     private String phone;
@@ -40,7 +40,7 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.memberType = memberType != null ? memberType : MemberType.MEMBER;
+        this.memberType = memberType != null ? memberType : MemberType.Adult;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -48,7 +48,7 @@ public class Member {
     }
 
     public Member(Long id, String email, String password, String phone, String firstName, String lastName) {
-        this(id, email, password,  MemberType.MEMBER, phone, firstName, lastName);
+        this(id, email, password,  MemberType.Adult, phone, firstName, lastName);
     }
 
     public String getEmail() {
