@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
-
+import uk.ac.sheffield.team28.team28.model.MemberType;
 @Entity
 @Table(name = "Member")
 public class Member {
@@ -18,9 +18,9 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "member_type", nullable = false)
-    private MemberType memberType;
+    private MemberType memberType = MemberType.Adult;
 
     @Column(name = "band")
     private BandInPractice band;
@@ -38,21 +38,12 @@ public class Member {
     @Column
     private BandInPractice bandInPractice;
 
-    // Parent can have multiple children
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Member> children = new HashSet<>();
-
-    // Each child has one parent
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Member parent;
-
     public Member() {}
-    public Member(Long id, String email, String password, String memberType, String phone, String firstName, String lastName) {
+    public Member(Long id, String email, String password, MemberType memberType, String phone, String firstName, String lastName) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.memberType = MemberType.fromString(memberType);
+        this.memberType = memberType != null ? memberType : MemberType.Adult;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -61,7 +52,8 @@ public class Member {
     }
 
     public Member(Long id, String email, String password, String phone, String firstName, String lastName) {
-        this(id, email, password, "Adult", phone, firstName, lastName); //Add band member here
+
+        this(id, email, password,  MemberType.Adult, phone, firstName, lastName);
     }
 
     public String getEmail() {
@@ -93,41 +85,33 @@ public class Member {
     }
 
 
-public void setEmail(String email) {
-    this.email = email;
-}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-public void setFirstName(String firstName) {
-    this.firstName = firstName;
-}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-public void setLastName(String lastName) {
-    this.lastName = lastName;
-}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
 
-public void setPassword(String password) {
-    this.password = password;
-}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-public void setMemberType(MemberType memberType) {
-    this.memberType = memberType;
-}
+    public void setMemberType(MemberType memberType) {
+        this.memberType = memberType;
+    }
 
-public void setBand(BandInPractice band) {
+    public void setBand(BandInPractice band) {
         this.band = band;
     }
 
-public void setPhone(String phone) {
+    public void setPhone(String phone) {
     this.phone = phone;
-}
-
-    public Set<Member> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<Member> children) {
-        this.children = children;
     }
 
 }

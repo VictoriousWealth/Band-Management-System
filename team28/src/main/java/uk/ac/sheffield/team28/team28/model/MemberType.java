@@ -13,6 +13,7 @@ public enum MemberType {
             case Adult -> "Adult";
             case Committee -> "Committee";
             case Director -> "Director";
+            default -> throw new IllegalArgumentException("Unexpected value: " + this);
         };
     }
     
