@@ -11,6 +11,6 @@ import java.util.List;
 public interface ChildMemberRepository extends JpaRepository<ChildMember, Long> {
 
     //Custom query to get child members given a parent id
-    @Query("SELECT * FROM ChildMember WHERE parent == givenParent")
-    List<ChildMember> findAllByParent(@Param("givenParent") Member parent);
+    @Query("SELECT c FROM ChildMember c WHERE c.parent = :parent")
+    List<ChildMember> findAllByParent(@Param("parent") Member parent);
 }
