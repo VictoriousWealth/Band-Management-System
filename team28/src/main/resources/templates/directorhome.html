@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         /* Center the container on the page */
-        body {
+       /* body {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,7 +18,7 @@
             padding: 20px;
         }
 
-        /* Container styling */
+        /* Container styling
         .container {
             background-color: #ffffff;
             padding: 30px;
@@ -26,7 +26,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 600px;
-        }
+        }*/
 
         /* Title styling */
         h2 {
@@ -79,7 +79,7 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" id="directorTabs" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" href="dcommittee.html" role="tab">Committee</a>
+                <a class="nav-link" th:href="@{/director/committee}">Committee</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="directorseniorbandview.html" role="tab">Senior Band</a>

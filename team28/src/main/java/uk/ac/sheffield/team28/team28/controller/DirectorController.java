@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller // Use @Controller instead of @RestController for Thymeleaf views
@@ -31,6 +32,9 @@ public class DirectorController {
     public String showCommitteeMembers(Model model) {
         List<Member> committeeMembers = memberService.getCommitteeMembers();
         model.addAttribute("committeeMembers", committeeMembers);
+        System.out.println("Committee Members: " + committeeMembers);  // Should print the members list to the console
+        System.out.println("HEYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
         return "dcommittee";
     }
+
 }

@@ -116,7 +116,7 @@ public class MemberService {
     }
 
     public List<Member> getCommitteeMembers() {
-        return memberRepository.findByMemberType(MemberType.Committee);
+        return memberRepository.findByMemberType(MemberType.Adult); //Currently set to ADULT since no committee
     }
 
     public boolean authorise(Long memberId, String password) throws Exception {
