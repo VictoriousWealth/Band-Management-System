@@ -44,35 +44,32 @@ public class MemberController {
         }
     }
 
-   /* @PostMapping("/{memberId}/authorise")
-    public ResponseEntity<Member> authorise(@PathVariable Long memberId, @PathVariable String password) {
-        try {
-            boolean authorised = memberService.authorise(memberId, password);
-            return ResponseEntity.ok(null); //May need changing
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }*/
-
     @GetMapping("/authorise")
     public String showAuthorisePage(Model model) {
+        Member member = memberService.findMember();
+        System.out.println("Received memberId: " + member.getFirstName()); // Log the value
         model.addAttribute("We have got the page");
         return "authorise"; // This loads the HTML page
     }
 
-    @PostMapping("/authorise/{member_Id}")
+    //Add a success message
+    @PostMapping("/authorise")
     public String authorise(
-            @PathVariable Long member_id,
             @RequestParam String password,
-            Model model) {
-
-        System.out.println("Received memberId: " + member_id); // Log the value
+           // @RequestHeader(value = "Referer", required = false) String referer, //Bring this back when actually implemented
+            Model model)
+    {
+        Member member = memberService.findMember();
+        System.out.println("Received memberId: " + member.getId()); // Log the value
         System.out.println("Received password: " + password); // Log the password
+        System.out.println("Received password: " + member.getPassword()); // Log the password
+
         try {
-            System.out.println("WE IN OUT");
-            boolean authorised = memberService.authorise(member_id, password);
+            boolean authorised = memberService.authorise(member.getId(),password);
             if (authorised) {
                 model.addAttribute("message", "Authorisation successful!");
+                // Redirect to the referer or home if the referer is null
+                //return "redirect:" + (referer != null ? referer : "/home");
                 return "home"; // Success page
             } else {
                 model.addAttribute("error", "Invalid password. Please try again.");

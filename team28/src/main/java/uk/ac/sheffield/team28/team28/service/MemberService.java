@@ -147,7 +147,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
         // Compare the hashed password with the provided password
-        return Objects.equals(member.getPassword(), password);
+        return passwordEncoder.matches(password,member.getPassword());
 
 
     }

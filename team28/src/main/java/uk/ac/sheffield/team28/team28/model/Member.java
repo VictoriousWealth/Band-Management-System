@@ -56,6 +56,10 @@ public class Member {
         this(id, email, password,  MemberType.Adult, phone, firstName, lastName);
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
     }
