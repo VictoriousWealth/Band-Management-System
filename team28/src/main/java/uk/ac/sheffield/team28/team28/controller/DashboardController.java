@@ -18,7 +18,7 @@ public class DashboardController {
         //Get logged in member
         Member member = memberService.findMember();
         model.addAttribute("memberType", member.getMemberType().toString());
-
+        model.addAttribute("member", member);
         return "dashboard";
     }
 }

@@ -51,6 +51,7 @@ public class MemberController {
     public String showAuthorisePage(Model model) {
         Member member = memberService.findMember();
         System.out.println("Received memberId: " + member.getFirstName()); // Log the value
+        model.addAttribute("member", member);
         model.addAttribute("We have got the page");
         return "authorise"; // This loads the HTML page
     }

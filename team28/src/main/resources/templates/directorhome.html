@@ -67,7 +67,10 @@
 </head>
 <body>
 
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div th:if="${member != null}" th:replace="~{fragments/navbarforloggedinusers}"></div>
+    <div th:unless="${member == null}" th:replace="~{fragments/navbar}"></div>
+
     <div class="container">
         <!-- Page title -->
         <h2>Director</h2>

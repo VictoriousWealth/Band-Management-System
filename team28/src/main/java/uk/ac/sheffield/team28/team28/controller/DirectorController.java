@@ -24,13 +24,17 @@ public class DirectorController {
 
     @GetMapping("")
     public String directorHome(Model model) {
+        Member member = memberService.findMember();
         model.addAttribute("message", "This is our director page");
+        model.addAttribute("member", member);
         return "directorhome";
     }
 
     @GetMapping("/committee")
     public String showCommitteeMembers(Model model) {
         List<Member> committeeMembers = memberService.getCommitteeMembers();
+        Member member = memberService.findMember();
+        model.addAttribute("member", member);
         model.addAttribute("committeeMembers", committeeMembers);
         System.out.println("Committee Members: " + committeeMembers);  // Should print the members list to the console
         System.out.println("HEYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
