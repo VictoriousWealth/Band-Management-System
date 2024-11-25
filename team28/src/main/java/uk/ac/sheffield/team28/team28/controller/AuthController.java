@@ -23,14 +23,19 @@ public class AuthController {
         this.memberService = memberService;
     }
 
+    @GetMapping("/logout")
+    public String logout() {
+        return "home";
+    }
+
     @GetMapping("/login")
-public String showLoginForm(@RequestParam(value = "success", required = false) String successMessage,
-                            @RequestParam(value = "error", required = false) String errorMessage,
-                            Model model) {
-    model.addAttribute("successMessage", successMessage);
-    model.addAttribute("errorMessage", errorMessage);
-    return "login"; 
-}
+    public String showLoginForm(@RequestParam(value = "success", required = false) String successMessage,
+                                @RequestParam(value = "error", required = false) String errorMessage,
+                                Model model) {
+        model.addAttribute("successMessage", successMessage);
+        model.addAttribute("errorMessage", errorMessage);
+        return "login";
+    }
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
