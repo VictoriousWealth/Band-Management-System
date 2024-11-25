@@ -26,13 +26,7 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String showHomePage(Model model, Principal principal) {
-        if (principal != null && principal.getName() != null) {
-            String username = principal.getName();
-            Optional<Member> currentUser = memberRepository.findByEmail(username);
-
-            model.addAttribute("currentUser", currentUser);
-        }
+    public String showHomePage(Model model) {
         Member member = memberService.findMember();
         model.addAttribute("member", member);
         return "home";

@@ -32,8 +32,8 @@
         </style>
     </head>
     <body>
-        <div th:if="${member != null}" th:replace="~{fragments/navbarforloggedinusers}"></div>
-        <div th:unless="${member == null}" th:replace="~{fragments/navbar}"></div>
+
+    <div th:replace="~{fragments/navbarforloggedinusers}"></div>
 
         <div class="content-wrapper">
             <h2>Dashboard</h2>

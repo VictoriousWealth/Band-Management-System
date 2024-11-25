@@ -48,7 +48,7 @@
     </style>
   </head>
   <body>
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+  <div th:replace="~{fragments/navbar}"></div>
 
     <div class="content-wrapper">
       <div class="hero-section">
@@ -59,16 +59,13 @@
             Brass Band.
           </p>
 
-          <div th:if="${currentUser != null and currentUser.memberType == T(uk.ac.sheffield.team28.team28.model.MemberType).Director}">
+          <div th:if="${member != null and member.getMemberType() == T(uk.ac.sheffield.team28.team28.model.MemberType).Director}">
             <p>You are the director!</p>
           </div>
 
         </div>
       </div>
     </div>
-
-    <div th:if="${member != null}" th:replace="~{fragments/navbarforloggedinusers}"></div>
-    <div th:unless="${member == null}" th:replace="~{fragments/navbar}"></div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>

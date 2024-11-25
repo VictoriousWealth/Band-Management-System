@@ -15,6 +15,7 @@ import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -99,7 +100,13 @@ public class MemberService {
         } else {
             email = principal.toString();
         }
-        return memberRepository.findByEmail(email).get();
+
+
+        if (memberRepository.findByEmail(email).isPresent()) {
+            return memberRepository.findByEmail(email).get();
+        } else {
+            return null;
+        }
     }
 
 

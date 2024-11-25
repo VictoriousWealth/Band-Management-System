@@ -9,8 +9,7 @@
 </head>
 <body>
 
-<div th:if="${member != null}" th:replace="~{fragments/navbarforloggedinusers}"></div>
-<div th:unless="${member == null}" th:replace="~{fragments/navbar}"></div>
+<div th:replace="~{fragments/navbarforloggedinusers}"></div>
 
 <div class="container mt-4">
     <h2 class="text-center mb-4">Committee Members</h2>
