@@ -1,6 +1,8 @@
 package uk.ac.sheffield.team28.team28.controller;
 
-import ch.qos.logback.core.model.Model;
+//import ch.qos.logback.core.model.Model;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,7 +13,8 @@ import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 
 
-@RestController()
+
+@Controller()
 @RequestMapping("/")
 public class MemberController {
     private final MemberService memberService;
@@ -51,29 +54,35 @@ public class MemberController {
         }
     }*/
 
-    @GetMapping("/{memberId}/authorise")
-    public String showAuthorisePage(@PathVariable Long memberId, Model model) {
-//model.addAttribute("memberId", memberId);
-        return "authorise";
+    @GetMapping("/authorise")
+    public String showAuthorisePage(Model model) {
+        model.addAttribute("We have got the page");
+        return "authorise"; // This loads the HTML page
     }
 
-    @PostMapping("/{memberId}/authorise")
+    @PostMapping("/authorise/{member_Id}")
     public String authorise(
-            @PathVariable Long memberId, @RequestParam String password, Model model) {
+            @PathVariable Long member_id,
+            @RequestParam String password,
+            Model model) {
+
+        System.out.println("Received memberId: " + member_id); // Log the value
+        System.out.println("Received password: " + password); // Log the password
         try {
-            boolean authorised = memberService.authorise(memberId, password);
+            System.out.println("WE IN OUT");
+            boolean authorised = memberService.authorise(member_id, password);
             if (authorised) {
-//                model.addAttribute("message", "Authorisation successful!");
-                return "success"; // Replace with your success page
+                model.addAttribute("message", "Authorisation successful!");
+                return "home"; // Success page
             } else {
-               // model.addAttribute("error", "Invalid password. Please try again.");
-                return "authorise"; // Reload the popup with an error
+                model.addAttribute("error", "Invalid password. Please try again.");
+                return "authorise"; // Reload the page with the error
             }
         } catch (Exception e) {
-           // model.addAttribute("error", "An error occurred. Please try again.");
-            System.out.println("Exception");
-            return "authorise"; // Reload the popup with an error
+            model.addAttribute("error", "An error occurred: " + e.getMessage());
+            return "authorise"; // Reload the page with the error
         }
     }
+
 
 }

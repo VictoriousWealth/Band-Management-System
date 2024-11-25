@@ -132,9 +132,10 @@ public class MemberService {
     }
 
     public boolean authorise(Long memberId, String password) throws Exception {
+        //return true;
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
-        //Compares the passwords and returns the boolean result
+        // Compare the hashed password with the provided password
         return Objects.equals(member.getPassword(), password);
 
 
