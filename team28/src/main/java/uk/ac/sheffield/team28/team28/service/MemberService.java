@@ -6,6 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
+import uk.ac.sheffield.team28.team28.model.BandInPractice;
+//import uk.ac.sheffield.team28.team28.exception.MemberRegistrationException;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.model.MemberType;
@@ -13,6 +15,8 @@ import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 @Service
 public class MemberService {
@@ -96,6 +100,56 @@ public class MemberService {
             email = principal.toString();
         }
         return memberRepository.findByEmail(email).get();
+    }
+
+
+    public Member addMemberToBand(Long memberId, BandInPractice newBand) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+
+        if (member.getBand() != newBand && member.getBand() != BandInPractice.None && member.getBand() != BandInPractice.Both) {
+            member.setBand(BandInPractice.Both);
+        } else if (member.getBand() == BandInPractice.None){
+            member.setBand((newBand));
+        } else {
+            throw new Exception("Member is already in this band.");
+        }
+        //Save it
+        memberRepository.save(member);
+        return member;
+    }
+
+    public Member removeMemberFromBand(Long memberId, BandInPractice oldBand) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+
+        if (member.getBand() != BandInPractice.None && member.getBand() == oldBand) {
+            member.setBand(BandInPractice.None);
+        } else if (member.getBand() == BandInPractice.Both && oldBand == BandInPractice.Training) {
+            member.setBand(BandInPractice.Senior);
+
+        } else if (member.getBand() == BandInPractice.Both && oldBand == BandInPractice.Senior) {
+            member.setBand(BandInPractice.Training);
+
+        } else
+            throw new Exception("Member is already not assigned to any band.");
+        //Save changes
+        memberRepository.save(member);
+        return member;
+    }
+
+    public List<Member> getCommitteeMembers() {
+        return memberRepository.findByMemberType(MemberType.Adult); //Currently set to ADULT since no committee
+    }
+
+    public boolean authorise(Long memberId, String password) throws Exception {
+        //return true;
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+        // Compare the hashed password with the provided password
+        return passwordEncoder.matches(password,member.getPassword());
+
+
     }
 
 

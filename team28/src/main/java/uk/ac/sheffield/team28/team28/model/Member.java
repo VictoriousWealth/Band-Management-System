@@ -22,6 +22,9 @@ public class Member {
     @Column(name = "member_type", nullable = false)
     private MemberType memberType = MemberType.Adult;
 
+    @Column(name = "band")
+    private BandInPractice band;
+
     @Column(name="phone")
     private String phone;
 
@@ -44,11 +47,17 @@ public class Member {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.bandInPractice = BandInPractice.None;
+        this.band = BandInPractice.None;
+
     }
 
     public Member(Long id, String email, String password, String phone, String firstName, String lastName) {
+
         this(id, email, password,  MemberType.Adult, phone, firstName, lastName);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -75,25 +84,34 @@ public class Member {
         return lastName;
     }
 
+    public BandInPractice getBand() {
+        return band;
+    }
+
+
     public void setEmail(String email) {
-    this.email = email;
+        this.email = email;
     }
 
     public void setFirstName(String firstName) {
-    this.firstName = firstName;
+        this.firstName = firstName;
     }
 
     public void setLastName(String lastName) {
-    this.lastName = lastName;
+        this.lastName = lastName;
     }
 
 
     public void setPassword(String password) {
-    this.password = password;
+        this.password = password;
     }
 
     public void setMemberType(MemberType memberType) {
-    this.memberType = memberType;
+        this.memberType = memberType;
+    }
+
+    public void setBand(BandInPractice band) {
+        this.band = band;
     }
 
     public void setPhone(String phone) {
