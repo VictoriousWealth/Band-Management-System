@@ -1,5 +1,7 @@
 package uk.ac.sheffield.team28.team28.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -89,7 +91,16 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-
+    public Member findMember(){
+        String email;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails){
+            email = ((UserDetails) principal).getUsername();
+        } else {
+            email = principal.toString();
+        }
+        return memberRepository.findByEmail(email).get();
+    }
 
 
     public Member addMemberToBand(Long memberId, BandInPractice newBand) throws Exception {

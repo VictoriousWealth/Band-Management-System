@@ -46,6 +46,10 @@
                 <li class="nav-item">
                     <a class="nav-link" id="music-tab" data-toggle="tab" href="#music" role="tab" aria-controls="music" aria-selected="false">Music</a>
                 </li>
+                <li class="nav-item" th:if="${memberType.equals('Committee')}">
+                    <a class="nav-link" id="instrument-tab" data-toggle="tab" href="#instrument" role="tab" aria-controls="instrument" aria-selected="false">Instrument</a>
+                    <!-- Insert Instruments table -->
+                </li>
             </ul>
 
             <div class="tab-content mt-3" id="myTabContent">
