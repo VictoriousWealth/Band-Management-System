@@ -24,7 +24,7 @@ public class InstrumentService {
         //Save instrument to item
         Item item = new Item();
         item.setItemType(ItemType.Instrument);
-        item.setNameTypeOrTitle(dto.getName());
+        item.setNameTypeOrTitle(dto.getInstrumentInput());
         item.setMakeOrComposer(dto.getMake());
         item.setInStorage(dto.getInStorage());
         item.setNote(dto.getNote());

@@ -41,6 +41,7 @@ public class DashboardController {
 
         //If member is a committee member, get all instruments
         if (member.getMemberType() == MemberType.Committee){
+
             List<Instrument> instruments = instrumentRepository.findAll();
             model.addAttribute("instruments", instruments);
         }
@@ -49,8 +50,8 @@ public class DashboardController {
     }
 
     @PostMapping("/addInstrument")
-    public String addInstrument(@RequestBody InstrumentDto dto){
+    public String addInstrument(@ModelAttribute("instrument") InstrumentDto dto){
         instrumentService.saveInstrument(dto);
-        return "dashboard";
+        return "redirect:/dashboard";
     }
 }
