@@ -83,7 +83,10 @@
                             <td th:text="${instrument.item.nameTypeOrTitle}"></td>
                             <td th:text="${instrument.item.makeOrComposer}"></td>
                             <td th:text="${instrument.serialNumber}"></td>
-                            <td th:text="${instrument.item.inStorage}"></td>
+                            <td>
+                                <span th:if="${instrument.item?.inStorage}" class="badge badge-success">Yes</span>
+                                <span th:if="${!instrument.item?.inStorage}" class="badge badge-danger">No</span>
+                            </td>
                             <td th:text="${instrument.item.note}"></td>
                         </tr>
                         </tbody>
