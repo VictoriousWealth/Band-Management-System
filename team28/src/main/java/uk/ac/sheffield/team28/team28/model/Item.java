@@ -59,4 +59,24 @@ public class Item {
     public String getNote(){
         return note;
     }
+
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
+    }
+
+    public void setNameTypeOrTitle(String nameTypeOrTitle) {
+        this.nameTypeOrTitle = nameTypeOrTitle;
+    }
+
+    public void setMakeOrComposer(String makeOrComposer) {
+        this.makeOrComposer = makeOrComposer;
+    }
+
+    public void setInStorage(Boolean inStorage) {
+        this.inStorage = inStorage;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 }
