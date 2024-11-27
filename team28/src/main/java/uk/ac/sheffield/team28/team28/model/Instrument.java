@@ -32,7 +32,15 @@ public class Instrument {
         return serialNumber;
     }
 
-    public Item item(){
+    public Item getItem(){
         return item;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
 }
