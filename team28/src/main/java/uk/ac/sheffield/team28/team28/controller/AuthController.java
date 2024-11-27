@@ -47,9 +47,6 @@ public class AuthController {
     public String performRegister(@Valid @ModelAttribute("member") MemberRegistrationDto registrationDto, 
                                   BindingResult result, 
                                   Model model) {
-        if (result.hasErrors()) {
-            return "register"; 
-        }
 
         try {
             memberService.registerMember(registrationDto);
