@@ -26,7 +26,6 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-
     @PostMapping("/{memberId}/addToBand")
     public ResponseEntity<Member> addMemberToBand(@PathVariable Long memberId, @PathVariable BandInPractice oldBand) {
         try {
@@ -82,13 +81,6 @@ public class MemberController {
             model.addAttribute("error", "An error occurred: " + e.getMessage());
             return "authorise"; // Reload the page with the error
         }
-    }
-
-    @GetMapping("/account-info")
-    public String accountInfo(Model model) {
-//        model.addAttribute("member", );
-        return "account-info";
-
     }
 
 
