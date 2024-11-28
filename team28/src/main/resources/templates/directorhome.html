@@ -73,7 +73,7 @@
         <h2>Director</h2>
 
         <!-- Display error and success messages -->
-        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+        <div th:if="${errorMessage}" class="alert alert-anger" th:text="${errorMessage}"></div>
         <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
 
         <!-- Nav tabs -->
@@ -82,13 +82,13 @@
                 <a class="nav-link" th:href="@{/director/committee}">Committee</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="directorseniorbandview.html" role="tab">Senior Band</a>
+                <a class="nav-link" th:href="@{/director/trainingBand}">Training Band</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="directortrainingbandsview.html" role="tab">Training Band</a>
+                <a class="nav-link" th:href="@{/director/seniorBand}">Senior Band</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="directorparentsview.html" role="tab">Parents</a>
+                <a class="nav-link" href="directorseniorbandview.html" role="tab">Parents</a>
             </li>
         </ul>
     </div>

@@ -14,6 +14,7 @@ import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -107,17 +108,22 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
 
-        if (member.getBand() != newBand && member.getBand() != BandInPractice.None && member.getBand() != BandInPractice.Both) {
-            member.setBand(BandInPractice.Both);
-        } else if (member.getBand() == BandInPractice.None){
-            member.setBand((newBand));
-        } else {
+        if (member.getBand() == newBand) {
             throw new Exception("Member is already in this band.");
         }
-        //Save it
+        if (member.getBand() == BandInPractice.None) {
+            member.setBand(newBand);
+        } else if (member.getBand() != BandInPractice.Both) {
+            member.setBand(BandInPractice.Both);
+        } else {
+            throw new Exception("Member is already in both bands.");
+        }
+
+        // Save updated member
         memberRepository.save(member);
         return member;
     }
+
 
     public Member removeMemberFromBand(Long memberId, BandInPractice oldBand) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
@@ -142,6 +148,36 @@ public class MemberService {
         return memberRepository.findByMemberType(MemberType.Adult); //Currently set to ADULT since no committee
     }
 
+    public List<Member> getAllMembersBands() {
+        List<Member> allMembers = new ArrayList<>();
+
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.None));
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Training));
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
+
+        return allMembers; //Currently set to ADULT since no committee
+    }
+    public List<Member> getTrainingBandMembers() {
+        List<Member> allMembers = new ArrayList<>();
+
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Training));
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
+        return allMembers; //Currently set to ADULT since no committee
+    }
+
+    public List<Member> getSeniorBandMembers() {
+        List<Member> allMembers = new ArrayList<>();
+
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
+        return allMembers; //Currently set to ADULT since no committee
+    }
+
+    public void setNone () {
+
+    }
+
     public boolean authorise(Long memberId, String password) throws Exception {
         //return true;
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
@@ -151,6 +187,8 @@ public class MemberService {
 
 
     }
+
+
 
 
 }

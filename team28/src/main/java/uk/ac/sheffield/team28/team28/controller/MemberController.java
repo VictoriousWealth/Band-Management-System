@@ -54,10 +54,7 @@ public class MemberController {
 
     //Add a success message
     @PostMapping("/authorise")
-    public String authorise(
-            @RequestParam String password,
-           // @RequestHeader(value = "Referer", required = false) String referer, //Bring this back when actually implemented
-            Model model)
+    public String authorise(@RequestParam String password, Model model)
     {
         Member member = memberService.findMember();
         System.out.println("Received memberId: " + member.getId()); // Log the value

@@ -22,8 +22,8 @@ public class Member {
     @Column(name = "member_type", nullable = false)
     private MemberType memberType = MemberType.Adult;
 
-    @Column(name = "band")
-    private BandInPractice band;
+    @Column(name = "band", nullable = false)
+    private BandInPractice band = BandInPractice.None;
 
     @Column(name="phone")
     private String phone;
@@ -53,7 +53,14 @@ public class Member {
 
     public Member(Long id, String email, String password, String phone, String firstName, String lastName) {
 
-        this(id, email, password,  MemberType.Adult, phone, firstName, lastName);
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.memberType = MemberType.Adult;
+        this.phone = phone;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.band = BandInPractice.None;
     }
 
     public Long getId() {
