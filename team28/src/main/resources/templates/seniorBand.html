@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senior Band</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <!-- Form to add a member to the Senior Band -->
+    <h2 class="text-center mb-4">Add Member to Senior Band</h2>
+    <form th:action="@{/director/addToBandByEmail}" method="post" class="mb-4">
+        <div class="form-group">
+            <label for="email">Add Member by Email:</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="Enter member email" required>
+        </div>
+        <input type="hidden" name="band" value="Senior"> <!-- Hidden input for Training band -->
+        <button type="submit" class="btn btn-primary">Add to Senior Band</button>
+    </form>
+
+    <!-- Table for Training Band Members -->
+    <h2 class="text-center mb-4">Senior Band Members</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Band</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${seniorBandMembers}">
+            <td th:text="${member.firstName} + ' ' + ${member.lastName}">Name</td>
+            <td th:text="${member.email}">Email</td>
+            <td th:text="${member.phone}">Phone</td>
+            <td>
+                <a th:href="@{/director/showMemberS/{memberId}(memberId=${member.id})}"
+                   th:text="${member.band}">Band</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Table for Non-Senior Band Members -->
+    <h2 class="text-center mt-5 mb-4">Non Members</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Band</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${nonBandMembers}">
+            <td th:text="${member.firstName} + ' ' + ${member.lastName}">Name</td>
+            <td th:text="${member.email}">Email</td>
+            <td th:text="${member.phone}">Phone</td>
+            <td th:text="${member.band}">Band</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
