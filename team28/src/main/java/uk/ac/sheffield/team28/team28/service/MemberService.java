@@ -6,6 +6,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
+import uk.ac.sheffield.team28.team28.exception.EmailAlreadyInUseException;
+import uk.ac.sheffield.team28.team28.exception.FieldCannotBeBlankException;
+import uk.ac.sheffield.team28.team28.exception.IdNotFoundException;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
 //import uk.ac.sheffield.team28.team28.exception.MemberRegistrationException;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
@@ -14,16 +17,13 @@ import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
     private final ChildMemberRepository childMemberRepository;
-     private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z]).{8,}$");
 
     public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder,
@@ -159,5 +159,43 @@ public class MemberService {
 
     }
 
+    public List<Exception> updateMemberInfo(Long id, String firstName, String lastName, String phone, String email) {
+        List<Exception> exceptions = new ArrayList<>();
+        System.out.println(id);
+        if (memberRepository.findById(id).isPresent()) {
+            Member memberToBeUpdated = memberRepository.findById(id).get();
+
+            //TODO check if firstname is in valid format
+            if (!firstName.isBlank()) {
+                memberToBeUpdated.setFirstName(firstName);
+            } else {
+                exceptions.add(new FieldCannotBeBlankException("First name cannot be empty"));
+            }
+
+            //TODO check if lastname is in valid format
+            if (!lastName.isBlank()) {
+                memberToBeUpdated.setLastName(lastName);
+            } else {
+                exceptions.add(new FieldCannotBeBlankException("Last name cannot be empty"));
+            }
+
+            //TODO check if phone number is in valid format
+            memberToBeUpdated.setPhone(phone);
+
+            //TODO check if email is in valid format
+            if (!email.equals(memberToBeUpdated.getEmail()) && !memberRepository.existsByEmail(email)) {
+                memberToBeUpdated.setEmail(email);
+            } else if (email.equals(memberToBeUpdated.getEmail())) {
+                memberToBeUpdated.setEmail(email);
+            } else {
+                exceptions.add(new EmailAlreadyInUseException());
+            }
+
+            memberRepository.save(memberToBeUpdated);
+        } else {
+            exceptions.add(new IdNotFoundException());
+        }
+        return exceptions;
+    }
 
 }
