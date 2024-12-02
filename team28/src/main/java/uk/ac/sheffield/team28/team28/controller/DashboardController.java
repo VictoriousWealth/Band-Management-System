@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.sheffield.team28.team28.dto.InstrumentDto;
 import uk.ac.sheffield.team28.team28.model.Instrument;
 import uk.ac.sheffield.team28.team28.model.Member;
@@ -49,4 +50,17 @@ public class DashboardController {
         instrumentService.saveInstrument(dto);
         return "redirect:/dashboard";
     }
+
+    @PostMapping("/editInstrument")
+    public String editInstrument(@ModelAttribute("instrument") InstrumentDto dto){
+        instrumentService.updateInstrument(dto);
+        return "redirect:/dashboard"; // Adjust as needed
+    }
+
+    @PostMapping("/deleteInstrument")
+    public String deleteInstrument(@RequestParam("instrumentId") Long id) {
+        instrumentService.deleteInstrument(id);
+        return "redirect:/dashboard"; // Adjust as needed
+    }
+
 }
