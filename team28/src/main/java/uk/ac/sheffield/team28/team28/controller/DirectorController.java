@@ -61,7 +61,10 @@ public class DirectorController {
     @GetMapping("/committee")
     public String showCommitteeMembers(Model model) {
         List<Member> committeeMembers = memberService.getCommitteeMembers();
+        List<Member> nonCommitteeMembers = memberService.getAdultMembers();
+
         model.addAttribute("committeeMembers", committeeMembers);
+        model.addAttribute("nonCommitteeMembers", nonCommitteeMembers);
 
         return "dcommittee";
     }
@@ -153,6 +156,24 @@ public class DirectorController {
         } catch (Exception e) {
             e.printStackTrace(); // Log the error for debugging
             return "redirect:/director/trainingBand?error=true"; // Redirect with an error flag
+        }
+    }
+
+    @PostMapping("/addToCommitteeByEmail")
+    public String addMemberToCommitteeByEmail(@RequestParam String email) {
+        try {
+            // Fetch the member by email
+            Member member = memberRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Member not found with email: " + email));
+
+            // Update the member's band
+            memberService.addMemberToCommittee(member.getId());
+
+            // Redirect back to the Training Band page
+            return "redirect:/director/committee";
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the error for debugging
+            return "redirect:/director/committee?error=true"; // Redirect with an error flag
         }
     }
 

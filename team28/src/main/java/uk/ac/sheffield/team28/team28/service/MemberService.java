@@ -104,6 +104,20 @@ public class MemberService {
     }
 
 
+    public Member addMemberToCommittee(Long memberId) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+
+        if (member.getMemberType() == MemberType.Adult) {
+            member.setMemberType(MemberType.Committee);
+        } else
+            throw new Exception("Member cannot be added.");
+
+        // Save updated member
+        memberRepository.save(member);
+        return member;
+    }
+
     public Member addMemberToBand(Long memberId, BandInPractice newBand) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
@@ -145,9 +159,11 @@ public class MemberService {
     }
 
     public List<Member> getCommitteeMembers() {
+        return memberRepository.findByMemberType(MemberType.Committee); //Currently set to ADULT since no committee
+    }
+    public List<Member> getAdultMembers() {
         return memberRepository.findByMemberType(MemberType.Adult); //Currently set to ADULT since no committee
     }
-
     public List<Member> getAllMembersBands() {
         List<Member> allMembers = new ArrayList<>();
 
