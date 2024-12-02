@@ -19,4 +19,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByBand(BandInPractice bandInPractice);
 
     Optional<Member> findByEmail(String username);
+
+
+
 }

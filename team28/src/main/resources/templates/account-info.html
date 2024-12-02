@@ -31,6 +31,15 @@
             align-items: center;
         }
 
+        #errors {
+            color: red;
+
+        }
+
+        #success {
+            color: green;
+        }
+
     </style>
 </head>
 <body>
@@ -40,14 +49,26 @@
 <div class="content-wrapper">
     <div id="viewDetails">
         <h1>Account Information</h1>
+
+        <div th:unless="${success==null}">
+            <strong id="errors" th:unless="${success}">Errors in inputs
+                <ul th:each="exception : ${exceptionList}">
+                    <li th:text="${exception.message}"></li>
+                </ul>
+            </strong>
+            <strong id="success" th:if="${success}" th:color="green">Successfully updated all edited records</strong>
+        </div>
+
         <p><strong>Email:</strong> <span th:text="${member.email}"></span></p>
         <p><strong>First Name:</strong> <span th:text="${member.firstName}"></span></p>
         <p><strong>Last Name:</strong> <span th:text="${member.lastName}"></span></p>
         <p><strong>Phone:</strong> <span th:text="${member.phone}"></span></p>
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
+        <!-- if hasBeenAccepted is true then button should be clicked to proceed and above it should show wha't-->
+        <button th:unless="${hasBeenAccepted}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
             Request Account Information Change
         </button>
+
     </div>
 
     <!-- Creates a pop-up that allows you to submit an edit request -->

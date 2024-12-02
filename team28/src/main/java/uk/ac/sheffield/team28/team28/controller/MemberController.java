@@ -1,6 +1,7 @@
 package uk.ac.sheffield.team28.team28.controller;
 
 //import ch.qos.logback.core.model.Model;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.slf4j.Logger;
@@ -13,6 +14,9 @@ import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 import uk.ac.sheffield.team28.team28.model.Member;
+
+import java.util.List;
+import java.util.Objects;
 
 
 @Controller()
@@ -58,9 +62,8 @@ public class MemberController {
     //Add a success message
     @PostMapping("/authorise")
     public String authorise(
-            @RequestParam String password,
-           // @RequestHeader(value = "Referer", required = false) String referer, //Bring this back when actually implemented
-            Model model) {
+            @RequestParam String password, @RequestHeader(value = "Referer", required = false) String referer, //Bring this back when actually implemented
+            Model model, HttpSession session) {
         Member member = memberService.findMember();
         System.out.println("Received memberId: " + member.getId()); // Log the value
         System.out.println("Received password: " + password); // Log the password
@@ -69,10 +72,9 @@ public class MemberController {
         try {
             boolean authorised = memberService.authorise(member.getId(), password);
             if (authorised) {
-                model.addAttribute("message", "Authorisation successful!");
-                // Redirect to the referer or home if the referer is null
-                //return "redirect:" + (referer != null ? referer : "/home");
-                return "home"; // Success page
+                session.setAttribute("isAuthorized", true); // Store auth status in session
+                String safeReferer = (referer != null && referer.startsWith("/")) ? referer : "/account-info";
+                return "redirect:" + safeReferer;
             } else {
                 model.addAttribute("error", "Invalid password. Please try again.");
                 return "authorise"; // Reload the page with the error
@@ -82,6 +84,5 @@ public class MemberController {
             return "authorise"; // Reload the page with the error
         }
     }
-
 
 }
