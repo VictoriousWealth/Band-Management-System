@@ -46,8 +46,8 @@ public class DashboardController {
             model.addAttribute("instruments", instruments);
         }
 
-        List<Loan> loans = loanService.getLoansByMemberId(member.getId());
-        model.addAttribute("loans", loans);
+        List<Loan> memberLoans = loanService.getLoansByMemberId(member.getId());
+        model.addAttribute("memberLoans", memberLoans);
 
         return "dashboard";
     }

@@ -79,16 +79,16 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="loan: ${loans}">
+                        <tr th:each="loan: ${memberLoans}">
                             <td th:text="${loan.item.nameTypeOrTitle}"></td>
                             <td th:text="${loan.returnDate}"></td>
-                            <td>
+                            <!--<td>
                                 <button class="btn btn-primary"
                                         data-toggle="modal"
                                         data-target="#editInstrumentModal"
                                         th:attr="data-id=${loan.id}"
                                         onclick="populateEditForm(this)"> View </button>
-                            </td>
+                            </td>-->
                         </tr>
                         </tbody>
                     </table>

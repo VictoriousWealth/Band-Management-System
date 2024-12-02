@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.ac.sheffield.team28.team28.dto.LoanRequestDto;
 import uk.ac.sheffield.team28.team28.service.LoanService;
 import uk.ac.sheffield.team28.team28.model.Loan;
 
@@ -17,11 +18,20 @@ public class LoanController {
         this.loanService = loanService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Loan> createLoan(@RequestBody Loan loan) {
         Loan createdLoan = loanService.save(loan);
         return ResponseEntity.ok(createdLoan);
     }
 
-    // More methods need to be added here later but I'm not sure what exactly is needed yet
+    @PostMapping
+    public ResponseEntity<?> handleLoanAction(@RequestBody LoanRequestDto loanRequest) {
+        if (loanRequest.getAction().equals("loan")) {
+            loanService.loanInstrument(loanRequest.getInstrumentId(), loanRequest.getMemberName());
+        } else if (loanRequest.getAction().equals("return")) {
+            loanService.returnInstrument(loanRequest.getInstrumentId());
+        }
+        return ResponseEntity.ok().build();
+    }
+
 }
