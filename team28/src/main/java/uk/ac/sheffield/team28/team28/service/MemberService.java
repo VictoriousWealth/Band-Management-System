@@ -19,9 +19,6 @@ import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 @Service
 public class MemberService {
@@ -114,7 +111,7 @@ public class MemberService {
     }
 
 
-    public Member addMemberToCommittee(Long memberId) throws Exception {
+    public Member promoteMemberWithId(Long memberId) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
 
@@ -251,5 +248,21 @@ public class MemberService {
         }
         return exceptions;
     }
+
+    public Member demoteMemberWithId(Long memberId) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+
+        if (member.getMemberType() == MemberType.Committee) {
+            member.setMemberType(MemberType.Adult);
+        } else
+            throw new Exception("Member cannot be demoted.");
+
+        // Save updated member
+        memberRepository.save(member);
+        return member;
+    }
+
+
 
 }

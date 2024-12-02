@@ -30,6 +30,7 @@
             <th>Email</th>
             <th>Phone</th>
             <th>Type</th>
+            <th>Demote</th>
 
         </tr>
         </thead>
@@ -40,6 +41,11 @@
             <td th:text="${member.email}">Email</td>
             <td th:text="${member.phone}">Phone</td>
             <td th:text="${member.memberType}">Phone</td>
+            <td>
+                <form th:action="@{/director/committee/{id}(id=${member.id})}" method="post">
+                    <button type="submit" class="btn btn-danger btn-sm">Demote</button>
+                </form>
+            </td>
 
         </tr>
         </tbody>
@@ -54,6 +60,7 @@
             <th>Email</th>
             <th>Phone</th>
             <th>Type</th>
+
 
         </tr>
         </thead>
