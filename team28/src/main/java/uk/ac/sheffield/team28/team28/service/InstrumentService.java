@@ -38,4 +38,31 @@ public class InstrumentService {
 
         instrumentRepository.save(instrument);
     }
+
+    public void updateInstrument(InstrumentDto dto) {
+        Long instrumentId = dto.getInstrumentId();
+        Instrument instrument = instrumentRepository.getReferenceById(instrumentId);
+        Item item = instrument.getItem();
+
+        item.setItemType(ItemType.Instrument);
+        item.setNameTypeOrTitle(dto.getInstrumentInput());
+        item.setMakeOrComposer(dto.getMake());
+        item.setInStorage(dto.getInStorage());
+        item.setNote(dto.getNote());
+
+        Item savedItem = itemRepository.save(item);
+        instrument.setSerialNumber(dto.getSerialNumber());
+        instrument.setItem(savedItem);
+
+        instrumentRepository.save(instrument);
+    }
+
+    public void deleteInstrument(Long id) {
+        Instrument instrument = instrumentRepository.getReferenceById(id);
+        Item item = instrument.getItem();
+
+        instrumentRepository.delete(instrument);
+        itemRepository.delete(item);
+    }
+
 }
