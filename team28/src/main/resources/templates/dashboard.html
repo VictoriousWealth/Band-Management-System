@@ -70,6 +70,28 @@
                 <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
                     <h3>Loans</h3>
                     <p>Details of loans...</p>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Loaned Instrument</th>
+                            <th>Return by</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="loan: ${loans}">
+                            <td th:text="${loan.item.nameTypeOrTitle}"></td>
+                            <td th:text="${loan.returnDate}"></td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        data-toggle="modal"
+                                        data-target="#editInstrumentModal"
+                                        th:attr="data-id=${loan.id}"
+                                        onclick="populateEditForm(this)"> View </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">

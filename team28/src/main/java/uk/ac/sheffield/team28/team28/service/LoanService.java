@@ -26,6 +26,11 @@ public class LoanService {
         return loanRepository.findById(id);
     }
 
+    // Find all loans for a particular member
+    public List<Loan> getLoansByMemberId(Long memberId) {
+        return loanRepository.findByMemberId(memberId);
+    }
+
     // Retrieves all loans
     public List<Loan> getAllLoans() {
         return loanRepository.findAll();
