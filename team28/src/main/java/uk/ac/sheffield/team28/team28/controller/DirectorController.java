@@ -1,7 +1,6 @@
 package uk.ac.sheffield.team28.team28.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +16,11 @@ import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import javax.servlet.http.HttpServletRequest;
 
 
-
-import java.util.Arrays;
 import java.util.List;
+
 import java.util.Map;
 import java.util.Optional;
+
 
 @Controller // Use @Controller instead of @RestController for Thymeleaf views
 @RequestMapping("/director")
@@ -192,7 +191,7 @@ public class DirectorController {
                     .orElseThrow(() -> new RuntimeException("Member not found with email: " + email));
 
             // Update the member's band
-            memberService.addMemberToCommittee(member.getId());
+            memberService.promoteMemberWithId(member.getId());
 
             // Redirect back to the Training Band page
             return "redirect:/director/committee";
@@ -202,12 +201,29 @@ public class DirectorController {
         }
     }
 
+
     @GetMapping("/parents")
     public String showParents(Model model) {
         Map<Member, List<ChildMember>> parentsWithChildren = childMemberService.getParentsWithChildren();
         model.addAttribute("parentsWithChildren", parentsWithChildren);
         System.out.println("IT IS"+parentsWithChildren.isEmpty());
         return "parents";
+    }
+
+
+    @PostMapping("/committee/{id}")
+    public ResponseEntity<String> removeMemberFromCommittee(@PathVariable Long id) {
+        System.out.println(id);
+        try {
+            Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("Member not found"));
+            memberService.demoteMemberWithId(member.getId());
+            return ResponseEntity.ok("Committee member demoted");
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the error for debugging
+            return ResponseEntity.badRequest().body("Committee member not found"); // Redirect with an error flag
+
+        }
+
     }
 
 
