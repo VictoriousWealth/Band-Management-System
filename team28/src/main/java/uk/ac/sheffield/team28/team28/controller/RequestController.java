@@ -78,7 +78,7 @@ public class RequestController {
             return "redirect:/request/show/approve";
         }
         model.addAttribute("deletedFlag", true);
-        model.addAttribute("requests", requestService.getAllToBeApprovedRequests());
+        model.addAttribute("requests", requestService.getAllApprovedRequestWhereRequesterIs(memberService.findMember()));
         return "approved-changes";
     }
 
