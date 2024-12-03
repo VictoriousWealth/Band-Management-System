@@ -43,9 +43,15 @@
     </head>
     <body>
 
-    <div th:replace="~{fragments/nav-bar-for-logged-in-users}"></div>
+    <div th:unless="${memberType.equals('Director')}">
+        <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+    </div>
+    <div th:if="${memberType.equals('Director')}">
+        <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
+    </div>
 
-        <div class="content-wrapper">
+
+    <div class="content-wrapper">
             <h2>Dashboard</h2>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">

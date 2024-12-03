@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div th:unless="${memberType.equals('Director')}">
+    <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+</div>
+<div th:if="${memberType.equals('Director')}">
+    <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
+</div>
 
 <div class="container mt-4">
     <h2 class="text-center mb-4">Committee Members</h2>

@@ -53,6 +53,8 @@ public class DirectorController {
     @GetMapping("")
     public String directorHome(Model model) {
         model.addAttribute("message", "This is our director page");
+        model.addAttribute("memberType", memberService.findMember().getMemberType());
+        System.out.println(model.getAttribute("memberType"));
         return "directorhome";
     }
 
@@ -63,6 +65,7 @@ public class DirectorController {
 
         model.addAttribute("committeeMembers", committeeMembers);
         model.addAttribute("nonCommitteeMembers", nonCommitteeMembers);
+        model.addAttribute("memberType", memberService.findMember().getMemberType());
 
         return "dcommittee";
     }
@@ -77,6 +80,7 @@ public class DirectorController {
 //        //List<Member> committeeMembers = memberService.getCommitteeMembers();
         model.addAttribute("nonBandMembers", nonBandMembers);
         model.addAttribute("trainingBandMembers", trainingBandMembers);
+        model.addAttribute("memberType", memberService.findMember().getMemberType());
 
         return "trainingBand";
     }
@@ -90,6 +94,7 @@ public class DirectorController {
 //        //List<Member> committeeMembers = memberService.getCommitteeMembers();
         model.addAttribute("nonBandMembers", nonBandMembers);
         model.addAttribute("seniorBandMembers", seniorBandMembers);
+        model.addAttribute("memberType", memberService.findMember().getMemberType());
 
         return "seniorBand";
     }
