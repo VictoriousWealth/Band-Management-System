@@ -11,14 +11,14 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne // Changed to ManyToOne as each Request is made by one Member
+    @ManyToOne // ManyToOne as each Request is made by one Member
     @JoinColumn(name = "requester_id", nullable = false) // Foreign key column name
     private Member requester;
 
     @Column(name = "accepted", nullable = false)
     private boolean accepted;
 
-    @Column(name = "description", length = 500) // Renamed for clarity, added length constraint
+    @Column(name = "description", length = 500)
     private String description;
 
     // Constructors

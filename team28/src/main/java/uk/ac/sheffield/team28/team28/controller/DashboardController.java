@@ -32,7 +32,6 @@ public class DashboardController {
     public String showDashboard(Model model) {
         //Get logged in member
         Member member = memberService.findMember();
-        model.addAttribute("member", member);
         model.addAttribute("memberType", member.getMemberType().toString());
 
         //If member is a committee member, get all instruments
