@@ -65,6 +65,7 @@ public class MemberController {
             @RequestParam String password,
             Model model, HttpSession session) {
         Member member = memberService.findMember();
+        model.addAttribute("memberType", member.getMemberType().toString());
         System.out.println("Received memberId: " + member.getId()); // Log the value
         System.out.println("Received password: " + password); // Log the password
         System.out.println("Received password: " + member.getPassword()); // Log the password

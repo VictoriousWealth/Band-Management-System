@@ -10,7 +10,13 @@
     <link rel="stylesheet" th:href="@{/css/customBody.css}"/>
 </head>
 <body>
-<div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+
+<div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
+    <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+</div>
+<div th:if="${memberType.equals('Committee')}">
+    <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
+</div>
 
 <div class="content-wrapper">
     <h1>Approved changes</h1>

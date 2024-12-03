@@ -22,44 +22,14 @@ public class DashboardController {
 
     @Autowired
     private MemberService memberService;
-    @Autowired
-    private InstrumentRepository instrumentRepository;
-    @Autowired
-    private InstrumentService instrumentService;
-
 
     @GetMapping("/dashboard")
     public String showDashboard(Model model) {
         //Get logged in member
         Member member = memberService.findMember();
         model.addAttribute("memberType", member.getMemberType().toString());
-
-        //If member is a committee member, get all instruments
-        if (member.getMemberType() == MemberType.Committee){
-
-            List<Instrument> instruments = instrumentRepository.findAll();
-            model.addAttribute("instruments", instruments);
-        }
-
         return "dashboard";
     }
 
-    @PostMapping("/addInstrument")
-    public String addInstrument(@ModelAttribute("instrument") InstrumentDto dto){
-        instrumentService.saveInstrument(dto);
-        return "redirect:/dashboard";
-    }
-
-    @PostMapping("/editInstrument")
-    public String editInstrument(@ModelAttribute("instrument") InstrumentDto dto){
-        instrumentService.updateInstrument(dto);
-        return "redirect:/dashboard"; // Adjust as needed
-    }
-
-    @PostMapping("/deleteInstrument")
-    public String deleteInstrument(@RequestParam("instrumentId") Long id) {
-        instrumentService.deleteInstrument(id);
-        return "redirect:/dashboard"; // Adjust as needed
-    }
 
 }

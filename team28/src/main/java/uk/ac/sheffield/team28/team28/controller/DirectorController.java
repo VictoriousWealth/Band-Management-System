@@ -58,6 +58,7 @@ public class DirectorController {
     @GetMapping("")
     public String directorHome(Model model) {
         model.addAttribute("message", "This is our director page");
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         return "directorhome";
     }
 
@@ -68,6 +69,7 @@ public class DirectorController {
 
         model.addAttribute("committeeMembers", committeeMembers);
         model.addAttribute("nonCommitteeMembers", nonCommitteeMembers);
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
 
         return "dcommittee";
     }
@@ -85,6 +87,7 @@ public class DirectorController {
         model.addAttribute("nonBandMembers", nonBandMembers);
         model.addAttribute("trainingBandMembers", trainingBandMembers);
         model.addAttribute("nonTrainingBandChildren", nonTrainingBandChildren);
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
 
         return "trainingBand";
     }
@@ -98,7 +101,7 @@ public class DirectorController {
 //        //List<Member> committeeMembers = memberService.getCommitteeMembers();
         model.addAttribute("nonBandMembers", nonBandMembers);
         model.addAttribute("seniorBandMembers", seniorBandMembers);
-
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         return "seniorBand";
     }
 
@@ -131,6 +134,7 @@ public class DirectorController {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
 
         model.addAttribute("member", member);
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         System.out.println("Here" + memberId);
         return "memberDV";
 
@@ -142,6 +146,7 @@ public class DirectorController {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
 
         model.addAttribute("member", member);
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         System.out.println("Here" + memberId);
         return "memberSB";
 
@@ -206,6 +211,7 @@ public class DirectorController {
     public String showParents(Model model) {
         Map<Member, List<ChildMember>> parentsWithChildren = childMemberService.getParentsWithChildren();
         model.addAttribute("parentsWithChildren", parentsWithChildren);
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         System.out.println("IT IS"+parentsWithChildren.isEmpty());
         return "parents";
     }

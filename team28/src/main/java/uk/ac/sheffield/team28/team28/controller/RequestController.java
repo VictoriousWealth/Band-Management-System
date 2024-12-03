@@ -29,13 +29,16 @@ public class RequestController {
     public String showApprovedRequests(Model model) {
         List<Request> requests = requestService.getAllApprovedRequestWhereRequesterIs(memberService.findMember());
         model.addAttribute("requests", requests);
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         return "approved-changes";
+
     }
 
     @GetMapping("/show/all")
     public String showAllRequests(Model model) {
         List<Request> requests = requestService.getAllToBeApprovedRequests();
         model.addAttribute("requests", requests);
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         return "changes-to-be-approved";
     }
 
