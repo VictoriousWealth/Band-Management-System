@@ -7,9 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
+import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
+import uk.ac.sheffield.team28.team28.service.ChildMemberService;
+import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller // Use @Controller instead of @RestController for Thymeleaf views
@@ -25,16 +29,18 @@ public class DirectorController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository; // Add this field
-
+    private final ChildMemberService childMemberService;
+    private final ChildMemberRepository childMemberRepository; // Add this field
 
 
 
     @Autowired // Constructor injection
-    public DirectorController(MemberService memberService, MemberRepository memberRepository) {
+    public DirectorController(MemberService memberService, MemberRepository memberRepository, ChildMemberRepository childMemberRepository, ChildMemberService childMemberService) {
 
         this.memberService = memberService;
         this.memberRepository = memberRepository; // Initialize it in the constructor
-
+        this.childMemberRepository = childMemberRepository;
+        this.childMemberService = childMemberService;
     }
 
     public String redirectToPreviousPage(HttpServletRequest request) {
@@ -72,11 +78,14 @@ public class DirectorController {
     public String showTrainingBand(Model model) {
         List<Member> nonBandMembers = memberService.getAllMembersBands();
         List<Member> trainingBandMembers = memberService.getTrainingBandMembers();
+        List<ChildMember> nonTrainingBandChildren = childMemberService.getAllChildren();
+        List<ChildMember> childTrainingBandMembers = childMemberService.getTrainingBandMembers();
         nonBandMembers.removeAll(trainingBandMembers);
-
-//        //List<Member> committeeMembers = memberService.getCommitteeMembers();
+        nonTrainingBandChildren.removeAll(childTrainingBandMembers);
+        model.addAttribute("childTrainingBandMembers", childTrainingBandMembers);
         model.addAttribute("nonBandMembers", nonBandMembers);
         model.addAttribute("trainingBandMembers", trainingBandMembers);
+        model.addAttribute("nonTrainingBandChildren", nonTrainingBandChildren);
 
         return "trainingBand";
     }
@@ -158,6 +167,23 @@ public class DirectorController {
         }
     }
 
+
+    @PostMapping("/addChildToBandByName")
+    public String addChildToBandByName(@RequestParam String fullName) {
+        try {
+            // Fetch the member by email
+            ChildMember childMember = childMemberRepository.findByName(fullName)
+                    .orElseThrow(() -> new RuntimeException("Member not found with email: " + fullName));
+            // Update the member's band
+            childMemberService.addChildMemberToBand(childMember.getId());
+            // Redirect back to the Training Band page
+            return "redirect:/director/trainingBand";
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the error for debugging
+            return "redirect:/director/trainingBand?error=true"; // Redirect with an error flag
+        }
+    }
+
     @PostMapping("/addToCommitteeByEmail")
     public String addMemberToCommitteeByEmail(@RequestParam String email) {
         try {
@@ -174,6 +200,14 @@ public class DirectorController {
             e.printStackTrace(); // Log the error for debugging
             return "redirect:/director/committee?error=true"; // Redirect with an error flag
         }
+    }
+
+    @GetMapping("/parents")
+    public String showParents(Model model) {
+        Map<Member, List<ChildMember>> parentsWithChildren = childMemberService.getParentsWithChildren();
+        model.addAttribute("parentsWithChildren", parentsWithChildren);
+        System.out.println("IT IS"+parentsWithChildren.isEmpty());
+        return "parents";
     }
 
 

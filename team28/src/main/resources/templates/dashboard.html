@@ -30,6 +30,20 @@
                 align-items: center;
             }
 
+            .floating-buttons {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .floating-buttons button {
+                width: 150px;
+                height: 50px;
+            }
+
         </style>
     </head>
     <body>
@@ -152,11 +166,52 @@
             </div>
 
         </div>
+        <!-- Buttons for Add Child, Child View, and Committee View -->
+        <div class="floating-buttons">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addChildModal">Add Child</button>
+            <button class="btn btn-secondary" onclick="window.location.href='/childView';">Child View</button>
+            <button class="btn btn-info" onclick="window.location.href='/committeeView';">Committee View</button>
+        </div>
 
-        <div th:replace="~{fragments/footer :: footer}"></div>
+        <!-- Add Child Modal -->
+        <div class="modal fade" id="addChildModal" tabindex="-1" role="dialog" aria-labelledby="addChildModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addChildModalLabel">Add Child</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/addChild}" method="post">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="firstName">First Name:</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name:</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="parentId">Parent ID:</label>
+                                <input type="number" class="form-control" id="parentId" name="parentId" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div th:replace="~{fragments/footer :: footer}"></div>
 
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        </footer>
     </body>
 </html>

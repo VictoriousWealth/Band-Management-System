@@ -96,6 +96,7 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
+
     public Member findMember(){
         String email;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
