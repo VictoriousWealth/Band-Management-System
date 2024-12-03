@@ -16,6 +16,9 @@ public class ChildMember {
     @Column(name = "lastName", nullable = false)
     private String lastName;
 
+    @Column(name = "band", nullable = false)
+    private BandInPractice band = BandInPractice.None;
+
     @ManyToOne
     @JoinColumn(name = "parent", nullable = false)
     private Member parent;
@@ -52,6 +55,8 @@ public class ChildMember {
         return parent;
     }
 
+    public BandInPractice getBand() {return band;}
+
     public void setId(long id) {
         this.id = id;
     }
@@ -67,4 +72,6 @@ public class ChildMember {
     public void setParent(Member parent) {
         this.parent = parent;
     }
+
+    public void setBand(BandInPractice band) {this.band = band;}
 }
