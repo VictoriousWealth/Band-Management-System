@@ -90,3 +90,23 @@ body {
 .error-message {
     color: #d9534f;
 }
+
+/*Account Info page*/
+#errors {
+    color: red;
+
+}
+
+#success {
+    color: green;
+}
+
+/* Dashboard */
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+#deleteButton {
+    margin-right: auto;
+}
