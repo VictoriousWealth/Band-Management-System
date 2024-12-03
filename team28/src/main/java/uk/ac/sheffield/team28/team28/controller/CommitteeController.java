@@ -28,7 +28,7 @@ public class CommitteeController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping()
     public String showCommitteeView(Model model) {
         Member member = memberService.findMember();
         model.addAttribute("member", member);
@@ -41,19 +41,19 @@ public class CommitteeController {
     @PostMapping("/addInstrument")
     public String addInstrument(@ModelAttribute("instrument") InstrumentDto dto){
         instrumentService.saveInstrument(dto);
-        return "redirect:/dashboard";
+        return "redirect:/committee";
     }
 
     @PostMapping("/editInstrument")
     public String editInstrument(@ModelAttribute("instrument") InstrumentDto dto){
         instrumentService.updateInstrument(dto);
-        return "redirect:/dashboard"; // Adjust as needed
+        return "redirect:/committee";
     }
 
     @PostMapping("/deleteInstrument")
     public String deleteInstrument(@RequestParam("instrumentId") Long id) {
         instrumentService.deleteInstrument(id);
-        return "redirect:/dashboard"; // Adjust as needed
+        return "redirect:/committee";
     }
 
 }
