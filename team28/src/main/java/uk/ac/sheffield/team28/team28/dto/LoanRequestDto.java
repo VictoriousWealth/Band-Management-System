@@ -11,7 +11,11 @@ public class LoanRequestDto {
 
     public LoanRequestDto() {}
 
-    public LoanRequestDto(Long instrumentId, String action, String memberName) {}
+    public LoanRequestDto(Long instrumentId, String action, String memberName) {
+        this.instrumentId = instrumentId;
+        this.action = action;
+        this.memberName = memberName;
+    }
 
     //getters and setters
     public Long getInstrumentId() {

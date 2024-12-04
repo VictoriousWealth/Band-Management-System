@@ -48,12 +48,10 @@ public class LoanService {
     // Find active loan for a particular item using its id
     public Loan findActiveLoanByItemId(Long itemId) {
         List<Loan> loans = loanRepository.findByItemId(itemId);
-        for (Loan loan : loans) {
-            if (loan.getReturnDate() != null) {
-                return loan;
-            }
-        }
-        return null;
+        return loans.stream()
+                .filter(loan -> loan.getReturnDate() == null)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No active loan found for item ID: " + itemId));
     }
 
     // Retrieves all loans
@@ -68,10 +66,6 @@ public class LoanService {
     // Delete a loan by ID
     public void deleteLoan(Long id) {
         loanRepository.deleteById(id);
-    }
-
-    public Loan save(Loan loan) {
-        return loan;
     }
 
     public void loanInstrument(Long instrumentId, String memberName) {
@@ -98,7 +92,7 @@ public class LoanService {
         loanRepository.save(loan);
 
         // Update instrument status
-        instrument.getItem().setInStorage(true);
+        instrument.getItem().setInStorage(false);
         instrumentRepository.save(instrument);
     }
 

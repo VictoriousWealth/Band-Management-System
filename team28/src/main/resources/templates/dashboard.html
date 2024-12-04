@@ -169,13 +169,15 @@
                                         data-toggle="modal"
                                         data-target="#loanModal"
                                         th:attr="data-id=${instrument.id}"
-                                        data-action="loan">Loan</button>
+                                        data-action="loan"
+                                        onclick="setAction(this)">Loan</button>
                                 <button class="btn btn-warning"
                                         th:if="${!instrument.item.inStorage}"
                                         data-toggle="modal"
                                         data-target="#returnModal"
                                         th:attr="data-id=${instrument.id}"
-                                        data-action="return">Return</button>
+                                        data-action="return"
+                                        onclick="setAction(this)">Return</button>
                             </td>
                         </tr>
                         </tbody>
@@ -195,9 +197,10 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form id="loanForm" method="post">
+                                <form th:action="@{/loans/loanAction}" id="loanForm" method="post">
                                     <div class="modal-body">
                                         <input type="hidden" id="loanInstrumentId" name="instrumentId">
+                                        <input type="hidden" id="loanAction" name="action">
                                         <div class="form-group">
                                             <label for="memberName">Member Full Name:</label>
                                             <input type="text" class="form-control" id="memberName" name="memberName" required>
@@ -222,9 +225,10 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form id="returnForm" method="post">
+                                <form th:action="@{/loans/loanAction}" id="returnForm" method="post">
                                     <div class="modal-body">
                                         <input type="hidden" id="returnInstrumentId" name="instrumentId">
+                                        <input type="hidden" id="returnAction" name="action">
                                         <p>Are you sure you want to return this instrument?</p>
                                     </div>
                                     <div class="modal-footer">
@@ -357,6 +361,7 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script th:src="@{js/editInstrument.js}"></script>
-    <script th:src="@{js/confirmDelete.js}"></script>
+        <script th:src="@{js/confirmDelete.js}"></script>
+        <script th:src="@{js/dashboardLoan.js}"></script>
     </body>
 </html>

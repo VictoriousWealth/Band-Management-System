@@ -1,13 +1,14 @@
 package uk.ac.sheffield.team28.team28.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.ac.sheffield.team28.team28.dto.LoanRequestDto;
 import uk.ac.sheffield.team28.team28.service.LoanService;
 import uk.ac.sheffield.team28.team28.model.Loan;
+
+import java.io.IOException;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/loans")
@@ -18,20 +19,25 @@ public class LoanController {
         this.loanService = loanService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Loan> createLoan(@RequestBody Loan loan) {
-        Loan createdLoan = loanService.save(loan);
-        return ResponseEntity.ok(createdLoan);
-    }
-
     @PostMapping("/loanAction")
-    public ResponseEntity<?> handleLoanAction(@RequestBody LoanRequestDto loanRequest) {
-        if (loanRequest.getAction().equals("loan")) {
-            loanService.loanInstrument(loanRequest.getInstrumentId(), loanRequest.getMemberName());
-        } else if (loanRequest.getAction().equals("return")) {
-            loanService.returnInstrument(loanRequest.getInstrumentId());
+    public ResponseEntity<String> handleLoanAction(@ModelAttribute LoanRequestDto loanRequest, HttpServletResponse response) {
+        if (loanRequest.getAction() == null) {
+            return ResponseEntity.badRequest().body("Action is required");
         }
-        return ResponseEntity.ok().build();
+        System.out.println(loanRequest.getAction());
+        try {
+            if (loanRequest.getAction().equals("loan")) {
+                loanService.loanInstrument(loanRequest.getInstrumentId(), loanRequest.getMemberName());
+            } else if (loanRequest.getAction().equals("return")) {
+                loanService.returnInstrument(loanRequest.getInstrumentId());
+            } else {
+                return ResponseEntity.badRequest().body("Invalid action specified: " + loanRequest.getAction());
+            }
+            response.sendRedirect("/dashboard");
+            return ResponseEntity.ok("Action processed successfully");
+        } catch (IllegalStateException | NoSuchElementException | IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }
