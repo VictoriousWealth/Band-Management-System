@@ -11,53 +11,32 @@
             rel="stylesheet"
             href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
-
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .content-wrapper {
-            padding-top: 60px;
-            flex: 1;
-            display: flex;
-            text-align: center;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-        }
-
-        #errors {
-            color: red;
-
-        }
-
-        #success {
-            color: green;
-        }
-
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/customContentWrapper.css}"/>
+    <link rel="stylesheet" th:href="@{/css/customBody.css}"/>
 </head>
 <body>
 
-<div th:replace="~{fragments/navbarforloggedinusers}"></div>
+
+<div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
+    <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+</div>
+<div th:if="${memberType.equals('Committee')}">
+    <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
+</div>
+<div th:if="${memberType.equals('Director')}">
+    <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
+</div>
+
 
 <div class="content-wrapper">
     <div id="viewDetails">
         <h1>Account Information</h1>
 
-        <div th:unless="${success==null}">
-            <strong id="errors" th:unless="${success}">Errors in inputs
-                <ul th:each="exception : ${exceptionList}">
-                    <li th:text="${exception.message}"></li>
-                </ul>
-            </strong>
-            <strong id="success" th:if="${success}" th:color="green">Successfully updated all edited records</strong>
-        </div>
+        <strong><ul><li th:if="${hasBeenRequested==true}">Successfully has been requested won't show until the director approves your request and you click to proceed on your request tab</li></ul></strong>
+
+        <strong><ul><li th:if="${success != null && success==true}">Successfully has been updated</li></ul></strong>
+        <strong><ul><li th:if="${success != null && success==false}">Partially has been updated</li></ul></strong>
 
         <p><strong>Email:</strong> <span th:text="${member.email}"></span></p>
         <p><strong>First Name:</strong> <span th:text="${member.firstName}"></span></p>
@@ -65,10 +44,9 @@
         <p><strong>Phone:</strong> <span th:text="${member.phone}"></span></p>
 
         <!-- if hasBeenAccepted is true then button should be clicked to proceed and above it should show wha't-->
-        <button th:unless="${hasBeenAccepted}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
             Request Account Information Change
         </button>
-
     </div>
 
     <!-- Creates a pop-up that allows you to submit an edit request -->
@@ -82,7 +60,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{/account/update}" method="post">
+                    <form th:if="${isAuthorised}" th:action="@{/account/request-update}" method="post">
                         <label for="email">Email:</label>
                         <input type="email" name="email" id="email" th:value="${member.email}" /><br>
 
@@ -97,10 +75,22 @@
 
                         <button type="submit" class="btn btn-success">Request Changes</button>
                     </form>
+
+                    <form th:if="${isAuthorised == null || !isAuthorised}" th:action="@{/account/request-update}" method="post">
+
+                        <p><strong>Email:</strong> <span th:text="${member.email}"></span></p>
+                        <p><strong>First Name:</strong> <span th:text="${member.firstName}"></span></p>
+                        <p><strong>Last Name:</strong> <span th:text="${member.lastName}"></span></p>
+                        <p><strong>Phone:</strong> <span th:text="${member.phone}"></span></p>
+
+                        <button type="submit" class="btn btn-success">Authorise yourself before requesting changes</button>
+                    </form>
+
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

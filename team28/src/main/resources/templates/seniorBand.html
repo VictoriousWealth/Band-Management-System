@@ -7,9 +7,19 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container mt-4">
+    <div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
+        <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+    </div>
+    <div th:if="${memberType.equals('Committee')}">
+        <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
+    </div>
+    <div th:if="${memberType.equals('Director')}">
+        <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
+    </div>
+
+
+    <div class="container mt-4">
     <!-- Form to add a member to the Senior Band -->
     <h2 class="text-center mb-4">Add Member to Senior Band</h2>
     <form th:action="@{/director/addToBandByEmail}" method="post" class="mb-4">

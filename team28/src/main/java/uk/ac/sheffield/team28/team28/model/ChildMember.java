@@ -3,18 +3,21 @@ package uk.ac.sheffield.team28.team28.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="ChildMember")
+@Table(name="child_member")
 public class ChildMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "firstName", nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "lastName", nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @Column(name = "band", nullable = false)
+    private BandInPractice band = BandInPractice.None;
 
     @ManyToOne
     @JoinColumn(name = "parent", nullable = false)
@@ -52,6 +55,8 @@ public class ChildMember {
         return parent;
     }
 
+    public BandInPractice getBand() {return band;}
+
     public void setId(long id) {
         this.id = id;
     }
@@ -67,4 +72,6 @@ public class ChildMember {
     public void setParent(Member parent) {
         this.parent = parent;
     }
+
+    public void setBand(BandInPractice band) {this.band = band;}
 }

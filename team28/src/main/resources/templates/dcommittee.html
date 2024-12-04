@@ -5,69 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Committee Members</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Committee Members</h2>
+    <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
 
-    <!-- Form to add a committee member -->
-    <form th:action="@{/director/addToCommitteeByEmail}" method="post" class="mb-4">
-        <div class="form-group">
-            <label for="email">Add Member by Email:</label>
-            <input type="email" id="email" name="email" class="form-control" placeholder="Enter member email" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Add to Committee</button>
-    </form>
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">Committee Members</h2>
 
-    <!-- Display a list of committee members -->
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Forename</th>
-            <th>Surname</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Type</th>
+        <!-- Form to add a committee member -->
+        <form th:action="@{/director/addToCommitteeByEmail}" method="post" class="mb-4">
+            <div class="form-group">
+                <label for="email">Add Member by Email:</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Enter member email" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add to Committee</button>
+        </form>
 
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="member : ${committeeMembers}">
-            <td th:text="${member.firstName}">First Name</td>
-            <td th:text="${member.lastName}">Last Name</td>
-            <td th:text="${member.email}">Email</td>
-            <td th:text="${member.phone}">Phone</td>
-            <td th:text="${member.memberType}">Phone</td>
+        <!-- Display a list of committee members -->
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Forename</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Type</th>
+                <th>Demote</th>
 
-        </tr>
-        </tbody>
-    </table>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${committeeMembers}">
+                <td th:text="${member.firstName}">First Name</td>
+                <td th:text="${member.lastName}">Last Name</td>
+                <td th:text="${member.email}">Email</td>
+                <td th:text="${member.phone}">Phone</td>
+                <td th:text="${member.memberType}">Phone</td>
+                <td>
+                    <form th:action="@{/director/committee/{id}(id=${member.id})}" method="post">
+                        <button type="submit" class="btn btn-danger btn-sm">Demote</button>
+                    </form>
+                </td>
 
-    <h2>Adult Members</h2>
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Forename</th>
-            <th>Surname</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Type</th>
+            </tr>
+            </tbody>
+        </table>
 
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="member : ${nonCommitteeMembers}">
-            <td th:text="${member.firstName}">First Name</td>
-            <td th:text="${member.lastName}">Last Name</td>
-            <td th:text="${member.email}">Email</td>
-            <td th:text="${member.phone}">Phone</td>
-            <td th:text="${member.memberType}">Phone</td>
+        <h2>Adult Members</h2>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Forename</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Type</th>
 
-        </tr>
-        </tbody>
-    </table>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${nonCommitteeMembers}">
+                <td th:text="${member.firstName}">First Name</td>
+                <td th:text="${member.lastName}">Last Name</td>
+                <td th:text="${member.email}">Email</td>
+                <td th:text="${member.phone}">Phone</td>
+                <td th:text="${member.memberType}">Phone</td>
+
+            </tr>
+            </tbody>
+        </table>
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

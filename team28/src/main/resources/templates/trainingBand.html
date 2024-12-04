@@ -7,9 +7,18 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container mt-4">
+    <div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
+        <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+    </div>
+    <div th:if="${memberType.equals('Committee')}">
+        <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
+    </div>
+    <div th:if="${memberType.equals('Director')}">
+        <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
+    </div>
+
+    <div class="container mt-4">
     <!-- Form to add a member to the Training Band -->
     <h2 class="text-center mb-4">Add Member to Training Band</h2>
     <form th:action="@{/director/addToBandByEmail}" method="post" class="mb-4">
@@ -21,7 +30,7 @@
         <button type="submit" class="btn btn-primary">Add to Training Band</button>
     </form>
 
-    <!-- Table for Training Band Members -->
+    <!-- Tables for Training Band Members -->
     <h2 class="text-center mb-4">Training Band Members</h2>
     <table class="table table-bordered">
         <thead>
@@ -45,6 +54,34 @@
         </tbody>
     </table>
 
+    <h2 class="text-center mb-4">Add Child to Training Band</h2>
+    <form th:action="@{/director/addChildToBandByName}" method="post" class="mb-4">
+        <div class="form-group">
+            <label for="fullName">Child's First Name:</label>
+            <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter full name" required>
+        </div>
+        <input type="hidden" name="band" value="Training"> <!-- Hidden input for Training band -->
+        <button type="submit" class="btn btn-primary">Add to Training Band</button>
+    </form>
+
+    <!-- child band members-->
+    <h2 class="text-center mb-4">Training Band Child Members</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Band</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="child : ${childTrainingBandMembers}">
+            <td th:text="${child.firstName} + ' ' + ${child.lastName}">Name</td>
+            <td th:text="${child.band}">Band</td>
+        </tr>
+        </tbody>
+    </table>
+
+
     <!-- Table for Non-Training Band Members -->
     <h2 class="text-center mt-5 mb-4">Non Members</h2>
     <table class="table table-bordered">
@@ -65,6 +102,24 @@
         </tr>
         </tbody>
     </table>
+
+    <!-- Table for Non-Training Child Band Members -->
+    <h2 class="text-center mt-5 mb-4">Non Members (Child)</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Band</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="child : ${nonTrainingBandChildren}">
+            <td th:text="${child.firstName} + ' ' + ${child.lastName}">Name</td>
+            <td th:text="${child.band}">Band</td>
+        </tr>
+        </tbody>
+    </table>
+
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

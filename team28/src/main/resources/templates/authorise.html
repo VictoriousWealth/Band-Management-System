@@ -6,55 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authorise</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        /* Modal styles */
-        .modal {
-            display: block; /* Change to 'block' to show or 'none' to hide */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 5px;
-            width: 30%;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-content input[type="password"] {
-            width: 80%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .modal-content button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .modal-content button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/customModal.css}"/>
 </head>
 <body>
 
-    <div th:replace="~{fragments/navbarforloggedinusers}"></div>
+    <div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
+        <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+    </div>
+    <div th:if="${memberType.equals('Committee')}">
+        <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
+    </div>
+    <div th:if="${memberType.equals('Director')}">
+        <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
+    </div>
+
 
     <div class="modal">
         <div class="modal-content">

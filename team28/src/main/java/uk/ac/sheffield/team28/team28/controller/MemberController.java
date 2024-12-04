@@ -62,18 +62,21 @@ public class MemberController {
     //Add a success message
     @PostMapping("/authorise")
     public String authorise(
-            @RequestParam String password, @RequestHeader(value = "Referer", required = false) String referer, //Bring this back when actually implemented
+            @RequestParam String password,
             Model model, HttpSession session) {
         Member member = memberService.findMember();
+        model.addAttribute("memberType", member.getMemberType().toString());
         System.out.println("Received memberId: " + member.getId()); // Log the value
         System.out.println("Received password: " + password); // Log the password
         System.out.println("Received password: " + member.getPassword()); // Log the password
 
+        String referer = session.getAttribute("referer").toString();
         try {
             boolean authorised = memberService.authorise(member.getId(), password);
             if (authorised) {
-                session.setAttribute("isAuthorized", true); // Store auth status in session
-                String safeReferer = (referer != null && referer.startsWith("/")) ? referer : "/account-info";
+                session.setAttribute("isAuthorised", true); // Store auth status in session
+                String safeReferer = (referer != null) ? referer : "/dashboard";
+                model.addAttribute("message", true);
                 return "redirect:" + safeReferer;
             } else {
                 model.addAttribute("error", "Invalid password. Please try again.");

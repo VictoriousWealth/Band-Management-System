@@ -114,7 +114,7 @@ public class MemberService {
     }
 
 
-    public Member addMemberToCommittee(Long memberId) throws Exception {
+    public Member promoteMemberWithId(Long memberId) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
 
@@ -220,21 +220,25 @@ public class MemberService {
             Member memberToBeUpdated = memberRepository.findById(id).get();
 
             //TODO check if firstname is in valid format
-            if (!firstName.isBlank()) {
+            if (firstName != null && !firstName.isBlank()) {
                 memberToBeUpdated.setFirstName(firstName);
             } else {
                 exceptions.add(new FieldCannotBeBlankException("First name cannot be empty"));
             }
 
             //TODO check if lastname is in valid format
-            if (!lastName.isBlank()) {
+            if (lastName != null && !lastName.isBlank()) {
                 memberToBeUpdated.setLastName(lastName);
             } else {
                 exceptions.add(new FieldCannotBeBlankException("Last name cannot be empty"));
             }
 
             //TODO check if phone number is in valid format
-            memberToBeUpdated.setPhone(phone);
+            if (phone != null) {
+                memberToBeUpdated.setPhone(phone);
+            } else {
+                exceptions.add(new FieldCannotBeBlankException("Phone cannot be empty"));
+            }
 
             //TODO check if email is in valid format
             if (!email.equals(memberToBeUpdated.getEmail()) && !memberRepository.existsByEmail(email)) {
@@ -274,4 +278,20 @@ public class MemberService {
         // If no match is found
         throw new IllegalArgumentException("No member found with the full name: " + memberName);
     }
+    public Member demoteMemberWithId(Long memberId) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+
+        if (member.getMemberType() == MemberType.Committee) {
+            member.setMemberType(MemberType.Adult);
+        } else
+            throw new Exception("Member cannot be demoted.");
+
+        // Save updated member
+        memberRepository.save(member);
+        return member;
+    }
+
+
+
 }

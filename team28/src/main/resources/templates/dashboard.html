@@ -11,41 +11,24 @@
                 rel="stylesheet"
                 href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         />
-        <style>
-            html,
-            body {
-                height: 100%;
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .content-wrapper {
-                padding-top: 60px;
-                flex: 1;
-                display: flex;
-                text-align: center;
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: center;
-            }
-
-            .modal-footer {
-                display: flex;
-                justify-content: space-between;
-            }
-
-            #deleteButton {
-                margin-right: auto;
-            }
-
-        </style>
+        <link rel="stylesheet" th:href="@{/css/style.css}"/>
+        <link rel="stylesheet" th:href="@{/css/customContentWrapper.css}"/>
+        <link rel="stylesheet" th:href="@{/css/customBody.css}"/>
     </head>
     <body>
 
-    <div th:replace="~{fragments/navbarforloggedinusers}"></div>
+    <div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
+        <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+    </div>
+    <div th:if="${memberType.equals('Committee')}">
+        <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
+    </div>
+    <div th:if="${memberType.equals('Director')}">
+        <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
+    </div>
 
-        <div class="content-wrapper">
+
+    <div class="content-wrapper">
             <h2>Dashboard</h2>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
@@ -60,6 +43,13 @@
                 <li class="nav-item" th:if="${memberType.equals('Committee')}">
                     <a class="nav-link" id="instrument-tab" data-toggle="tab" href="#instrument" role="tab" aria-controls="instrument" aria-selected="false">Instrument</a>
             </ul>
+
+            <!-- Buttons for Add Child, Child View, and Committee View -->
+            <div class="floating-buttons">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#addChildModal">Add Child</button>
+                <button class="btn btn-secondary" onclick="window.location.href='/childView';">Child View</button>
+                <button class="btn btn-info" onclick="window.location.href='/committeeView';">Committee View</button>
+            </div>
 
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="performance" role="tabpanel" aria-labelledby="performance-tab">
@@ -352,16 +342,45 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <!-- Add Child Modal -->
+        <div class="modal fade" id="addChildModal" tabindex="-1" role="dialog" aria-labelledby="addChildModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addChildModalLabel">Add Child</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/addChild}" method="post">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="firstName">First Name:</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name:</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <div th:replace="~{fragments/footer :: footer}"></div>
-
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script th:src="@{js/editInstrument.js}"></script>
         <script th:src="@{js/confirmDelete.js}"></script>
         <script th:src="@{js/dashboardLoan.js}"></script>
+
     </body>
 </html>
