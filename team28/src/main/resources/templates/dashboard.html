@@ -73,20 +73,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="music:${musics}">
-                                <td th:text="music.item.nameTypeOrTitle"></td>
+                            <tr th:each="music: ${musics}">
+                                <td th:text="${music.item.nameTypeOrTitle}"></td>
                                 <td th:text="${music.item.makeOrComposer}"></td>
                                 <td th:text="${music.arranger}"></td>
                                 <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
-                                    th:text="music.bandInPractice"></td>
+                                    th:text="${music.bandInPractice}"></td>
                                 <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
-                                    th:text="music.item.note"></td>
+                                    th:text="${music.item.note}"></td>
                             </tr>
                         </tbody>
                     </table>
                     <!-- Button to add music -->
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#addMusic">
-                        Add Music</button>
+                    <span th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#addMusic">
+                            Add Music</button>
+                    </span>
                 </div>
 
                 <div class="tab-pane fade" id="instrument" role="tabpanel" aria-labelledby="instrument-tab">
