@@ -39,6 +39,7 @@
                 </li>
                 <li class="nav-item" th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
                     <a class="nav-link" id="instrument-tab" data-toggle="tab" href="#instrument" role="tab" aria-controls="instrument" aria-selected="false">Instrument</a>
+                </li>
             </ul>
 
             <div class="tab-content mt-3" id="myTabContent">
@@ -53,8 +54,39 @@
                 </div>
 
                 <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
-                    <h3>Music</h3>
-                    <p>Details of available music pieces...</p>
+                    <h3><span th:unless="${memberType.equals('Committee')} or ${memberType.equals('Director')}">Your </span>Music</h3>
+
+                    <!-- Music table - If you are a normal user will display music in their band, allow them to create an order for
+                    music they should but do not have -->
+                    <!-- For committee display all music, option to put into practice for one or both bands, or return it back to storage -->
+                    <!-- Outstanding orders button shows music members have requested -->
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Composer</th>
+                                <th>Arranger</th>
+                                <th th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
+                                    Band practicing</th>
+                                <th th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
+                                    Suitable for training band?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="music:${musics}">
+                                <td th:text="music.item.nameTypeOrTitle"></td>
+                                <td th:text="${music.item.makeOrComposer}"></td>
+                                <td th:text="${music.arranger}"></td>
+                                <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
+                                    th:text="music.bandInPractice"></td>
+                                <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
+                                    th:text="music.item.note"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Button to add music -->
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#addMusic">
+                        Add Music</button>
                 </div>
 
                 <div class="tab-pane fade" id="instrument" role="tabpanel" aria-labelledby="instrument-tab">
@@ -139,7 +171,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary btn-submit">Save</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -191,7 +223,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary btn-submit">Save</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
                                     </div>
                                 </form>
                                 <!-- Button to delete an Instrument -->
@@ -206,6 +238,63 @@
                     </div>
                 </div>
             </div>
+
+        <!-- Type modal with form to add music-->
+        <div class="modal fade" id="addMusic" tabindex="-1" role="dialog"
+             aria-labelledby="addMusic" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addMusicLabel">Add Instrument</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/addMusic}" method="post">
+                        <div class="modal-body">
+                            <div class="form-group" >
+                                <label for="MusicInput">Name:</label>
+                                <input type="text" class="form-control" id="MusicInput" name="MusicInput" required >
+                            </div>
+                            <div class="form-group">
+                                <label for="composer">Composer:</label>
+                                <input type="text" class="form-control" id="composer" name="composer" required >
+                            </div>
+                            <div class="form-group">
+                                <label for="arranger">Arranger:</label>
+                                <input type="text" class="form-control" id="arranger" name="arranger">
+                            </div>
+                            <div class="form-group">
+                                <label for="bandInPractice">Band practicing:</label>
+                                <select id="bandInPractice" name="bands">
+                                    <option value="none">None</option>
+                                    <option value="training">Training Band</option>
+                                    <option value="senior">Senior Band</option>
+                                    <option value="both">Both bands</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Is this suitable for the Training Band?</label>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="suitableForTraining" id="suitableForTrainingYes" value="true" checked>
+                                    <label class="form-check-label" for="inStorageYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="suitableForTraining" id="suitableForTrainingNo" value="false">
+                                    <label class="form-check-label" for="inStorageNo">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         </div>
         <!-- Buttons for Add Child, Child View, and Committee View -->

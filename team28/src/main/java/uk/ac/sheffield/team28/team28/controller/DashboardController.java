@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.sheffield.team28.team28.dto.InstrumentDto;
-import uk.ac.sheffield.team28.team28.model.Instrument;
-import uk.ac.sheffield.team28.team28.model.Member;
-import uk.ac.sheffield.team28.team28.model.MemberType;
+import uk.ac.sheffield.team28.team28.model.*;
 import uk.ac.sheffield.team28.team28.repository.InstrumentRepository;
+import uk.ac.sheffield.team28.team28.repository.MusicRepository;
 import uk.ac.sheffield.team28.team28.service.InstrumentService;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 
@@ -26,6 +25,8 @@ public class DashboardController {
     private InstrumentRepository instrumentRepository;
     @Autowired
     private InstrumentService instrumentService;
+    @Autowired
+    private MusicRepository musicRepository;
 
 
     @GetMapping("/dashboard")
@@ -35,10 +36,23 @@ public class DashboardController {
         model.addAttribute("memberType", member.getMemberType().toString());
 
         //If member is a committee member, get all instruments
-        if (member.getMemberType() == MemberType.Committee){
+        if (member.getMemberType() == MemberType.Committee || member.getMemberType() == MemberType.Director){
 
             List<Instrument> instruments = instrumentRepository.findAll();
             model.addAttribute("instruments", instruments);
+
+            //Get all music
+            List<Music> music = musicRepository.findAll();
+            model.addAttribute("musics", music);
+        } else if (member.getMemberType() == MemberType.Adult){
+
+            //Get music based on band
+            BandInPractice band = member.getBand();
+            if (band != BandInPractice.None){
+                List<Music> music =
+                        musicRepository.findByBandInPracticeOrBandInPractice(band, BandInPractice.Both);
+                model.addAttribute("musics", music);
+            }
         }
 
         return "dashboard";
