@@ -52,6 +52,14 @@ public class DashboardController {
         return "dashboard";
     }
 
+    @GetMapping("/loanDetails")
+    public String getLoanDetails(@RequestParam Long loanId, Model model) {
+        Loan selectedLoan = loanService.findLoanById(loanId)
+                .orElseThrow(() -> new IllegalArgumentException("Loan not found"));
+        model.addAttribute("selectedLoan", selectedLoan);
+        return "dashboard";
+    }
+
     @PostMapping("/addInstrument")
     public String addInstrument(@ModelAttribute("instrument") InstrumentDto dto){
         instrumentService.saveInstrument(dto);

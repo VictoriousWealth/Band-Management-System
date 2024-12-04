@@ -24,7 +24,7 @@ public class LoanController {
         return ResponseEntity.ok(createdLoan);
     }
 
-    @PostMapping
+    @PostMapping("/loanAction")
     public ResponseEntity<?> handleLoanAction(@RequestBody LoanRequestDto loanRequest) {
         if (loanRequest.getAction().equals("loan")) {
             loanService.loanInstrument(loanRequest.getInstrumentId(), loanRequest.getMemberName());

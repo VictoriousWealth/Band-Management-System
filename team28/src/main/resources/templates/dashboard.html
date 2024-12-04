@@ -74,24 +74,57 @@
                         <thead>
                         <tr>
                             <th>Loaned Instrument</th>
-                            <th>Return by</th>
+                            <th>Loaned on</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="loan: ${memberLoans}">
+                        <tr th:each="loan: ${memberLoans}"
+                            th:attr="data-itemName=${loan.item.nameTypeOrTitle},
+                                     data-make=${loan.item.makeOrComposer},
+                                     data-note=${loan.item.note},
+                                     data-memberFirstName=${loan.member.firstName},
+                                     data-memberLastName=${loan.member.lastName},
+                                     data-dateOfLoan=${loan.loanDate}">
                             <td th:text="${loan.item.nameTypeOrTitle}"></td>
-                            <td th:text="${loan.returnDate}"></td>
-                            <!--<td>
-                                <button class="btn btn-primary"
+                            <td th:text="${loan.loanDate}"></td>
+                            <td>
+                                <button class="btn btn-info"
+                                        th:href="@{/loanDetails(loanId=${loan.id})}"
                                         data-toggle="modal"
-                                        data-target="#editInstrumentModal"
-                                        th:attr="data-id=${loan.id}"
-                                        onclick="populateEditForm(this)"> View </button>
-                            </td>-->
-                        </tr>
+                                        data-target="#loanDetailsModal"
+                                        th:attr="data-itemName=${loan.item.nameTypeOrTitle},
+                                                 data-make=${loan.item.makeOrComposer},
+                                                 data-note=${loan.item.note},
+                                                 data-memberFirstName=${loan.member.firstName},
+                                                 data-memberLastName=${loan.member.lastName},
+                                                 data-dateOfLoan=${loan.loanDate}">Details</button>
+                            </td>
                         </tbody>
                     </table>
+                </div>
+
+                <div class="modal fade" id="loanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="loanDetailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="loanDetailsModalLabel">Loan Item Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Instrument Name:</strong> <span th:text="${selectedLoan?.item?.nameTypeOrTitle}"></span></p>
+                                <p><strong>Make:</strong> <span th:text="${selectedLoan?.item?.makeOrComposer}"></span></p>
+                                <p><strong>Note:</strong> <span th:text="${selectedLoan?.item?.note}"></span></p>
+                                <p><strong>Loaned to:</strong> <span th:text="${selectedLoan?.member?.firstName} + ' ' + ${selectedLoan?.member?.lastName}"></span></p>
+                                <p><strong>Date of Loan:</strong> <span th:text="${selectedLoan?.loanDate}"></span></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
@@ -110,6 +143,7 @@
                             <th>In Storage</th>
                             <th>Note</th>
                             <th>Action</th>
+                            <th>Loan/Return</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -129,12 +163,78 @@
                                         th:attr="data-id=${instrument.id}"
                                         onclick="populateEditForm(this)"> Edit </button>
                             </td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        th:if="${instrument.item.inStorage}"
+                                        data-toggle="modal"
+                                        data-target="#loanModal"
+                                        th:attr="data-id=${instrument.id}"
+                                        data-action="loan">Loan</button>
+                                <button class="btn btn-warning"
+                                        th:if="${!instrument.item.inStorage}"
+                                        data-toggle="modal"
+                                        data-target="#returnModal"
+                                        th:attr="data-id=${instrument.id}"
+                                        data-action="return">Return</button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
+
                     <!-- Button to add instruments to inventory -->
                     <button class="btn btn-primary" data-toggle="modal" data-target="#addInstrument">
                         Add Instrument</button>
+
+                    <!-- Loan modal -->
+                    <div class="modal fade" id="loanModal" tabindex="-1" role="dialog" aria-labelledby="loanModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="loanModalLabel">Loan Instrument</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="loanForm" method="post">
+                                    <div class="modal-body">
+                                        <input type="hidden" id="loanInstrumentId" name="instrumentId">
+                                        <div class="form-group">
+                                            <label for="memberName">Member Full Name:</label>
+                                            <input type="text" class="form-control" id="memberName" name="memberName" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Return Modal -->
+                    <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="returnModalLabel">Return Instrument</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="returnForm" method="post">
+                                    <div class="modal-body">
+                                        <input type="hidden" id="returnInstrumentId" name="instrumentId">
+                                        <p>Are you sure you want to return this instrument?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-warning">Return</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Type modal with form to add instrument-->
                     <div class="modal fade" id="addInstrument" tabindex="-1" role="dialog"

@@ -27,9 +27,6 @@ public class LoanService {
     @Autowired
     private InstrumentRepository instrumentRepository;
 
-    @Autowired
-    private LoanService loanService;
-
     public LoanService(LoanRepository loanRepository) {
         this.loanRepository = loanRepository;
     }
@@ -117,7 +114,7 @@ public class LoanService {
         }
 
         // Find the active loan for the item
-        Loan loan = loanService.findActiveLoanByItemId(item.getId());
+        Loan loan = this.findActiveLoanByItemId(item.getId());
 
         // Mark the loan as completed (return date set)
         loan.setReturnDate(LocalDate.now());
