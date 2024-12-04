@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.sheffield.team28.team28.dto.InstrumentDto;
+import uk.ac.sheffield.team28.team28.dto.MusicDto;
 import uk.ac.sheffield.team28.team28.model.*;
 import uk.ac.sheffield.team28.team28.repository.InstrumentRepository;
 import uk.ac.sheffield.team28.team28.repository.MusicRepository;
 import uk.ac.sheffield.team28.team28.service.InstrumentService;
 import uk.ac.sheffield.team28.team28.service.MemberService;
+import uk.ac.sheffield.team28.team28.service.MusicService;
 
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class DashboardController {
     private InstrumentService instrumentService;
     @Autowired
     private MusicRepository musicRepository;
+    @Autowired
+    private MusicService musicService;
 
 
     @GetMapping("/dashboard")
@@ -67,13 +71,19 @@ public class DashboardController {
     @PostMapping("/editInstrument")
     public String editInstrument(@ModelAttribute("instrument") InstrumentDto dto){
         instrumentService.updateInstrument(dto);
-        return "redirect:/dashboard"; // Adjust as needed
+        return "redirect:/dashboard";
     }
 
     @PostMapping("/deleteInstrument")
     public String deleteInstrument(@RequestParam("instrumentId") Long id) {
         instrumentService.deleteInstrument(id);
-        return "redirect:/dashboard"; // Adjust as needed
+        return "redirect:/dashboard";
+    }
+
+    @PostMapping("/addMusic")
+    public String addMusic(@ModelAttribute("music") MusicDto dto){
+        musicService.saveMusic(dto);
+        return "redirect:/dashboard";
     }
 
 }

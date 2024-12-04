@@ -40,4 +40,16 @@ public class Music {
     public BandInPractice getBandInPractice(){
         return bandInPractice;
     }
+
+    public void setBandInPractice(BandInPractice bandInPractice) {
+        this.bandInPractice = bandInPractice;
+    }
+
+    public void setArranger(String arranger) {
+        this.arranger = arranger;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
 }
