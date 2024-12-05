@@ -16,6 +16,7 @@ import uk.ac.sheffield.team28.team28.service.InstrumentService;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 import uk.ac.sheffield.team28.team28.service.MusicService;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -48,6 +49,11 @@ public class DashboardController {
             //Get all music
             List<Music> music = musicRepository.findAll();
             model.addAttribute("musics", music);
+
+            //Get band types
+            List<BandInPractice> bands = Arrays.asList(BandInPractice.values());
+            model.addAttribute("bands", bands);
+
         } else if (member.getMemberType() == MemberType.Adult){
 
             //Get music based on band
@@ -82,6 +88,7 @@ public class DashboardController {
 
     @PostMapping("/addMusic")
     public String addMusic(@ModelAttribute("music") MusicDto dto){
+        System.out.println("Band Type: " + dto.getBandInPractice());
         musicService.saveMusic(dto);
         return "redirect:/dashboard";
     }

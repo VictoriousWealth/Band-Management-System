@@ -78,7 +78,7 @@
                                 <td th:text="${music.item.makeOrComposer}"></td>
                                 <td th:text="${music.arranger}"></td>
                                 <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
-                                    th:text="${music.bandInPractice}"></td>
+                                    th:text="${music.bandInPractice.toString()}"></td>
                                 <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
                                     th:text="${music.item.note}"></td>
                             </tr>
@@ -268,11 +268,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="bandInPractice">Band practicing:</label>
-                                <select id="bandInPractice" name="bands">
-                                    <option value="none">None</option>
-                                    <option value="training">Training Band</option>
-                                    <option value="senior">Senior Band</option>
-                                    <option value="both">Both bands</option>
+                                <select id="bandInPractice" name="bandInPractice" required>
+                                    <option th:each="band : ${T(uk.ac.sheffield.team28.team28.model.BandInPractice).values()}"
+                                            th:value="${band}"
+                                            th:text="${band.toString() != null ? band.toString() : band.toString()}"></option>
                                 </select>
                             </div>
                             <div class="form-group">
