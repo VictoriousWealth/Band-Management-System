@@ -21,9 +21,7 @@ public class PerformanceController {
 
     @GetMapping("/performance")
     public String calender(Model model) {
-        Map<LocalDate, List<String>> performance = new HashMap<>();
-        model.addAttribute("performance", performance);
-        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
-        return "performance-page";
+
+        return "performance";
     }
 }

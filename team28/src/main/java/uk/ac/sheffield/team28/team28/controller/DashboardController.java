@@ -60,22 +60,4 @@ public class DashboardController {
         return "dashboard";
     }
 
-    @PostMapping("/addInstrument")
-    public String addInstrument(@ModelAttribute("instrument") InstrumentDto dto){
-        instrumentService.saveInstrument(dto);
-        return "redirect:/dashboard";
-    }
-
-    @PostMapping("/editInstrument")
-    public String editInstrument(@ModelAttribute("instrument") InstrumentDto dto){
-        instrumentService.updateInstrument(dto);
-        return "redirect:/dashboard";
-    }
-
-    @PostMapping("/deleteInstrument")
-    public String deleteInstrument(@RequestParam("instrumentId") Long id) {
-        instrumentService.deleteInstrument(id);
-        return "redirect:/dashboard";
-    }
-
 }

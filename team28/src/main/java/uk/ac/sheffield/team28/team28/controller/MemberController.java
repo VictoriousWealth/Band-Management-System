@@ -55,6 +55,7 @@ public class MemberController {
         Member member = memberService.findMember();
         System.out.println("Received memberId: " + member.getFirstName()); // Log the value
         model.addAttribute("member", member);
+        model.addAttribute("memberType", member.getMemberType().toString());
         model.addAttribute("We have got the page");
         return "authorise"; // This loads the HTML page
     }
@@ -66,6 +67,7 @@ public class MemberController {
             Model model, HttpSession session) {
         Member member = memberService.findMember();
         model.addAttribute("memberType", member.getMemberType().toString());
+        System.out.println(model.getAttribute("memberType"));
         System.out.println("Received memberId: " + member.getId()); // Log the value
         System.out.println("Received password: " + password); // Log the password
         System.out.println("Received password: " + member.getPassword()); // Log the password

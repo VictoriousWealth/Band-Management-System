@@ -28,7 +28,7 @@ public class CommitteeController {
     }
 
 
-    @GetMapping()
+    @GetMapping("")
     public String showCommitteeView(Model model) {
         Member member = memberService.findMember();
         model.addAttribute("member", member);

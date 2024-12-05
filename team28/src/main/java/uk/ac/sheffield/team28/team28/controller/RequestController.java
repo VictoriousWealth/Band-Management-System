@@ -44,7 +44,7 @@ public class RequestController {
 
     @PostMapping("/approve/{id}")
     public String fulfilRequest(@PathVariable Long id, Model model) {
-        System.out.println(id);
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         Request requestToBeApproved = requestService.getRequestWithId(id);
         if (requestToBeApproved == null) {
             model.addAttribute("error", "Request with id " + id + " does not exist");
@@ -63,6 +63,7 @@ public class RequestController {
 
     @PostMapping("/reject/{id}")
     public String rejectRequest(@PathVariable Long id, Model model) {
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         boolean deletedFlag = requestService.deleteRequest(requestService.getRequestWithId(id));
         if (!deletedFlag) {
             model.addAttribute("error", "Request with id " + id + " does not exist");
@@ -75,6 +76,7 @@ public class RequestController {
 
     @PostMapping("/discard/{id}")
     public String deleteRequest(@PathVariable Long id, Model model) {
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         boolean deletedFlag = requestService.deleteRequest(requestService.getRequestWithId(id));
         if (!deletedFlag) {
             model.addAttribute("error", "Request with id " + id + " does not exist");
