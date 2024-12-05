@@ -2,6 +2,9 @@ package uk.ac.sheffield.team28.team28.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 @Entity
 @Table(name="child_member")
 public class ChildMember {
@@ -23,19 +26,24 @@ public class ChildMember {
     @JoinColumn(name = "parent", nullable = false)
     private Member parent;
 
+    @Column
+    LocalDate dateOfBirth;
+
     public ChildMember(){}
 
-    public ChildMember(Long id, String firstName, String lastName, Member parent){
+    public ChildMember(Long id, String firstName, String lastName, Member parent, LocalDate dateOfBirth) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.parent = parent;
+        this.dateOfBirth = dateOfBirth;
     }
 
-    public ChildMember(String firstName, String lastName, Member parent){
+    public ChildMember(String firstName, String lastName, Member parent, LocalDate dateOfBirth) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.parent = parent;
+        this.dateOfBirth = dateOfBirth;
     }
 
     // Getters and setters
@@ -74,4 +82,16 @@ public class ChildMember {
     }
 
     public void setBand(BandInPractice band) {this.band = band;}
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public int getAge() {
+        return Period.between(dateOfBirth, LocalDate.now()).getYears();
+    }
 }

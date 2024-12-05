@@ -80,7 +80,8 @@ public class MemberService {
              ChildMember child = new ChildMember(
                      dto.getChildFirstName(),
                      dto.getChildLastName(),
-                     member);
+                     member,
+                     dto.getChildDateOfBirth());
              childMemberRepository.save(child);
          }
 
@@ -293,5 +294,7 @@ public class MemberService {
     }
 
 
-
+    public Member getMemberWithId(Long id) {
+        return memberRepository.findById(id).get();
+    }
 }
