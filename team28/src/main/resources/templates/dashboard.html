@@ -80,7 +80,7 @@
                                 <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
                                     th:text="${music.bandInPractice.toString()}"></td>
                                 <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
-                                    th:text="${music.item.note}"></td>
+                                    th:text="${music.item.note == 'true' ? 'True' : 'False'}"></td>
                             </tr>
                         </tbody>
                     </table>
