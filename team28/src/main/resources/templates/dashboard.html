@@ -106,6 +106,7 @@
                             <th>In Storage</th>
                             <th>Note</th>
                             <th>Action</th>
+                            <th>Loan/Return</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -124,6 +125,22 @@
                                         data-target="#editInstrumentModal"
                                         th:attr="data-id=${instrument.id}"
                                         onclick="populateEditForm(this)"> Edit </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary"
+                                        th:if="${instrument.item.inStorage}"
+                                        data-toggle="modal"
+                                        data-target="#loanModal"
+                                        th:attr="data-id=${instrument.id}"
+                                        data-action="loan"
+                                        onclick="setAction(this)">Loan</button>
+                                <button class="btn btn-warning"
+                                        th:if="${!instrument.item.inStorage}"
+                                        data-toggle="modal"
+                                        data-target="#returnModal"
+                                        th:attr="data-id=${instrument.id}"
+                                        data-action="return"
+                                        onclick="setAction(this)">Return</button>
                             </td>
                         </tr>
                         </tbody>
