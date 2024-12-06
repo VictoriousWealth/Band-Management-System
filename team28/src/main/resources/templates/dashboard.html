@@ -89,6 +89,13 @@
                         <button class="btn btn-primary" data-toggle="modal" data-target="#addMusic">
                             Add Music</button>
                     </span>
+
+                    <!-- Button to request music if you are a normal member -->
+                    <span th:if="${memberType.equals('Adult')} or ${memberType.equals('Non_Adult')}">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#orderMusic">
+                            Order Music
+                        </button>
+                    </span>
                 </div>
 
                 <div class="tab-pane fade" id="instrument" role="tabpanel" aria-labelledby="instrument-tab">
@@ -247,7 +254,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addMusicLabel">Add Instrument</h5>
+                        <h5 class="modal-title" id="addMusicLabel">Add Music</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -287,6 +294,43 @@
                                     <label class="form-check-label" for="inStorageNo">No</label>
                                 </div>
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Type modal with form to order music-->
+        <div class="modal fade" id="orderMusic" tabindex="-1" role="dialog"
+             aria-labelledby="addMusic" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderMusicLabel">Order Music</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/orderMusic}" method="post">
+                        <!-- Insert dropdown with all music -->
+                        <div class="form-group">
+                            <label for="selectMusic">Select music piece:</label>
+                            <select id="selectMusic" name="itemId" required>
+                                <option th:each="music : ${musics}"
+                                        th:value="${music.item.id}"
+                                        th:text="${music.arranger != null && !music.arranger.isEmpty()
+                                                    ? music.item.nameTypeOrTitle + ' - ' + music.item.makeOrComposer + ' - ' + music.arranger
+                                                    : music.item.nameTypeOrTitle + ' - ' + music.item.makeOrComposer}"></option>
+                            </select>
+                        </div>
+                        <!-- Add note section so user can add a note to their order -->
+                        <div class="form-group">
+                            <label for="noteSelectMusic">Add note:</label>
+                            <input type="text" name="note" id="noteSelectMusic">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

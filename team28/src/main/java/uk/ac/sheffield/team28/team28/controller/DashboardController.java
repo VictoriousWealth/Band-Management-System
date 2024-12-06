@@ -1,6 +1,7 @@
 package uk.ac.sheffield.team28.team28.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,13 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.sheffield.team28.team28.dto.InstrumentDto;
 import uk.ac.sheffield.team28.team28.dto.MusicDto;
+import uk.ac.sheffield.team28.team28.dto.OrderDto;
 import uk.ac.sheffield.team28.team28.model.*;
 import uk.ac.sheffield.team28.team28.repository.InstrumentRepository;
 import uk.ac.sheffield.team28.team28.repository.MusicRepository;
-import uk.ac.sheffield.team28.team28.service.InstrumentService;
-import uk.ac.sheffield.team28.team28.service.MemberService;
-import uk.ac.sheffield.team28.team28.service.MusicService;
+import uk.ac.sheffield.team28.team28.service.*;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,6 +33,10 @@ public class DashboardController {
     private MusicRepository musicRepository;
     @Autowired
     private MusicService musicService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private ItemService itemService;
 
 
     @GetMapping("/dashboard")
@@ -88,8 +93,19 @@ public class DashboardController {
 
     @PostMapping("/addMusic")
     public String addMusic(@ModelAttribute("music") MusicDto dto){
-        System.out.println("Band Type: " + dto.getBandInPractice());
         musicService.saveMusic(dto);
+        return "redirect:/dashboard";
+    }
+
+    @PostMapping("/orderMusic")
+    public String orderMusic(@ModelAttribute("order") OrderDto dto){
+        Member member = memberService.findMember();
+        dto.setMember(member);
+        Item item = itemService.findById(dto.getItemId());
+        dto.setItem(item);
+        System.out.println("Local date is: " + LocalDate.now());
+        dto.setOrderDate(LocalDate.now());
+        orderService.save(dto);
         return "redirect:/dashboard";
     }
 

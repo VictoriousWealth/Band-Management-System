@@ -25,6 +25,9 @@ public class Order {
     @Column(name = "isFulfilled")
     private boolean isFulfilled;
 
+    @Column(name = "note")
+    private String note;
+
     public Order() {}
 
     public Order(Member member, Item item, LocalDate orderDate) {
@@ -32,6 +35,15 @@ public class Order {
         this.item = item;
         this.orderDate = orderDate;
         this.isFulfilled = false;
+        note = null;
+    }
+
+    public Order(Member member, Item item, LocalDate orderDate, String note) {
+        this.member = member;
+        this.item = item;
+        this.orderDate = orderDate;
+        this.isFulfilled = false;
+        this.note = note;
     }
 
     public Long getId() {
@@ -50,7 +62,7 @@ public class Order {
         return orderDate;
     }
 
-    public void setOrderDate(LocalDate loanDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -60,5 +72,21 @@ public class Order {
 
     public void setIsFulfilled(boolean isFulfilled) {
         this.isFulfilled = isFulfilled;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
 }
