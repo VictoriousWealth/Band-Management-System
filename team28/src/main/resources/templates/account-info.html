@@ -11,37 +11,23 @@
             rel="stylesheet"
             href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
-
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .content-wrapper {
-            padding-top: 60px;
-            flex: 1;
-            display: flex;
-            text-align: center;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-        }
-
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/customContentWrapper.css}"/>
+    <link rel="stylesheet" th:href="@{/css/customBody.css}"/>
 </head>
 <body>
 
 
+<div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
+    <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+</div>
+<div th:if="${memberType.equals('Committee')}">
+    <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
+</div>
 <div th:if="${memberType.equals('Director')}">
     <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
 </div>
-<div th:unless="${memberType.equals('Director')}">
-    <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
-</div>
+
 
 <div class="content-wrapper">
     <div id="viewDetails">
@@ -61,7 +47,6 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
             Request Account Information Change
         </button>
-
     </div>
 
     <!-- Creates a pop-up that allows you to submit an edit request -->
@@ -105,6 +90,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

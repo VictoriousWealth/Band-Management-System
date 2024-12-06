@@ -39,19 +39,18 @@ public class AccountDetailsController {
     public String requestToUpdateAccountInfo(@ModelAttribute Member desiredUpdatedMember,
                                              HttpSession session, Model model) {
         Boolean isAuthorised = (Boolean) session.getAttribute("isAuthorised");
+        Member oldMember = memberService.findMember(); // old member as in original member with no changes
+        model.addAttribute("memberType", oldMember.getMemberType().toString());
         if (isAuthorised == null || !isAuthorised) {
             session.setAttribute("referer", "/account-info");
             return "redirect:/authorise";
         }
-
-        Member oldMember = memberService.findMember(); // old member as in original member with no changes
 
         String description = getString(desiredUpdatedMember, oldMember);
         boolean requestAdded = requestService.addRequest(new Request(oldMember, false, description));
 
         session.removeAttribute("isAuthorised");
         if (requestAdded) {
-            model.addAttribute("memberType", oldMember.getMemberType().toString());
 
             model.addAttribute("hasBeenRequested", true);
             System.out.println("===================================");

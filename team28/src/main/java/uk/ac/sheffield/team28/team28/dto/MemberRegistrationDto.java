@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import uk.ac.sheffield.team28.team28.model.MemberType;
 
+import java.time.LocalDate;
+
 public class MemberRegistrationDto {
 
     @NotBlank(message = "Please enter a valid email address")
@@ -32,11 +34,12 @@ public class MemberRegistrationDto {
     private String childFirstName;
 
     private String childLastName;
+    private LocalDate childDateOfBirth;
 
     public MemberRegistrationDto() {}
 
     public MemberRegistrationDto(String email, String password, MemberType memberType, String phone, String firstName, String lastName,
-                                 Boolean addChild, String childFirstName, String childLastName) {
+                                 Boolean addChild, String childFirstName, String childLastName, LocalDate dateOfBirth) {
         this.email = email;
         this.password = password;
         this.memberType = memberType;
@@ -47,6 +50,7 @@ public class MemberRegistrationDto {
         this.addChild = addChild;
         this.childFirstName = childFirstName;
         this.childLastName = childLastName;
+        this.childDateOfBirth = dateOfBirth;
     }
 
     public String getEmail() {
@@ -119,5 +123,13 @@ public class MemberRegistrationDto {
 
     public void setAddChild(Boolean addChild) {
         this.addChild = addChild;
+    }
+
+    public LocalDate getChildDateOfBirth() {
+        return childDateOfBirth;
+    }
+
+    public void setChildDateOfBirth(LocalDate childDateOfBirth) {
+        this.childDateOfBirth = childDateOfBirth;
     }
 }

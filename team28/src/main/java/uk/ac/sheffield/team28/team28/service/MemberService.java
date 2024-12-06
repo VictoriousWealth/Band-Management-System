@@ -19,6 +19,9 @@ import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 @Service
 public class MemberService {
@@ -77,7 +80,8 @@ public class MemberService {
              ChildMember child = new ChildMember(
                      dto.getChildFirstName(),
                      dto.getChildLastName(),
-                     member);
+                     member,
+                     dto.getChildDateOfBirth());
              childMemberRepository.save(child);
          }
 
@@ -92,7 +96,6 @@ public class MemberService {
     public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
-
 
     public Member findMember(){
         String email;
@@ -254,6 +257,28 @@ public class MemberService {
         return exceptions;
     }
 
+    public Member findMemberByFullName(String memberName) {
+        String[] nameParts = memberName.trim().split("\\s+");
+        if (nameParts.length < 2) {
+            throw new IllegalArgumentException("Full name must include both first and last name.");
+        }
+
+        String firstName = nameParts[0];
+        String lastName = nameParts[nameParts.length - 1];
+
+        // Query the repository by first name
+        List<Member> membersWithFirstName = memberRepository.findByFirstName(firstName);
+
+        // Verify that the last name matches
+        for (Member member : membersWithFirstName) {
+            if (member.getLastName().equalsIgnoreCase(lastName)) {
+                return member;
+            }
+        }
+
+        // If no match is found
+        throw new IllegalArgumentException("No member found with the full name: " + memberName);
+    }
     public Member demoteMemberWithId(Long memberId) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
@@ -269,5 +294,7 @@ public class MemberService {
     }
 
 
-
+    public Member getMemberWithId(Long id) {
+        return memberRepository.findById(id).get();
+    }
 }

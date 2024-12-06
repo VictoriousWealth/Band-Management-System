@@ -27,6 +27,8 @@ public class HomeController {
 
     @GetMapping("/")
     public String showHomePage(Model model) {
+        Member member = memberService.findMember();
+        model.addAttribute("member", member);
         return "home";
     }
 

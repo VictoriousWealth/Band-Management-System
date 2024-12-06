@@ -3,10 +3,11 @@ package uk.ac.sheffield.team28.team28.model;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import uk.ac.sheffield.team28.team28.model.MemberType;
 @Entity
-@Table(name = "Member")
+@Table(name = "member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +37,11 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private BandInPractice bandInPractice;
+    private BandInPractice bandInPractice = BandInPractice.None;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChildMember> childMembers = new HashSet<>();
+
 
     public Member() {}
     public Member(Long id, String email, String password, MemberType memberType, String phone, String firstName, String lastName) {

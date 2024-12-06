@@ -5,26 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sludgate Brass Band</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        .content-wrapper {
-            padding-top: 60px;
-            flex: 1;
-            display: flex;
-            text-align: center;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/customContentWrapper.css}"/>
+    <link rel="stylesheet" th:href="@{/css/customBody.css}"/>
 </head>
 <body>
-<div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+
+<div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
+    <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+</div>
+<div th:if="${memberType.equals('Committee')}">
+    <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
+</div>
 
 <div class="content-wrapper">
     <h1>Approved changes</h1>
