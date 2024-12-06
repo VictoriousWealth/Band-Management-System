@@ -87,7 +87,61 @@
 
                 <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
                     <h3>Loans</h3>
-                    <p>Details of loans...</p>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Loaned Instrument</th>
+                            <th>Loaned on</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="loan: ${memberLoans}"
+                            th:attr="data-itemName=${loan.item.nameTypeOrTitle},
+                                     data-make=${loan.item.makeOrComposer},
+                                     data-note=${loan.item.note},
+                                     data-memberFirstName=${loan.member.firstName},
+                                     data-memberLastName=${loan.member.lastName},
+                                     data-dateOfLoan=${loan.loanDate}">
+                            <td th:text="${loan.item.nameTypeOrTitle}"></td>
+                            <td th:text="${loan.loanDate}"></td>
+                            <td>
+                                <button class="btn btn-info"
+                                        th:href="@{/loanDetails(loanId=${loan.id})}"
+                                        data-toggle="modal"
+                                        data-target="#loanDetailsModal"
+                                        th:attr="data-itemName=${loan.item.nameTypeOrTitle},
+                                                 data-make=${loan.item.makeOrComposer},
+                                                 data-note=${loan.item.note},
+                                                 data-memberFirstName=${loan.member.firstName},
+                                                 data-memberLastName=${loan.member.lastName},
+                                                 data-dateOfLoan=${loan.loanDate}">Details</button>
+                            </td>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal fade" id="loanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="loanDetailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="loanDetailsModalLabel">Loan Item Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Instrument Name:</strong> <span th:text="${selectedLoan?.item?.nameTypeOrTitle}"></span></p>
+                                <p><strong>Make:</strong> <span th:text="${selectedLoan?.item?.makeOrComposer}"></span></p>
+                                <p><strong>Note:</strong> <span th:text="${selectedLoan?.item?.note}"></span></p>
+                                <p><strong>Loaned to:</strong> <span th:text="${selectedLoan?.member?.firstName} + ' ' + ${selectedLoan?.member?.lastName}"></span></p>
+                                <p><strong>Date of Loan:</strong> <span th:text="${selectedLoan?.loanDate}"></span></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
