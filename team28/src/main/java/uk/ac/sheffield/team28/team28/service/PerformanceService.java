@@ -42,6 +42,8 @@ public class PerformanceService {
         performanceRepository.save(performance);
     }
 
+    
+
     // Get all performances
     public List<Performance> getAllPerformances() {
         return performanceRepository.findAll();
