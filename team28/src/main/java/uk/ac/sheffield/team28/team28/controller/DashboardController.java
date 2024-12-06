@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.sheffield.team28.team28.dto.InstrumentDto;
+import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Instrument;
 import uk.ac.sheffield.team28.team28.model.Loan;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.repository.InstrumentRepository;
+import uk.ac.sheffield.team28.team28.service.ChildMemberService;
 import uk.ac.sheffield.team28.team28.service.InstrumentService;
 import uk.ac.sheffield.team28.team28.service.LoanService;
 import uk.ac.sheffield.team28.team28.service.MemberService;
@@ -30,6 +32,8 @@ public class DashboardController {
     private InstrumentRepository instrumentRepository;
     @Autowired
     private InstrumentService instrumentService;
+    @Autowired
+    private ChildMemberService childMemberService;
 
 
     @GetMapping("/dashboard")
@@ -38,7 +42,10 @@ public class DashboardController {
         Member member = memberService.findMember();
         model.addAttribute("member", member);
         model.addAttribute("memberType", member.getMemberType().toString());
-
+        List <ChildMember> children = childMemberService.getChildByParent(member);
+        int childNum = children.size();
+        model.addAttribute("childNum", childNum);
+        model.addAttribute("children",children);
         //If member is a committee member, get all instruments
         if (member.getMemberType() == MemberType.Committee){
 

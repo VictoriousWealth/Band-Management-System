@@ -1,62 +1,41 @@
 package uk.ac.sheffield.team28.team28.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+//import ch.qos.logback.core.model.Model;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
-import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.service.ChildMemberService;
-import uk.ac.sheffield.team28.team28.service.MemberService;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
-@Controller("/")
+
+@Controller()
+@RequestMapping("/child")
+
 public class ChildMemberController {
+    private final ChildMemberService childMemberService;
 
+    public ChildMemberController(ChildMemberService childMemberService) {
+        this.childMemberService = childMemberService;
 
-    @Autowired
-    MemberService memberService;
-    @Autowired
-    ChildMemberService childMemberService;
+    }
 
-    @GetMapping("/viewChildren")
-    public String viewChildren(Model model) {
-        Member currentMember = memberService.findMember();
-
-        model.addAttribute("memberType", currentMember.getMemberType().toString());
-        List<ChildMember> children = childMemberService.getChildByParent(currentMember);
-        model.addAttribute("children", children);
-        return "viewChildren";
+    @GetMapping("/dashboard/{childMemberId}")
+    public String childDashboard(Model model, @PathVariable Long childMemberId) {
+        // Handle the logic for displaying the child's dashboard
+        model.addAttribute("childMemberId", childMemberId);
+        return "childDashboard";
     }
 
 
-    @PostMapping("/addChild")
-    public String addChild(@ModelAttribute("childMember") ChildMember childMember, Model model) {
-        Member parentMember = memberService.findMember();
-
-        List<Exception> exceptions = childMemberService.addNewChild(
-                childMember.getFirstName(),
-                childMember.getLastName(),
-                parentMember.getId(),
-                childMember.getDateOfBirth()
-        );
-        if (exceptions.isEmpty()) {
-            return "redirect:/viewChildren";
-        } else {
-            model.addAttribute("exceptions", exceptions);
-            StringBuilder reportOfErrors = new StringBuilder("Invalid details submitted. Please try again!");
-            for (Exception exception : exceptions) {
-                reportOfErrors.append("\n").append(exception.getMessage());
-            }
-            model.addAttribute("errorMessage", reportOfErrors.toString());
-            model.addAttribute("memberType", parentMember.getMemberType().toString());
-            model.addAttribute("children", childMemberService.getChildByParent(parentMember));
-            return "viewChildren";
-        }
-
-
-    }
 }

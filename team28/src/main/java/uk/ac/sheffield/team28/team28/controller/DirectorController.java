@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -127,7 +129,7 @@ public class DirectorController {
             return "redirect:/director"; // Redirect to MEANINGFUL PAGE
         }
     }
-
+//Delete ------------------------------------------------------------------------------------------------------------------
     @GetMapping("/showMemberT/{memberId}")
     public String showMemberT(@PathVariable Long memberId, Model model) {
         //List<Member> committeeMembers = memberService.getCommitteeMembers();
@@ -139,7 +141,7 @@ public class DirectorController {
         return "memberDV";
 
     }
-
+//Delete
     @GetMapping("/showMemberS/{memberId}")
     public String showMemberS(@PathVariable Long memberId, Model model) {
         //List<Member> committeeMembers = memberService.getCommitteeMembers();
@@ -151,6 +153,7 @@ public class DirectorController {
         return "memberSB";
 
     }
+//Delete ------------------------------------------------------------------------------------------------------------------
 
     @PostMapping("/addToBandByEmail")
     public String addMemberToBandByEmail(@RequestParam String email, @RequestParam BandInPractice band) {
@@ -164,12 +167,13 @@ public class DirectorController {
 
 
             // Redirect back to the Training Band page
-            return "redirect:/director/trainingBand";
+            return "redirect:/director";
         } catch (Exception e) {
             e.printStackTrace(); // Log the error for debugging
-            return "redirect:/director/trainingBand?error=true"; // Redirect with an error flag
+            return "redirect:/director?error=true"; // Redirect with an error flag
         }
     }
+
 
 
     @PostMapping("/addChildToBandByName")
@@ -184,6 +188,16 @@ public class DirectorController {
             return "redirect:/director/trainingBand";
         } catch (Exception e) {
             e.printStackTrace(); // Log the error for debugging
+            return "redirect:/director/trainingBand?error=true"; // Redirect with an error flag
+        }
+    }
+
+    @PostMapping("/removeChildFromBand/{childMemberId}")
+    public String removeMemberFromBand(@PathVariable Long childMemberId) {
+        try {
+            ChildMember childMember = childMemberService.removeChildMemberFromBand(childMemberId);
+            return "redirect:/director/trainingBand";
+        } catch (Exception e) {
             return "redirect:/director/trainingBand?error=true"; // Redirect with an error flag
         }
     }

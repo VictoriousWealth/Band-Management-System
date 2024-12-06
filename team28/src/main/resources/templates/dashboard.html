@@ -7,21 +7,56 @@
                 content="width=device-width, initial-scale=1.0"
         />
         <title>Sludgate Brass Band</title>
-        <link
-                rel="stylesheet"
-                href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-        />
-        <link rel="stylesheet" th:href="@{/css/style.css}"/>
-        <link rel="stylesheet" th:href="@{/css/customContentWrapper.css}"/>
-        <link rel="stylesheet" th:href="@{/css/customBody.css}"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .content-wrapper {
+                padding-top: 60px;
+                flex: 1;
+                display: flex;
+                text-align: center;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+            }
+
+
+            .floating-buttons {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .floating-buttons button {
+                width: 150px;
+                height: 50px;
+            }
+
+                .modal-footer {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            #deleteButton {
+                margin-right: auto;
+            }
+
+        </style>
     </head>
     <body>
 
-    <div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
+    <div th:unless="${memberType.equals('Director')}">
         <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
-    </div>
-    <div th:if="${memberType.equals('Committee')}">
-        <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
     </div>
     <div th:if="${memberType.equals('Director')}">
         <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
@@ -40,14 +75,9 @@
                 <li class="nav-item">
                     <a class="nav-link" id="music-tab" data-toggle="tab" href="#music" role="tab" aria-controls="music" aria-selected="false">Music</a>
                 </li>
+                <li class="nav-item" th:if="${memberType.equals('Committee')}">
+                    <a class="nav-link" id="instrument-tab" data-toggle="tab" href="#instrument" role="tab" aria-controls="instrument" aria-selected="false">Instrument</a>
             </ul>
-
-            <!-- Buttons for Add Child, Child View, and Committee View -->
-            <div class="floating-buttons">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#addChildModal">Add Child</button>
-                <button class="btn btn-secondary" onclick="window.location.href='/childView';">Child View</button>
-                <button class="btn btn-info" onclick="window.location.href='/committeeView';">Committee View</button>
-            </div>
 
             <div class="tab-content mt-3" id="myTabContent">
                 <div class="tab-pane fade show active" id="performance" role="tabpanel" aria-labelledby="performance-tab">
@@ -58,61 +88,6 @@
                 <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
                     <h3>Loans</h3>
                     <p>Details of loans...</p>
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Loaned Instrument</th>
-                            <th>Loaned on</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="loan: ${memberLoans}"
-                            th:attr="data-itemName=${loan.item.nameTypeOrTitle},
-                                     data-make=${loan.item.makeOrComposer},
-                                     data-note=${loan.item.note},
-                                     data-memberFirstName=${loan.member.firstName},
-                                     data-memberLastName=${loan.member.lastName},
-                                     data-dateOfLoan=${loan.loanDate}">
-                            <td th:text="${loan.item.nameTypeOrTitle}"></td>
-                            <td th:text="${loan.loanDate}"></td>
-                            <td>
-                                <button class="btn btn-info"
-                                        th:href="@{/loanDetails(loanId=${loan.id})}"
-                                        data-toggle="modal"
-                                        data-target="#loanDetailsModal"
-                                        th:attr="data-itemName=${loan.item.nameTypeOrTitle},
-                                                 data-make=${loan.item.makeOrComposer},
-                                                 data-note=${loan.item.note},
-                                                 data-memberFirstName=${loan.member.firstName},
-                                                 data-memberLastName=${loan.member.lastName},
-                                                 data-dateOfLoan=${loan.loanDate}">Details</button>
-                            </td>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="modal fade" id="loanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="loanDetailsModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="loanDetailsModalLabel">Loan Item Details</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p><strong>Instrument Name:</strong> <span th:text="${selectedLoan?.item?.nameTypeOrTitle}"></span></p>
-                                <p><strong>Make:</strong> <span th:text="${selectedLoan?.item?.makeOrComposer}"></span></p>
-                                <p><strong>Note:</strong> <span th:text="${selectedLoan?.item?.note}"></span></p>
-                                <p><strong>Loaned to:</strong> <span th:text="${selectedLoan?.member?.firstName} + ' ' + ${selectedLoan?.member?.lastName}"></span></p>
-                                <p><strong>Date of Loan:</strong> <span th:text="${selectedLoan?.loanDate}"></span></p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
@@ -131,7 +106,6 @@
                             <th>In Storage</th>
                             <th>Note</th>
                             <th>Action</th>
-                            <th>Loan/Return</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -151,82 +125,12 @@
                                         th:attr="data-id=${instrument.id}"
                                         onclick="populateEditForm(this)"> Edit </button>
                             </td>
-                            <td>
-                                <button class="btn btn-primary"
-                                        th:if="${instrument.item.inStorage}"
-                                        data-toggle="modal"
-                                        data-target="#loanModal"
-                                        th:attr="data-id=${instrument.id}"
-                                        data-action="loan"
-                                        onclick="setAction(this)">Loan</button>
-                                <button class="btn btn-warning"
-                                        th:if="${!instrument.item.inStorage}"
-                                        data-toggle="modal"
-                                        data-target="#returnModal"
-                                        th:attr="data-id=${instrument.id}"
-                                        data-action="return"
-                                        onclick="setAction(this)">Return</button>
-                            </td>
                         </tr>
                         </tbody>
                     </table>
-
                     <!-- Button to add instruments to inventory -->
                     <button class="btn btn-primary" data-toggle="modal" data-target="#addInstrument">
                         Add Instrument</button>
-
-                    <!-- Loan modal -->
-                    <div class="modal fade" id="loanModal" tabindex="-1" role="dialog" aria-labelledby="loanModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="loanModalLabel">Loan Instrument</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form th:action="@{/loans/loanAction}" id="loanForm" method="post">
-                                    <div class="modal-body">
-                                        <input type="hidden" id="loanInstrumentId" name="instrumentId">
-                                        <input type="hidden" id="loanAction" name="action">
-                                        <div class="form-group">
-                                            <label for="memberName">Member Full Name:</label>
-                                            <input type="text" class="form-control" id="memberName" name="memberName" required>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Return Modal -->
-                    <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="returnModalLabel">Return Instrument</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form th:action="@{/loans/loanAction}" id="returnForm" method="post">
-                                    <div class="modal-body">
-                                        <input type="hidden" id="returnInstrumentId" name="instrumentId">
-                                        <input type="hidden" id="returnAction" name="action">
-                                        <p>Are you sure you want to return this instrument?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-warning">Return</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Type modal with form to add instrument-->
                     <div class="modal fade" id="addInstrument" tabindex="-1" role="dialog"
@@ -340,6 +244,38 @@
                     </div>
                 </div>
             </div>
+
+        </div>
+        <!-- Buttons for Add Child, Child View, and Committee View -->
+        <div class="floating-buttons">
+            <button
+                    class="btn btn-primary"
+                    data-toggle="modal"
+                    data-target="#addChildModal"
+                    th:if="${childNum < 2}">
+                Add Child
+            </button>
+            <button
+                    class="btn btn-secondary"
+                    th:onclick="'window.location.href=\'/child/dashboard/' + ${children[0].id} + '\';'"
+                    th:if="${childNum == 1}">
+                Child View
+            </button>
+
+            <button
+                    class="btn btn-secondary"
+                    data-toggle="modal"
+                    data-target="#selectChildModal"
+                    th:if="${childNum == 2}">
+                Child View
+            </button>
+
+            <button
+                    class="btn btn-info"
+                    onclick="window.location.href='/committeeView';"
+                    th:if="${memberType.equals('Committee')}">
+                Committee View
+            </button>
         </div>
 
         <!-- Add Child Modal -->
@@ -371,14 +307,40 @@
                 </div>
             </div>
         </div>
+    <!--Choose child modal-->
+        <div class="modal fade" id="selectChildModal" tabindex="-1" role="dialog" aria-labelledby="selectChildModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="selectChildModalLabel">Select a Child</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Select which child's view you want to see:</p>
+                        <ul>
+                            <li th:each="child : ${children}">
+                                <a th:href="@{/child/dashboard/{childMemberId}(childMemberId=${child.id})}" class="btn btn-link">
+                                    <span th:text="${child.firstName}"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <div th:replace="~{fragments/footer :: footer}"></div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script th:src="@{js/editInstrument.js}"></script>
-        <script th:src="@{js/confirmDelete.js}"></script>
-        <script th:src="@{js/dashboardLoan.js}"></script>
+    <footer>
+            <div th:replace="~{fragments/footer :: footer}"></div>
+
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <script th:src="@{js/editInstrument.js}"></script>
+            <script th:src="@{js/confirmDelete.js}"></script>
+        </footer>
+
 
     </body>
 </html>
