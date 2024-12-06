@@ -128,9 +128,63 @@
                         </tr>
                         </tbody>
                     </table>
+
                     <!-- Button to add instruments to inventory -->
                     <button class="btn btn-primary" data-toggle="modal" data-target="#addInstrument">
                         Add Instrument</button>
+
+                    <!-- Loan pop up form -->
+                    <div class="modal fade" id="loanModal" tabindex="-1" role="dialog" aria-labelledby="loanModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="loanModalLabel">Loan Instrument</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form th:action="@{/loans/loanAction}" id="loanForm" method="post">
+                                    <div class="modal-body">
+                                        <input type="hidden" id="loanInstrumentId" name="instrumentId">
+                                        <input type="hidden" id="loanAction" name="action">
+                                        <div class="form-group">
+                                            <label for="memberName">Member Full Name:</label>
+                                            <input type="text" class="form-control" id="memberName" name="memberName" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Return pop up form -->
+                    <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="returnModalLabel">Return Instrument</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form th:action="@{/loans/loanAction}" id="returnForm" method="post">
+                                    <div class="modal-body">
+                                        <input type="hidden" id="returnInstrumentId" name="instrumentId">
+                                        <input type="hidden" id="returnAction" name="action">
+                                        <p>Are you sure you want to return this instrument?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-warning">Return</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Type modal with form to add instrument-->
                     <div class="modal fade" id="addInstrument" tabindex="-1" role="dialog"
