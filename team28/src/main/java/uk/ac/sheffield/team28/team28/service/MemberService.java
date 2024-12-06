@@ -62,7 +62,7 @@ public class MemberService {
         Member member = new Member();
         member.setEmail(dto.getEmail());
         member.setPassword(hashedPassword);
-        member.setMemberType(MemberType.Adult);
+        member.setMemberType(MemberType.ADULT);
         member.setPhone(dto.getPhone());
         member.setFirstName(dto.getFirstName());
         member.setLastName(dto.getLastName());
@@ -146,7 +146,7 @@ public class MemberService {
     }
 
     public List<Member> getCommitteeMembers() {
-        return memberRepository.findByMemberType(MemberType.Adult); //Currently set to ADULT since no committee
+        return memberRepository.findByMemberType(MemberType.ADULT); //Currently set to ADULT since no committee
     }
 
     public boolean authorise(Long memberId, String password) throws Exception {

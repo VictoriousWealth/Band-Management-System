@@ -20,7 +20,7 @@ public class Member {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "member_type", nullable = false)
-    private MemberType memberType = MemberType.Adult;
+    private MemberType memberType = MemberType.ADULT;
 
     @Column(name = "band")
     private BandInPractice band;
@@ -43,7 +43,7 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.memberType = memberType != null ? memberType : MemberType.Adult;
+        this.memberType = memberType != null ? memberType : MemberType.ADULT;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -52,8 +52,11 @@ public class Member {
     }
 
     public Member(Long id, String email, String password, String phone, String firstName, String lastName) {
+        this(id, email, password,  MemberType.ADULT, phone, firstName, lastName);
+    }
 
-        this(id, email, password,  MemberType.Adult, phone, firstName, lastName);
+    public boolean isCommitteeMember() {
+        return this.memberType == MemberType.COMMITTEE;
     }
 
     public Long getId() {

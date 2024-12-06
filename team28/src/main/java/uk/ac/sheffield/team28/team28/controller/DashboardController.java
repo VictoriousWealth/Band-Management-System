@@ -35,7 +35,7 @@ public class DashboardController {
         model.addAttribute("memberType", member.getMemberType().toString());
 
         //If member is a committee member, get all instruments
-        if (member.getMemberType() == MemberType.Committee){
+        if (member.getMemberType() == MemberType.COMMITTEE){
 
             List<Instrument> instruments = instrumentRepository.findAll();
             model.addAttribute("instruments", instruments);
