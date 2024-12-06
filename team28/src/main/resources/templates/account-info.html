@@ -33,10 +33,14 @@
     <div id="viewDetails">
         <h1>Account Information</h1>
 
-        <strong><ul><li th:if="${hasBeenRequested==true}">Successfully has been requested won't show until the director approves your request and you click to proceed on your request tab</li></ul></strong>
+        <div th:if="${hasBeenRequested==true}" class="alert alert-success mt-3">Your request to change your credentials has been successfully been sent to the director</div>
 
-        <strong><ul><li th:if="${success != null && success==true}">Successfully has been updated</li></ul></strong>
-        <strong><ul><li th:if="${success != null && success==false}">Partially has been updated</li></ul></strong>
+        <div th:if="${success != null && success==true}" class="alert alert-success mt-3">Successfully has been updated</div>
+        <div th:if="${success != null && success==false}" class="alert alert-danger mt-3">Partially has been updated</div>
+        <div th:if="${errors != null}">
+            <div th:each="error : ${errors}" class="alert alert-danger mt-3" th:text="${error}"></div>
+        </div>
+
 
         <p><strong>Email:</strong> <span th:text="${member.email}"></span></p>
         <p><strong>First Name:</strong> <span th:text="${member.firstName}"></span></p>

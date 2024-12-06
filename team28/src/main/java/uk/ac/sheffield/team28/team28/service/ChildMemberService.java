@@ -115,7 +115,7 @@ public class ChildMemberService {
             exceptions.add(new IllegalArgumentException("Date of birth cannot be in the future!"));
         }
 
-        if (dateOfBirth != null && dateOfBirth.minusDays(1).isAfter(LocalDate.now().minusYears(4))) {
+        if (dateOfBirth != null && dateOfBirth.minusDays(1).isBefore(LocalDate.now().minusYears(4))) {
             exceptions.add(new IllegalArgumentException("Child must be 4 years or older!"));
         }
         if (dateOfBirth != null && Period.between(dateOfBirth, LocalDate.now()).getYears() >= 18) {

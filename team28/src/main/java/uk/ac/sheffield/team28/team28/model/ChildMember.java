@@ -91,7 +91,7 @@ public class ChildMember {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public int getAge() {
+    public int calculateAge() {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
 }

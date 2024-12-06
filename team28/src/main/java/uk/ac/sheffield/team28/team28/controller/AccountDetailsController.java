@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.model.Request;
 import uk.ac.sheffield.team28.team28.service.MemberService;
@@ -46,21 +47,36 @@ public class AccountDetailsController {
             return "redirect:/authorise";
         }
 
+        // checking if desiredMember is valid
+        List<String> errors = new ArrayList<>();
+        if (desiredUpdatedMember.getFirstName() == null || desiredUpdatedMember.getFirstName().isBlank()) {
+            desiredUpdatedMember.setFirstName(oldMember.getFirstName());
+            errors.add("First name cannot be blank.");
+        }
+        if (desiredUpdatedMember.getLastName()==null || desiredUpdatedMember.getLastName().isBlank()) {
+            desiredUpdatedMember.setLastName(oldMember.getLastName());
+            errors.add("Last name cannot be blank.");
+        }
+        if (desiredUpdatedMember.getEmail()==null || desiredUpdatedMember.getEmail().isBlank()) {
+            desiredUpdatedMember.setEmail(oldMember.getEmail());
+            errors.add("Email cannot be blank.");
+        }
+        if (desiredUpdatedMember.getPhone()==null || desiredUpdatedMember.getPhone().isBlank()) {
+            desiredUpdatedMember.setPhone(oldMember.getPhone());
+            errors.add("Phone cannot be blank.");
+        }
+        if (!errors.isEmpty()) {
+            model.addAttribute("errors", errors);
+            session.removeAttribute("isAuthorised");
+            return "account-info";
+        }
+
         String description = getString(desiredUpdatedMember, oldMember);
-        boolean requestAdded = requestService.addRequest(new Request(oldMember, false, description));
+        requestService.addRequest(new Request(oldMember, false, description));
 
         session.removeAttribute("isAuthorised");
-        if (requestAdded) {
-
-            model.addAttribute("hasBeenRequested", true);
-            System.out.println("===================================");
-            System.out.println("HasBeenRequested: "+model.getAttribute("hasBeenRequested"));
-            System.out.println("===================================");
-            return "account-info";
-        } else {
-            model.addAttribute("hasBeenRequested", false);
-            return "redirect:/account-info";
-        }
+        model.addAttribute("hasBeenRequested", true);
+        return "account-info";
     }
 
 
