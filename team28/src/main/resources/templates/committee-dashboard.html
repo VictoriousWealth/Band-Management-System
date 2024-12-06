@@ -1,372 +1,183 @@
 <!DOCTYPE html>
-<html
-  lang="en"
-  xmlns:th="http://www.thymeleaf.org"
->
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Committee Dashboard</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-      }
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
 
-      body {
-        background-color: #f7f7f7;
-      }
+        body {
+            background-color: #f7f7f7;
+        }
 
-      .content-wrapper {
-        flex: 1;
-        padding: 20px 0;
-      }
+        .content-wrapper {
+            flex: 1;
+            padding: 20px 0;
+        }
 
-      .tab-content {
-        margin-top: 20px;
-      }
+        .tab-content {
+            margin-top: 20px;
+        }
 
-      .modal-header {
-        background-color: #007bff;
-        color: white;
-      }
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
 
-      .footer {
-        background-color: #343a40;
-        color: white;
-        padding: 10px 0;
-        text-align: center;
-      }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <!-- Navbar -->
     <div th:replace="~{fragments/navbarforloggedinusers}"></div>
 
     <!-- Content Wrapper -->
     <div class="content-wrapper container mt-5">
-      <h1>Committee Dashboard</h1>
-      <p>Manage your committee tasks here.</p>
+        <h1>Committee Dashboard</h1>
+        <p>Manage your committee tasks here.</p>
 
-      <!-- Tabs navigation -->
-      <ul
-        class="nav nav-tabs"
-        id="committeeTabs"
-        role="tablist"
-      >
-        <li class="nav-item">
-          <a
-            class="nav-link active"
-            id="performance-tab"
-            data-toggle="tab"
-            href="#performance"
-            role="tab"
-            aria-controls="performance"
-            aria-selected="true"
-            >Performance Schedule</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            id="items-tab"
-            data-toggle="tab"
-            href="#items"
-            role="tab"
-            aria-controls="items"
-            aria-selected="false"
-            >Items</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            id="music-tab"
-            data-toggle="tab"
-            href="#music"
-            role="tab"
-            aria-controls="music"
-            aria-selected="false"
-            >Music</a
-          >
-        </li>
-      </ul>
+        <!-- Tabs navigation -->
+        <ul class="nav nav-tabs" id="committeeTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="true">Performance Schedule</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="items-tab" data-toggle="tab" href="#items" role="tab" aria-controls="items" aria-selected="false">Items</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="music-tab" data-toggle="tab" href="#music" role="tab" aria-controls="music" aria-selected="false">Music</a>
+            </li>
+        </ul>
 
-      <!-- Tabs content -->
-      <div class="tab-content">
-        <!-- Performance Schedule Tab -->
-        <div
-          class="tab-pane fade show active"
-          id="performance"
-          role="tabpanel"
-          aria-labelledby="performance-tab"
-        >
-          <h3>Performance Schedule</h3>
-          <button
-            class="btn btn-primary mb-3"
-            onclick="showCreatePerformanceForm()"
-          >
-            Create Performance
-          </button>
-          <table
-            class="table table-striped"
-            id="performanceTable"
-          >
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Venue</th>
-                <th>Date and Time</th>
-                <th>Band</th>
-                <th>Playlist</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Rows will be dynamically added here -->
-            </tbody>
-          </table>
+        <!-- Tabs content -->
+        <div class="tab-content">
+            <!-- Performance Schedule Tab -->
+            <div class="tab-pane fade show active" id="performance" role="tabpanel" aria-labelledby="performance-tab">
+                <h3>Performance Schedule</h3>
+                <button class="btn btn-primary mb-3" onclick="showCreatePerformanceForm()">Create Performance</button>
+                <table class="table table-striped" id="performanceTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Venue</th>
+                            <th>Date and Time</th>
+                            <th>Band</th>
+                            <th>Playlist</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be dynamically added here -->
+                    </tbody>
+                </table>
 
-          <!-- Modal for Player Details -->
-          <div
-            class="modal fade"
-            id="performanceModal"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="performanceModalLabel"
-            aria-hidden="true"
-          >
-            <div
-              class="modal-dialog"
-              role="document"
-            >
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5
-                    class="modal-title"
-                    id="performanceModalLabel"
-                  >
-                    Players
-                  </h5>
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                  >
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+                <!-- Modal for Player Details -->
+                <div class="modal fade" id="performanceModal" tabindex="-1" role="dialog" aria-labelledby="performanceModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="performanceModalLabel">Players</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <ul id="playerList" class="list-group"></ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                  <ul
-                    id="playerList"
-                    class="list-group"
-                  ></ul>
+
+                <!-- Create Performance Form -->
+                <div id="createPerformanceForm" class="card p-3 mt-3" style="display: none;">
+                    <h5>Create New Performance</h5>
+                    <form id="performanceForm">
+                        <div class="form-group">
+                            <label for="name">Performance Name</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="venue">Venue</label>
+                            <input type="text" id="venue" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateTime">Date and Time</label>
+                            <input type="datetime-local" id="dateTime" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Band</label><br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="band" id="bandA" value="Training">
+                                <label class="form-check-label" for="Training">Training Band</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="band" id="bandB" value="Senior">
+                                <label class="form-check-label" for="bandB">Senior Bank</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="band" id="bothBands" value="Both">
+                                <label class="form-check-label" for="bothBands">Both Bands</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="playlist">Select Music for Playlist</label>
+                            <select id="playlist" name="playlist" class="form-control" multiple>
+                                <!-- Dynamically populate music options -->
+                                <option value="1">Song A</option>
+                                <option value="2">Song B</option>
+                                <option value="3">Song C</option>
+                            </select>
+                            <small class="form-text text-muted">Hold Ctrl (Windows) or Command (Mac) to select multiple items.</small>
+                        </div>
+                        <button type="button" class="btn btn-success" onclick="submitPerformance()">Save Performance</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideCreatePerformanceForm()">Cancel</button>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
             </div>
-          </div>
 
-          <!-- Create Performance Form -->
-          <div
-            id="createPerformanceForm"
-            class="card p-3 mt-3"
-            style="display: none"
-          >
-            <h5>Create New Performance</h5>
-            <form id="performanceForm">
-              <div class="form-group">
-                <label for="name">Performance Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="venue">Venue</label>
-                <input
-                  type="text"
-                  id="venue"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="dateTime">Date and Time</label>
-                <input
-                  type="datetime-local"
-                  id="dateTime"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label>Band</label><br />
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="band"
-                    id="bandA"
-                    value="Training"
-                  />
-                  <label
-                    class="form-check-label"
-                    for="Training"
-                    >Training Band</label
-                  >
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="band"
-                    id="bandB"
-                    value="Senior"
-                  />
-                  <label
-                    class="form-check-label"
-                    for="bandB"
-                    >Senior Bank</label
-                  >
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="band"
-                    id="bothBands"
-                    value="Both"
-                  />
-                  <label
-                    class="form-check-label"
-                    for="bothBands"
-                    >Both Bands</label
-                  >
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="playlist">Select Music for Playlist</label>
-                <select
-                  id="playlist"
-                  name="playlist"
-                  class="form-control"
-                  multiple
-                >
-                  <!-- Dynamically populate music options -->
-                  <option value="1">Song A</option>
-                  <option value="2">Song B</option>
-                  <option value="3">Song C</option>
-                </select>
-                <small class="form-text text-muted"
-                  >Hold Ctrl (Windows) or Command (Mac) to select multiple
-                  items.</small
-                >
-              </div>
-              <button
-                type="button"
-                class="btn btn-success"
-                onclick="submitPerformance()"
-              >
-                Save Performance
-              </button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                onclick="hideCreatePerformanceForm()"
-              >
-                Cancel
-              </button>
-            </form>
-          </div>
-        </div>
+            <!-- Items Tab -->
+            <div class="tab-pane fade" id="items" role="tabpanel" aria-labelledby="items-tab">
+                <h3>Items</h3>
+                <ul id="itemsList" class="list-group">
+                    <li class="list-group-item">
+                        Sample Item
+                        <button class="btn btn-sm btn-secondary float-right" onclick="toggleLoanStatus('Sample Item')">Loan/Return</button>
+                    </li>
+                </ul>
+            </div>
 
-        <!-- Items Tab -->
-        <div
-          class="tab-pane fade"
-          id="items"
-          role="tabpanel"
-          aria-labelledby="items-tab"
-        >
-          <h3>Items</h3>
-          <ul
-            id="itemsList"
-            class="list-group"
-          >
-            <li class="list-group-item">
-              Sample Item
-              <button
-                class="btn btn-sm btn-secondary float-right"
-                onclick="toggleLoanStatus('Sample Item')"
-              >
-                Loan/Return
-              </button>
-            </li>
-          </ul>
+            <!-- Music Tab -->
+            <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
+                <h3>Music</h3>
+                <ul id="musicList" class="list-group">
+                    <li class="list-group-item">
+                        Sample Music
+                        <button class="btn btn-sm btn-success float-right" onclick="markAsInPractice('Sample Music')">Put into Practice</button>
+                        <button class="btn btn-sm btn-warning float-right mr-2" onclick="markAsInStorage('Sample Music')">Return to Storage</button>
+                    </li>
+                </ul>
+                <button class="btn btn-primary mt-3" onclick="viewOutstandingOrders()">Outstanding Orders</button>
+            </div>
         </div>
-
-        <!-- Music Tab -->
-        <div
-          class="tab-pane fade"
-          id="music"
-          role="tabpanel"
-          aria-labelledby="music-tab"
-        >
-          <h3>Music</h3>
-          <ul
-            id="musicList"
-            class="list-group"
-          >
-            <li class="list-group-item">
-              Sample Music
-              <button
-                class="btn btn-sm btn-success float-right"
-                onclick="markAsInPractice('Sample Music')"
-              >
-                Put into Practice
-              </button>
-              <button
-                class="btn btn-sm btn-warning float-right mr-2"
-                onclick="markAsInStorage('Sample Music')"
-              >
-                Return to Storage
-              </button>
-            </li>
-          </ul>
-          <button
-            class="btn btn-primary mt-3"
-            onclick="viewOutstandingOrders()"
-          >
-            Outstanding Orders
-          </button>
-        </div>
-      </div>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-      &copy; 2024 Sludgate Brass Bandss. All Rights Reserved.
+        &copy; 2024 Sludgate Brass Bandss. All Rights Reserved.
     </div>
 
     <!-- Bootstrap JS, Popper.js, and jQuery -->
@@ -376,126 +187,113 @@
 
     <!-- Custom Scripts -->
     <script>
-      function showCreatePerformanceForm() {
-        document.getElementById("createPerformanceForm").style.display =
-          "block";
-      }
-
-      function hideCreatePerformanceForm() {
-        document.getElementById("createPerformanceForm").style.display = "none";
-      }
-
-      function submitPerformance() {
-        const name = document.getElementById("name").value;
-        const venue = document.getElementById("venue").value;
-        const dateTime = document.getElementById("dateTime").value;
-        const band = document.querySelector(
-          'input[name="band"]:checked'
-        )?.value;
-        const playlist = Array.from(
-          document.getElementById("playlist").selectedOptions
-        ).map((option) => option.value);
-
-        if (!name || !venue || !dateTime || !band) {
-          alert("Please fill all fields.");
-          return;
+        function showCreatePerformanceForm() {
+            document.getElementById('createPerformanceForm').style.display = 'block';
         }
 
-        // Submit the performance data to the backend
-        fetch("/performances", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name, venue, dateTime, band, playlist }),
-        })
-          .then((response) => {
-            if (response.ok) {
-              alert("Performance created successfully!");
-              hideCreatePerformanceForm();
-              // Refresh the list
-            } else {
-              alert("Failed to create performance.");
+        function hideCreatePerformanceForm() {
+            document.getElementById('createPerformanceForm').style.display = 'none';
+        }
+
+        function submitPerformance() {
+            const name = document.getElementById('name').value;
+            const venue = document.getElementById('venue').value;
+            const dateTime = document.getElementById('dateTime').value;
+            const band = document.querySelector('input[name="band"]:checked')?.value;
+            const playlist = Array.from(document.getElementById('playlist').selectedOptions).map(option => option.value);
+
+            if (!name || !venue || !dateTime || !band) {
+                alert('Please fill all fields.');
+                return;
             }
-          })
-          .catch((error) => console.error("Error:", error));
-      }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        fetch("/performances")
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Parsed data:", data);
-            const performanceTableBody = document.querySelector(
-              "#performanceTable tbody"
-            );
-            performanceTableBody.innerHTML = ""; // Clear any existing items
+            // Submit the performance data to the backend
+            fetch('/performances', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, venue, dateTime, band, playlist })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Performance created successfully!');
+                    hideCreatePerformanceForm();
+                    // Refresh the list
+                } else {
+                    alert('Failed to create performance.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
 
-            if (data.length === 0) {
-              // Show a message if there are no performances
-              const li = document.createElement("li");
-              li.className = "list-group-item";
-              li.textContent = "No performances available.";
-              performanceList.appendChild(li);
-            } else {
-              // Populate the list with performances
-              data.forEach((performance) => {
-                const row = document.createElement("tr");
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/performances')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Parsed data:', data);
+                    const performanceTableBody = document.querySelector('#performanceTable tbody');
+                    performanceTableBody.innerHTML = ''; // Clear any existing items
 
-                // Format date and time
-                const date = new Date(performance.dateTime);
-                const formattedDate = date.toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                });
-                const formattedTime = date.toLocaleTimeString("en-US", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                });
+                    if (data.length === 0) {
+                        // Show a message if there are no performances
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.textContent = 'No performances available.';
+                        performanceList.appendChild(li);
+                    } else {
+                        // Populate the list with performances
+                        data.forEach(performance => {
+                            const row = document.createElement('tr');
 
-                row.innerHTML = `
+                            // Format date and time
+                            const date = new Date(performance.dateTime);
+                            const formattedDate = date.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                            });
+                            const formattedTime = date.toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true,
+                            });
+
+                            row.innerHTML = `
                                 <td>${performance.name}</td>
                                 <td>${performance.venue}</td>
                                 <td>${formattedDate}, ${formattedTime}</td>
                                 <td>${performance.band}</td>
-                                <td>${
-                                  performance.playlist &&
-                                  performance.playlist.length > 0
-                                    ? performance.playlist.join(", ")
-                                    : "No playlist"
-                                }</td>
+                                <td>${performance.playlist && performance.playlist.length > 0 ? performance.playlist.join(', ') : 'No playlist'}</td>
                             `;
-                performanceTableBody.appendChild(row);
-              });
-            }
-          })
-          .catch((error) =>
-            console.error("Error fetching performances:", error)
-          );
-      });
+                            row.addEventListener('click', () => {
+                            viewPerformanceDetails(performance.id);
+                            });
+                            performanceTableBody.appendChild(row);
+                            });
+                    }
+                })
+                .catch(error => console.error('Error fetching performances:', error));
+        });
 
-      function viewPerformanceDetails(performanceId) {
-        fetch(`/performances/${performanceId}/players`)
-          .then((response) => response.json())
-          .then((players) => {
-            const playerList = document.getElementById("playerList");
-            playerList.innerHTML = "";
+        function viewPerformanceDetails(performanceId) {
+            fetch(`/performances/${performanceId}/players`)
+                .then(response => response.json())
+                .then(players => {
+                    const playerList = document.getElementById('playerList');
+                    playerList.innerHTML = '';
 
-            players.forEach((player) => {
-              const li = document.createElement("li");
-              li.className = "list-group-item";
-              li.textContent = player.name;
-              playerList.appendChild(li);
-            });
+                    players.forEach(player => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.textContent = player.name;
+                        playerList.appendChild(li);
+                    });
 
-            $("#performanceModal").modal("show");
-          })
-          .catch((error) =>
-            console.error("Error fetching performance details:", error)
-          );
-      }
+                    $('#performanceModal').modal('show');
+                })
+                .catch(error => console.error('Error fetching performance details:', error));
+        }
     </script>
-  </body>
+</body>
 </html>
