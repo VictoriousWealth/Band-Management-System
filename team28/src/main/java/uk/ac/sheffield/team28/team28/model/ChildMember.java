@@ -20,7 +20,7 @@ public class ChildMember {
     private BandInPractice band = BandInPractice.None;
 
     @ManyToOne
-    @JoinColumn(name = "parent", nullable = false)
+    @JoinColumn(name = "parent_id", nullable = false)
     private Member parent;
 
     public ChildMember(){}

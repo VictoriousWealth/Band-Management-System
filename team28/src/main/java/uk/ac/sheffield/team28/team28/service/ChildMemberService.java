@@ -90,4 +90,8 @@ public class ChildMemberService {
         childMemberRepository.save(childMember);
         return childMember;
     }
+
+    public void save(ChildMember childMember) {
+        childMemberRepository.save(childMember);
+    }
 }

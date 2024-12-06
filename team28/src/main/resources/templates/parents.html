@@ -17,19 +17,15 @@
                 <th>Parent Name</th>
                 <th>Email</th>
                 <th>Child 1 Name</th>
-                <th>Child 1 Email</th>
                 <th>Child 2 Name</th>
-                <th>Child 2 Email</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="entry : ${parentsWithChildren}">
-                <td th:text="${entry.key.firstName} + ' ' + ${entry.key.lastName}">Parent Name</td>
+                <td th:text="${entry.key.firstName} + ' ' + ${entry.key.lastName}">(Parent Name)</td>
                 <td th:text="${entry.key.email}">Email</td>
                 <td th:text="${entry.value.size() > 0 ? entry.value.get(0).firstName + ' ' + entry.value.get(0).lastName : 'N/A'}">Child 1 Name</td>
-                <td th:text="${entry.value.size() > 0 ? entry.value.get(0).email : 'N/A'}">Child 1 Email</td>
                 <td th:text="${entry.value.size() > 1 ? entry.value.get(1).firstName + ' ' + entry.value.get(1).lastName : 'N/A'}">Child 2 Name</td>
-                <td th:text="${entry.value.size() > 1 ? entry.value.get(1).email : 'N/A'}">Child 2 Email</td>
             </tr>
             </tbody>
         </table>

@@ -11,10 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
+import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
+import uk.ac.sheffield.team28.team28.service.ChildMemberService;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 import uk.ac.sheffield.team28.team28.model.Member;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,10 +27,13 @@ import java.util.Objects;
 
 public class MemberController {
     private final MemberService memberService;
+    private final ChildMemberService childMemberService;
     private final static Logger logger = LoggerFactory.getLogger(MemberController.class);
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, ChildMemberService childMemberService) {
         this.memberService = memberService;
+        this.childMemberService = childMemberService;
+
     }
 
     @PostMapping("/{memberId}/addToBand")
@@ -86,5 +92,38 @@ public class MemberController {
             return "authorise"; // Reload the page with the error
         }
     }
+
+    @PostMapping("/addChild")
+    public String addChild(@RequestParam String firstName,
+                           @RequestParam String lastName,
+                           Model model) {
+        try {
+            Member parent = memberService.findMember();
+
+            System.out.println("The member's id is: "+ parent.getFirstName());
+            System.out.println("Parent: " + parent);
+            System.out.println("Parent ID: " + parent.getId());
+            System.out.println("Parent First Name: " + parent.getFirstName());
+            // Create and save the new child
+            ChildMember child = new ChildMember();
+            String formattedFirstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
+            String formattedLastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
+
+            child.setFirstName(formattedFirstName);
+            child.setLastName(formattedLastName);
+            child.setParent(parent);
+            childMemberService.save(child);
+            return "redirect:/dashboard";
+
+        } catch (Exception e) {
+            Member parent = memberService.findMember();
+
+            e.printStackTrace();
+                model.addAttribute("error", "An error occurred: " + e.getMessage());
+                return "error"; // Return an error page if something goes wrong
+            }
+
+    }
+
 
 }

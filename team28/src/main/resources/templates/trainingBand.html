@@ -43,9 +43,11 @@
             <td th:text="${member.firstName} + ' ' + ${member.lastName}">Name</td>
             <td th:text="${member.email}">Email</td>
             <td th:text="${member.phone}">Phone</td>
+            <td th:text="${member.band}">Band</td>
             <td>
-                <a th:href="@{/director/showMemberT/{memberId}(memberId=${member.id})}"
-                   th:text="${member.band}">Band</a>
+                <form th:action="@{/director/removeFromBand/{memberId}/{oldBand}(memberId=${member.id}, oldBand='Training')}" method="post">
+                    <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                </form>
             </td>
         </tr>
         </tbody>
@@ -74,6 +76,11 @@
         <tr th:each="child : ${childTrainingBandMembers}">
             <td th:text="${child.firstName} + ' ' + ${child.lastName}">Name</td>
             <td th:text="${child.band}">Band</td>
+            <td>
+                <form th:action="@{/director/removeChildFromBand/{memberId}(memberId=${child.id})}" method="post">
+                    <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>

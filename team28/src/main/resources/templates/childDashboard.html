@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    />
+    <title>Sludgate Brass Band</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            padding-top: 60px;
+            flex: 1;
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+
+        .floating-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .floating-buttons button {
+            width: 150px;
+            height: 50px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #deleteButton {
+            margin-right: auto;
+        }
+
+    </style>
+</head>
+<body>
+
+<div>
+    <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+</div>
+
+
+
+<div class="content-wrapper">
+    <h2>Dashboard</h2>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="true">Performance Schedule</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="loans-tab" data-toggle="tab" href="#loans" role="tab" aria-controls="loans" aria-selected="false">Loans</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="music-tab" data-toggle="tab" href="#music" role="tab" aria-controls="music" aria-selected="false">Music</a>
+        </li>
+    </ul>
+</div>
+    <div class="tab-content mt-3" id="myTabContent">
+        <div class="tab-pane fade show active" id="performance" role="tabpanel" aria-labelledby="performance-tab">
+            <h3>Performance Schedule</h3>
+            <p>Details of upcoming performances...</p>
+        </div>
+
+        <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
+            <h3>Loans</h3>
+            <p>Details of loans...</p>
+        </div>
+
+        <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
+            <h3>Music</h3>
+            <p>Details of available music pieces...</p>
+        </div>
+    </div>
+
+
+<!-- Buttons for Add Child, Child View, and Committee View -->
+<div class="floating-buttons">
+    <a
+            class="btn btn-secondary"
+            th:href="@{/dashboard}">
+        Return to parent view
+    </a>
+</div>
+
+<footer>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script th:src="@{js/editInstrument.js}"></script>
+    <script th:src="@{js/confirmDelete.js}"></script>
+</footer>
+
+
+</body>
+</html>
