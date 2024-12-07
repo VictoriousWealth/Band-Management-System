@@ -65,6 +65,7 @@ public class DashboardController {
             //Get all orders
             List<Order> orders = orderRepository.findByItemTypeAndNotFulfilled(ItemType.Music);
             model.addAttribute("musicOrders", orders);
+            model.addAttribute("orderService", orderService);
 
         } else if (member.getMemberType() == MemberType.Adult){
 

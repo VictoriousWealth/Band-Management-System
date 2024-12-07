@@ -89,7 +89,7 @@
                         <button class="btn btn-primary" data-toggle="modal" data-target="#addMusic">
                             Add Music</button>
                         <button class="btn btn-primary" data-toggle="modal" data-target="#viewOrders">
-                            Add Music</button>
+                            View Orders</button>
                     </span>
 
                     <!-- Button to request music if you are a normal member -->
@@ -319,7 +319,7 @@
                     </div>
                     <form th:action="@{/orders/changeOrderStatus}" method="post">
                         <!-- Table that shows all music orders that are not fulfilled -->
-                        <table id="orderTable">
+                        <table id="orderTable" class="table table-bordered">
                             <thead>
                             <tr>
                                 <th>Select</th>
@@ -336,7 +336,7 @@
                                     </td>
                                     <td th:text="${musicOrder.item.nameTypeOrTitle}"></td>
                                     <td th:text="${musicOrder.item.makeOrComposer}"></td>
-                                    <td></td>
+                                    <td th:text="${orderService.getArrangerForOrder(musicOrder.id)}"></td>
                                     <td th:text="${musicOrder.note}"></td>
                                 </tr>
                             </tbody>
