@@ -15,8 +15,8 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/{orderId}/changeOrderStatus")
-    public ResponseEntity<Order> changeOrderStatus(@PathVariable Long orderId) {
+    @PostMapping("/changeOrderStatus")
+    public ResponseEntity<Order> changeOrderStatus(@RequestParam("orderId") Long orderId) {
         try {
             orderService.changeOrderStatus(orderId);
             return ResponseEntity.ok(null);
