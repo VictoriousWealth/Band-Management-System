@@ -96,26 +96,20 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="loan: ${memberLoans}"
-                            th:attr="data-itemName=${loan.item.nameTypeOrTitle},
-                                     data-make=${loan.item.makeOrComposer},
-                                     data-note=${loan.item.note},
-                                     data-memberFirstName=${loan.member.firstName},
-                                     data-memberLastName=${loan.member.lastName},
-                                     data-dateOfLoan=${loan.loanDate}">
+                        <tr th:each="loan: ${memberLoans}">
                             <td th:text="${loan.item.nameTypeOrTitle}"></td>
                             <td th:text="${loan.loanDate}"></td>
                             <td>
                                 <button class="btn btn-info"
-                                        th:href="@{/loanDetails(loanId=${loan.id})}"
+                                        th:data-itemName="${loan.item.nameTypeOrTitle}"
+                                        th:data-make="${loan.item.makeOrComposer}"
+                                        th:data-note="${loan.item.note}"
+                                        th:data-loanDate="${loan.loanDate}"
+                                        th:data-memberFirstName="${loan.member.firstName}"
+                                        th:data-memberLastName="${loan.member.lastName}"
+                                        onclick="showLoanDetails(this)"
                                         data-toggle="modal"
-                                        data-target="#loanDetailsModal"
-                                        th:attr="data-itemName=${loan.item.nameTypeOrTitle},
-                                                 data-make=${loan.item.makeOrComposer},
-                                                 data-note=${loan.item.note},
-                                                 data-memberFirstName=${loan.member.firstName},
-                                                 data-memberLastName=${loan.member.lastName},
-                                                 data-dateOfLoan=${loan.loanDate}">Details</button>
+                                        data-target="#loanDetailsModal">Details</button>
                             </td>
                         </tbody>
                     </table>
@@ -131,11 +125,11 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p><strong>Instrument Name:</strong> <span th:text="${selectedLoan?.item?.nameTypeOrTitle}"></span></p>
-                                <p><strong>Make:</strong> <span th:text="${selectedLoan?.item?.makeOrComposer}"></span></p>
-                                <p><strong>Note:</strong> <span th:text="${selectedLoan?.item?.note}"></span></p>
-                                <p><strong>Loaned to:</strong> <span th:text="${selectedLoan?.member?.firstName} + ' ' + ${selectedLoan?.member?.lastName}"></span></p>
-                                <p><strong>Date of Loan:</strong> <span th:text="${selectedLoan?.loanDate}"></span></p>
+                                <p><strong>Instrument Name:</strong> <span id="modalInstrumentName"></span></p>
+                                <p><strong>Make:</strong> <span id="modalMake"></span></p>
+                                <p><strong>Note:</strong> <span id="modalNote"></span></p>
+                                <p><strong>Loaned to:</strong> <span id="modalMemberName"></span></p>
+                                <p><strong>Date of Loan:</strong> <span id="modalLoanDate"></span></p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

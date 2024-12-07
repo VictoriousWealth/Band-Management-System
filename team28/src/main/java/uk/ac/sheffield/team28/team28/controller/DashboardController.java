@@ -53,7 +53,7 @@ public class DashboardController {
             model.addAttribute("instruments", instruments);
         }
 
-        List<Loan> memberLoans = loanService.getLoansByMemberId(member.getId());
+        List<Loan> memberLoans = loanService.getActiveLoansByMemberId(member.getId());
         model.addAttribute("memberLoans", memberLoans);
 
         return "dashboard";
@@ -64,6 +64,7 @@ public class DashboardController {
         Loan selectedLoan = loanService.findLoanById(loanId)
                 .orElseThrow(() -> new IllegalArgumentException("Loan not found"));
         model.addAttribute("selectedLoan", selectedLoan);
+        System.out.println("Selected Loan: " + selectedLoan);
         return "dashboard";
     }
 

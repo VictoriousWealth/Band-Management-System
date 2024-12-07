@@ -11,3 +11,19 @@ function setAction(button) {
         document.getElementById('returnInstrumentId').value = instrumentId;
     }
 }
+
+// assigns the values of the item on loan dynamically so that they can be viewed in the modal
+function showLoanDetails(button) {
+    const itemName = button.getAttribute('data-itemName');
+    const make = button.getAttribute('data-make');
+    const note = button.getAttribute('data-note');
+    const loanDate = button.getAttribute('data-loanDate');
+    const memberFirstName = button.getAttribute('data-memberFirstName');
+    const memberLastName = button.getAttribute('data-memberLastName');
+
+    document.getElementById('modalInstrumentName').innerText = itemName;
+    document.getElementById('modalMake').innerText = make;
+    document.getElementById('modalNote').innerText = note;
+    document.getElementById('modalLoanDate').innerText = loanDate;
+    document.getElementById('modalMemberName').innerText = memberFirstName + " " + memberLastName;
+}
