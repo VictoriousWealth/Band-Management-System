@@ -15,6 +15,9 @@ public class Loan {
     private Member member;
 
     @ManyToOne
+    @JoinColumn(name = "child_member_id")
+    private ChildMember childMember;
+    @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
@@ -31,6 +34,14 @@ public class Loan {
         this.item = item;
         this.loanDate = loanDate;
         this.returnDate = returnDate;
+    }
+
+    public Loan(Member member, Item item, LocalDate loanDate, LocalDate returnDate, ChildMember childMember) {
+        this.member = member;
+        this.item = item;
+        this.loanDate = loanDate;
+        this.returnDate = returnDate;
+        this.childMember = childMember;
     }
 
     //Getters and setters

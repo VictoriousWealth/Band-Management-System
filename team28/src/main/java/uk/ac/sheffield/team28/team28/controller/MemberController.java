@@ -20,6 +20,7 @@ import uk.ac.sheffield.team28.team28.service.MemberService;
 import uk.ac.sheffield.team28.team28.model.Member;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -102,34 +103,33 @@ public class MemberController {
     @PostMapping("/addChild")
     public String addChild(@RequestParam String firstName,
                            @RequestParam String lastName,
+                           @RequestParam String dateOfBirth,
                            Model model) {
         try {
+            // Find the parent member
             Member parent = memberService.findMember();
-
-            System.out.println("The member's id is: "+ parent.getFirstName());
-            System.out.println("Parent: " + parent);
-            System.out.println("Parent ID: " + parent.getId());
-            System.out.println("Parent First Name: " + parent.getFirstName());
             // Create and save the new child
             ChildMember child = new ChildMember();
+            // Format the first and last names
             String formattedFirstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
             String formattedLastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
+            LocalDate dob = LocalDate.parse(dateOfBirth);
 
             child.setFirstName(formattedFirstName);
             child.setLastName(formattedLastName);
+            child.setDateOfBirth(dob);
             child.setParent(parent);
             childMemberRepository.save(child);
             return "redirect:/dashboard";
 
         } catch (Exception e) {
-            Member parent = memberService.findMember();
-
+            // Handle errors
             e.printStackTrace();
-                model.addAttribute("error", "An error occurred: " + e.getMessage());
-                return "error"; // Return an error page if something goes wrong
-            }
-
+            model.addAttribute("error", "An error occurred: " + e.getMessage());
+            return "error"; // Return an error page if something goes wrong
+        }
     }
+
 
 
 }

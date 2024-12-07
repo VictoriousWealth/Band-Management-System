@@ -72,12 +72,14 @@
         <thead>
         <tr>
             <th>Name</th>
+            <th>Parent</th>
             <th>Band</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="child : ${childTrainingBandMembers}">
             <td th:text="${child.firstName} + ' ' + ${child.lastName}">Name</td>
+            <td th:text="${'('+child.getParent().firstName} + ' ' + ${child.getParent().lastName}+')'">(Parent)</td>
             <td th:text="${child.band}">Band</td>
             <td>
                 <form th:action="@{/director/removeChildFromBand/{memberId}(memberId=${child.id})}" method="post">

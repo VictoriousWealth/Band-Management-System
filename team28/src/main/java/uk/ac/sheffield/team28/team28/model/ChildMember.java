@@ -59,6 +59,8 @@ public class ChildMember {
         return lastName;
     }
 
+    public LocalDate getDateOfBirth() {return dateOfBirth;}
+
     public Member getParent() {
         return parent;
     }

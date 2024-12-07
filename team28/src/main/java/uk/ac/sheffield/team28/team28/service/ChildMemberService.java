@@ -1,11 +1,14 @@
 package uk.ac.sheffield.team28.team28.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import uk.ac.sheffield.team28.team28.exception.FieldCannotBeBlankException;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
+
+import uk.ac.sheffield.team28.team28.repository.LoanRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.time.LocalDate;
@@ -16,13 +19,16 @@ import java.util.*;
 public class ChildMemberService {
 
     private final ChildMemberRepository childMemberRepository;
+    private final LoanRepository loanRepository;
+
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
-    public ChildMemberService(ChildMemberRepository childMemberRepository, MemberService memberService, MemberRepository memberRepository){
+    public ChildMemberService(ChildMemberRepository childMemberRepository, LoanRepository loanRepository, MemberService memberService, MemberRepository member){
         this.childMemberRepository = childMemberRepository;
         this.memberService = memberService;
         this.memberRepository = memberRepository;
+        this.loanRepository = loanRepository;
     }
 
     public Optional<ChildMember> getChildByFullName(String fullName) {
@@ -42,6 +48,12 @@ public class ChildMemberService {
         return childMemberRepository.findAllByParent(parent);
     }
 
+    public ChildMember getChildById(Long childMemberId) throws Exception {
+        ChildMember childMember = childMemberRepository.findById(childMemberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + childMemberId));
+        return childMember;
+    }
+
     public List<ChildMember> getAllChildren(){
         return childMemberRepository.findAllChildren();
     }
@@ -55,8 +67,40 @@ public class ChildMemberService {
         allChildMembers.addAll(childMemberRepository.findByBand(BandInPractice.Training));
         return allChildMembers;
     }
-    public
-    Map<Member, List<ChildMember>> getParentsWithChildren() {
+
+    public boolean doAnyChildrenHaveLoans(Member parent) {
+        // Get all children for the given parent
+        List<ChildMember> allChildren = getChildByParent(parent);
+        // Loop through each child and check if they have active loans
+        for (ChildMember child : allChildren) {
+            if (loanRepository.childHasActiveLoans(child.getId())) {
+                // If any child has an active loan, return true
+                return true;
+            }
+        }
+        // If no children have active loans, return false
+        return false;
+    }
+
+    public boolean doesChildHaveLoans(ChildMember child) {
+        return loanRepository.childHasActiveLoans(child.getId());
+    }
+
+    @Transactional //Delete all a parent's children
+    public void deleteChildMembers(Member parent) throws Exception {
+        List<ChildMember> allChildren = getChildByParent(parent);
+        for (ChildMember child : allChildren) {
+            loanRepository.deleteLoansByChildMemberId(child.getId());
+            childMemberRepository.deleteById(child.getId());
+        }
+    }
+
+    @Transactional //Delete all a parent's children
+    public void deleteChildMember(ChildMember child) throws Exception {
+        loanRepository.deleteLoansByChildMemberId(child.getId());
+        childMemberRepository.deleteById(child.getId());
+    }
+    public Map<Member, List<ChildMember>> getParentsWithChildren() {
         List<Member> parents = getAllParents();
         Map<Member, List<ChildMember>> parentsWithChildren = new LinkedHashMap<>();
 

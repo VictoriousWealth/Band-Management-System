@@ -512,8 +512,8 @@
             <button
                     class="btn btn-primary"
                     data-toggle="modal"
-                    data-target="#addChildModal"
-                    th:if="${childNum < 2}">
+                    data-target="#addChildModal">
+<!--                    th:if="${childNum < 2}">-->
                 Add Child
             </button>
             <button
@@ -527,7 +527,7 @@
                     class="btn btn-secondary"
                     data-toggle="modal"
                     data-target="#selectChildModal"
-                    th:if="${childNum == 2}">
+                    th:if="${childNum <= 2}">
                 Child View
             </button>
 
@@ -559,6 +559,10 @@
                                 <label for="lastName">Last Name:</label>
                                 <input type="text" class="form-control" id="lastName" name="lastName" required>
                             </div>
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth:</label>
+                                <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -583,7 +587,7 @@
                         <ul>
                             <li th:each="child : ${children}">
                                 <a th:href="@{/child/dashboard/{childMemberId}(childMemberId=${child.id})}" class="btn btn-link">
-                                    <span th:text="${child.firstName}"></span>
+                                    <span th:text="${child.firstName + ' ' + child.lastName}"></span>
                                 </a>
                             </li>
                         </ul>
