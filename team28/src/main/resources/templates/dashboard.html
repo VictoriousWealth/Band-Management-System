@@ -30,11 +30,31 @@
 
             .floating-buttons {
                 position: fixed;
-                bottom: 20px;
+                bottom: 100px;
                 right: 20px;
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
+            }
+
+            .floating-buttons button {
+                background-color: navy; /* Changes the button color to navy */
+                color: white; /* Ensures the text is readable */
+                border: none; /* Optional: removes any border */
+                padding: 5px 15px; /* Adjusts padding for better appearance */
+                border-radius: 5px; /* Adds rounded corners */
+                font-size: 16px; /* Sets a readable font size */
+                cursor: pointer; /* Changes cursor to pointer on hover */
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: adds a slight shadow */
+            }
+
+            .floating-buttons button:hover {
+                background-color: darkblue; /* Changes to a slightly darker navy on hover */
+            }
+
+            footer {
+                position: relative; /* Ensures footer stays at the bottom */
+                z-index: 1; /* Makes sure it appears below floating elements */
             }
 
             .floating-buttons button {
@@ -251,8 +271,8 @@
             <button
                     class="btn btn-primary"
                     data-toggle="modal"
-                    data-target="#addChildModal"
-                    th:if="${childNum < 2}">
+                    data-target="#addChildModal">
+<!--                    th:if="${childNum < 2}">-->
                 Add Child
             </button>
             <button
@@ -266,7 +286,7 @@
                     class="btn btn-secondary"
                     data-toggle="modal"
                     data-target="#selectChildModal"
-                    th:if="${childNum == 2}">
+                    th:if="${childNum <= 2}">
                 Child View
             </button>
 
@@ -298,6 +318,10 @@
                                 <label for="lastName">Last Name:</label>
                                 <input type="text" class="form-control" id="lastName" name="lastName" required>
                             </div>
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth:</label>
+                                <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -322,7 +346,7 @@
                         <ul>
                             <li th:each="child : ${children}">
                                 <a th:href="@{/child/dashboard/{childMemberId}(childMemberId=${child.id})}" class="btn btn-link">
-                                    <span th:text="${child.firstName}"></span>
+                                    <span th:text="${child.firstName + ' ' + child.lastName}"></span>
                                 </a>
                             </li>
                         </ul>

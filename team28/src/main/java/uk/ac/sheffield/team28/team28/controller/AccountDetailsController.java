@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.model.Request;
+import uk.ac.sheffield.team28.team28.service.ChildMemberService;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 import uk.ac.sheffield.team28.team28.service.RequestService;
 
@@ -18,17 +20,23 @@ import java.util.List;
 @Controller
 public class AccountDetailsController {
     private final MemberService memberService;
+    private final ChildMemberService childMemberService;
+
     private final RequestService requestService;
 
-    public AccountDetailsController(MemberService memberService, RequestService requestService) {
+    public AccountDetailsController(MemberService memberService, ChildMemberService childMemberService, RequestService requestService) {
         this.memberService = memberService;
         this.requestService = requestService;
+        this.childMemberService = childMemberService;
     }
 
     @GetMapping("/account-info")
     public String accountInfo(HttpSession session, Model model) {
         Member member = memberService.findMember();
+        List<ChildMember> children = childMemberService.getChildByParent(member);
         model.addAttribute("member", member);
+        model.addAttribute("children", children);
+
         model.addAttribute("memberType", member.getMemberType().toString());
         model.addAttribute("isAuthorised", session.getAttribute("isAuthorised"));
         System.out.println(member.getMemberType());

@@ -59,6 +59,8 @@ public class ChildMember {
         return lastName;
     }
 
+    public LocalDate getDateOfBirth() {return dateOfBirth;}
+
     public Member getParent() {
         return parent;
     }
@@ -83,14 +85,7 @@ public class ChildMember {
 
     public void setBand(BandInPractice band) {this.band = band;}
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
+    public void setDateOfBirth(LocalDate dateOfBirth) {this.dateOfBirth = dateOfBirth;}
     public int getAge() {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
