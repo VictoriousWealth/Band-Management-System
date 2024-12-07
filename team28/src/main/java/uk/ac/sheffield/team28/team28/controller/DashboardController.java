@@ -14,6 +14,7 @@ import uk.ac.sheffield.team28.team28.dto.OrderDto;
 import uk.ac.sheffield.team28.team28.model.*;
 import uk.ac.sheffield.team28.team28.repository.InstrumentRepository;
 import uk.ac.sheffield.team28.team28.repository.MusicRepository;
+import uk.ac.sheffield.team28.team28.repository.OrderRepository;
 import uk.ac.sheffield.team28.team28.service.*;
 
 import java.time.LocalDate;
@@ -37,6 +38,8 @@ public class DashboardController {
     private OrderService orderService;
     @Autowired
     private ItemService itemService;
+    @Autowired
+    private OrderRepository orderRepository;
 
 
     @GetMapping("/dashboard")
@@ -45,7 +48,7 @@ public class DashboardController {
         Member member = memberService.findMember();
         model.addAttribute("memberType", member.getMemberType().toString());
 
-        //If member is a committee member, get all instruments
+        //If member is a committee member, get all instruments, and orders
         if (member.getMemberType() == MemberType.Committee || member.getMemberType() == MemberType.Director){
 
             List<Instrument> instruments = instrumentRepository.findAll();
@@ -58,6 +61,10 @@ public class DashboardController {
             //Get band types
             List<BandInPractice> bands = Arrays.asList(BandInPractice.values());
             model.addAttribute("bands", bands);
+
+            //Get all orders
+            List<Order> orders = orderRepository.findByItemTypeAndNotFulfilled(ItemType.Music);
+            model.addAttribute("musicOrders", orders);
 
         } else if (member.getMemberType() == MemberType.Adult){
 

@@ -84,9 +84,11 @@
                             </tr>
                         </tbody>
                     </table>
-                    <!-- Button to add music -->
+                    <!-- Button to add music and to see order requests-->
                     <span th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
                         <button class="btn btn-primary" data-toggle="modal" data-target="#addMusic">
+                            Add Music</button>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#viewOrders">
                             Add Music</button>
                     </span>
 
@@ -298,6 +300,50 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Type modal with form to view music orders-->
+        <div class="modal fade" id="viewOrders" tabindex="-1" role="dialog"
+             aria-labelledby="viewOrders" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="viewOrderLabel">View orders</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/orders/changeOrderStatus}" method="post">
+                        <!-- Table that shows all music orders that are not fulfilled -->
+                        <table id="orderTable">
+                            <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Name</th>
+                                <th>Composer</th>
+                                <th>Arranger</th>
+                                <th>Note</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="musicOrder : ${musicOrders}">
+                                    <td>
+                                        <input type="radio" name="orderId" th:value="${musicOrder.id}">
+                                    </td>
+                                    <td th:text="${musicOrder.item.nameTypeOrTitle}"></td>
+                                    <td th:text="${musicOrder.item.makeOrComposer}"></td>
+                                    <td></td>
+                                    <td th:text="${musicOrder.note}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Fulfill Order</button>
                         </div>
                     </form>
                 </div>
