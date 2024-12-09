@@ -169,10 +169,10 @@ public class MemberService {
         return member;
     }
 
-    public List<Member> getCOMMITTEEMembers() {
+    public List<Member> getCommitteeMembers() {
         return memberRepository.findByMemberType(MemberType.COMMITTEE); //Currently set to ADULT since no COMMITTEE
     }
-    public List<Member> getADULTMembers() {
+    public List<Member> getAdultMembers() {
         return memberRepository.findByMemberType(MemberType.ADULT); //Currently set to ADULT since no COMMITTEE
     }
     public List<Member> getAllMembersBands() {
