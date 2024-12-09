@@ -86,7 +86,8 @@ public class ChildMember {
     public void setBand(BandInPractice band) {this.band = band;}
 
     public void setDateOfBirth(LocalDate dateOfBirth) {this.dateOfBirth = dateOfBirth;}
-    public int getAge() {
+
+    public int calculateAge() {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
 }

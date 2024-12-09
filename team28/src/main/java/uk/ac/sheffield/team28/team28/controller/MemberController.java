@@ -2,6 +2,7 @@ package uk.ac.sheffield.team28.team28.controller;
 
 //import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
+import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import uk.ac.sheffield.team28.team28.service.ChildMemberService;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 import uk.ac.sheffield.team28.team28.model.Member;
@@ -28,12 +30,13 @@ import java.util.Objects;
 
 public class MemberController {
     private final MemberService memberService;
-    private final ChildMemberService childMemberService;
+
+    private final ChildMemberRepository childMemberRepository;
     private final static Logger logger = LoggerFactory.getLogger(MemberController.class);
 
-    public MemberController(MemberService memberService, ChildMemberService childMemberService) {
+    public MemberController(MemberService memberService, ChildMemberRepository childMemberRepository) {
         this.memberService = memberService;
-        this.childMemberService = childMemberService;
+        this.childMemberRepository = childMemberRepository;
 
     }
 
@@ -118,8 +121,8 @@ public class MemberController {
             child.setParent(parent);
 
             // Save the child to the database
-            childMemberService.save(child);
 
+            childMemberRepository.save(child);
             return "redirect:/dashboard";
 
         } catch (Exception e) {

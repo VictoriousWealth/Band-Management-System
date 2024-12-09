@@ -76,7 +76,7 @@ public class MemberService {
         Member member = new Member();
         member.setEmail(dto.getEmail());
         member.setPassword(hashedPassword);
-        member.setMemberType(MemberType.Adult);
+        member.setMemberType(MemberType.ADULT);
         member.setPhone(dto.getPhone());
         member.setFirstName(dto.getFirstName());
         member.setLastName(dto.getLastName());
@@ -129,8 +129,8 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
 
-        if (member.getMemberType() == MemberType.Adult) {
-            member.setMemberType(MemberType.Committee);
+        if (member.getMemberType() == MemberType.ADULT) {
+            member.setMemberType(MemberType.COMMITTEE);
         } else
             throw new Exception("Member cannot be added.");
 
@@ -179,11 +179,11 @@ public class MemberService {
         return member;
     }
 
-    public List<Member> getCommitteeMembers() {
-        return memberRepository.findByMemberType(MemberType.Committee); //Currently set to ADULT since no committee
+    public List<Member> getCOMMITTEEMembers() {
+        return memberRepository.findByMemberType(MemberType.COMMITTEE); //Currently set to ADULT since no COMMITTEE
     }
-    public List<Member> getAdultMembers() {
-        return memberRepository.findByMemberType(MemberType.Adult); //Currently set to ADULT since no committee
+    public List<Member> getADULTMembers() {
+        return memberRepository.findByMemberType(MemberType.ADULT); //Currently set to ADULT since no COMMITTEE
     }
     public List<Member> getAllMembersBands() {
         List<Member> allMembers = new ArrayList<>();
@@ -193,14 +193,14 @@ public class MemberService {
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
 
-        return allMembers; //Currently set to ADULT since no committee
+        return allMembers; //Currently set to ADULT since no COMMITTEE
     }
     public List<Member> getTrainingBandMembers() {
         List<Member> allMembers = new ArrayList<>();
 
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Training));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
-        return allMembers; //Currently set to ADULT since no committee
+        return allMembers; //Currently set to ADULT since no COMMITTEE
     }
 
     public List<Member> getSeniorBandMembers() {
@@ -208,7 +208,7 @@ public class MemberService {
 
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
-        return allMembers; //Currently set to ADULT since no committee
+        return allMembers; //Currently set to ADULT since no COMMITTEE
     }
 
     public void setNone () {
@@ -299,8 +299,8 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
 
-        if (member.getMemberType() == MemberType.Committee) {
-            member.setMemberType(MemberType.Adult);
+        if (member.getMemberType() == MemberType.COMMITTEE) {
+            member.setMemberType(MemberType.ADULT);
         } else
             throw new Exception("Member cannot be demoted.");
 

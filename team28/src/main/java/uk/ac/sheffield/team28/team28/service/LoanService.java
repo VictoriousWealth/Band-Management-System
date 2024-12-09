@@ -11,6 +11,7 @@ import uk.ac.sheffield.team28.team28.repository.LoanRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -43,6 +44,17 @@ public class LoanService {
     // Find all loans for a particular member
     public List<Loan> getLoansByMemberId(Long memberId) {
         return loanRepository.findByMemberId(memberId);
+    }
+
+    public List<Loan> getActiveLoansByMemberId(Long memberId) {
+        List<Loan> allLoans = this.getLoansByMemberId(memberId);
+        List<Loan> activeLoans = new ArrayList<>();
+        for (Loan loan : allLoans) {
+            if (loan.getReturnDate() == null) {
+                activeLoans.add(loan);
+            }
+        }
+        return activeLoans;
     }
 
     // Find active loan for a particular item using its id
