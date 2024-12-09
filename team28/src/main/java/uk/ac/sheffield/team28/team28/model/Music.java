@@ -12,23 +12,10 @@ public class Music {
 
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
-    private Item item;
-
-    @Column(name = "title", nullable = false)
-    private String title;
-
-    @Column(name = "composer", nullable = false)
-    private String composer;
-
-    @Column(name = "arranger")
-    private String arranger;
+    private Item item; 
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private MusicStatus status;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "band_in_practice")
+    @Column(name = "band_in_practice", nullable = true)
     private BandInPractice bandInPractice;
 
     @Column(name = "is_suitable_for_training", nullable = false)
@@ -37,13 +24,9 @@ public class Music {
     //Getters and setters
     public Music(){}
 
-    public Music(String title, String composer, Item item, String arranger, BandInPractice bandInPractice, boolean isSuitableForTraining){
+    public Music(Item item, BandInPractice bandInPractice, boolean isSuitableForTraining) {
         this.item = item;
-        this.title = title;
-        this.composer = composer;
-        this.status = MusicStatus.STORAGE;
-        this.arranger = arranger;
-        this.bandInPractice =bandInPractice;
+        this.bandInPractice = bandInPractice;
         this.isSuitableForTraining = isSuitableForTraining;
     }
 
@@ -55,36 +38,12 @@ public class Music {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public Item getItem() {
+        return item;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getComposer() {
-        return composer;
-    }
-
-    public void setComposer(String composer) {
-        this.composer = composer;
-    }
-
-    public String getArranger() {
-        return arranger;
-    }
-
-    public void setArranger(String arranger) {
-        this.arranger = arranger;
-    }
-
-    public MusicStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(MusicStatus status) {
-        this.status = status;
+    public void setItem(Item item) {
+        this.item = item;
     }
 
     public BandInPractice getBandInPractice() {
@@ -99,7 +58,7 @@ public class Music {
         return isSuitableForTraining;
     }
 
-    public void setSuitableForTraining(boolean isSuitableForTraining) {
-        this.isSuitableForTraining = isSuitableForTraining;
+    public void setSuitableForTraining(boolean suitableForTraining) {
+        isSuitableForTraining = suitableForTraining;
     }
 }
