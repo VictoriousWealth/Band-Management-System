@@ -88,6 +88,7 @@ public class AccountDetailsController {
 
     @PostMapping("/account/update/{id}")
     public String actualUpdateAccountInfo(@PathVariable Long id, Model model) {
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         List<String> details = getMemberUpdatedDetails(requestService.getRequestWithId(id).getDescription());
 
         Member oldMember = memberService.findMember(); // old member as in original member with no changes
@@ -111,13 +112,11 @@ public class AccountDetailsController {
                 model.addAttribute("exceptionList", exceptionList); // all the exceptions occurred during the attempt at updating the record, NOTE: if we were to redirect it won't show on the account-info page, as re-directing causes reset of the model values
             }
             model.addAttribute("hasBeenAccepted", false);
-            model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
             requestService.deleteRequest(requestService.getRequestWithId(id));
             model.addAttribute("requests", requestService.getAllApprovedRequestWhereRequesterIs(memberService.findMember()));
             return "account-info";
         }
         model.addAttribute("hasBeenAccepted", false);
-        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         return "redirect:/account-info";
 
     }
