@@ -1,8 +1,10 @@
 package uk.ac.sheffield.team28.team28.service;
-import org.mockito.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
@@ -38,9 +40,6 @@ public class MemberServiceTest {
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z]).{8,}$");
 
 
-
-
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -48,9 +47,9 @@ public class MemberServiceTest {
 
     @Test
     public void shouldReturnAllMembers_whenGetAllMembersIsCalled() {
-        Member member1 = new Member(29L, "a@z.com","password",MemberType.Adult,"090378734","John","Doe");
-        Member member2 = new Member(30L, "a@y.com","password",MemberType.Adult,"090376734","Johnny","Deoe");
-        Member member3 = new Member(31L, "a@x.com","password",MemberType.Adult,"090375734","Jon","Doey");
+        Member member1 = new Member(29L, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
+        Member member2 = new Member(30L, "a@y.com", "password", MemberType.Adult, "090376734", "Johnny", "Deoe");
+        Member member3 = new Member(31L, "a@x.com", "password", MemberType.Adult, "090375734", "Jon", "Doey");
         when(memberRepository.findAll()).thenReturn(Arrays.asList(member1, member2, member3));
 
         List<Member> members = memberService.getAllMembers();
@@ -63,15 +62,14 @@ public class MemberServiceTest {
 
     @Test
     public void shouldPromoteMember_whenPromoteMemberWithIdCalled() {
-        Member member1 = new Member(29L, "a@z.com","password",MemberType.Adult,"090378734","John","Doe");
+        Member member1 = new Member(29L, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
         Long memberId = 29L;
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member1));
         try {
             Member member = memberService.promoteMemberWithId(memberId);
             assertEquals(MemberType.Committee, member.getMemberType());
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -279,7 +277,6 @@ public class MemberServiceTest {
 
         assertFalse(isAuthorised);
     }
-
 
 
 }
