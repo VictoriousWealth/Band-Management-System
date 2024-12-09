@@ -176,7 +176,7 @@
                                 <button class="btn btn-primary"
                                         data-toggle="modal"
                                         data-target="#editInstrumentModal"
-                                        th:attr="data-id=${instrument.id}"
+                                        th:attr="data-id=${instrument.id}, data-inStorage=${instrument.item.inStorage}"
                                         onclick="populateEditForm(this)"> Edit </button>
                             </td>
                             <td>
@@ -281,19 +281,7 @@
                                             <label for="serialNumber">Serial Number:</label>
                                             <input type="text" class="form-control" id="serialNumber" name="serialNumber" required>
                                         </div>
-                                        <div class="form-group">
-                                            <label>In Storage?</label>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inStorage" id="inStorageYes" value="true" checked>
-                                                <label class="form-check-label" for="inStorageYes">Yes</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inStorage" id="inStorageNo" value="false">
-                                                <label class="form-check-label" for="inStorageNo">No</label>
-                                            </div>
-                                        </div>
+                                        <input type="hidden" name="inStorage" value = "true">
                                         <div class="form-group">
                                             <label for="note">Note:</label>
                                             <input type="text" class="form-control" id="note" name="note">
@@ -333,19 +321,7 @@
                                             <label for="editSerialNumber">Serial Number:</label>
                                             <input type="text" class="form-control" id="editSerialNumber" name="serialNumber" required>
                                         </div>
-                                        <div class="form-group">
-                                            <label>In Storage?</label>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inStorage" id="editInStorageYes" value="true">
-                                                <label class="form-check-label" for="editInStorageYes">Yes</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inStorage" id="editInStorageNo" value="false">
-                                                <label class="form-check-label" for="editInStorageNo">No</label>
-                                            </div>
-                                        </div>
+                                        <input type="hidden" name="inStorage" id="editInStorage">
                                         <div class="form-group">
                                             <label for="editNote">Note:</label>
                                             <input type="text" class="form-control" id="editNote" name="note">
