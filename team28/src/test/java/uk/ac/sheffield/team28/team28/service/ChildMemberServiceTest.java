@@ -1,33 +1,23 @@
 package uk.ac.sheffield.team28.team28.service;
 
-import org.mockito.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
-import uk.ac.sheffield.team28.team28.model.MemberType;
-import uk.ac.sheffield.team28.team28.repository.MemberRepository;
+import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
+import uk.ac.sheffield.team28.team28.repository.LoanRepository;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-
-import uk.ac.sheffield.team28.team28.repository.LoanRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
-import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
 public class ChildMemberServiceTest {
 
