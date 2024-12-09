@@ -47,9 +47,9 @@ public class MemberServiceTest {
 
     @Test
     public void shouldReturnAllMembers_whenGetAllMembersIsCalled() {
-        Member member1 = new Member(29L, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
-        Member member2 = new Member(30L, "a@y.com", "password", MemberType.Adult, "090376734", "Johnny", "Deoe");
-        Member member3 = new Member(31L, "a@x.com", "password", MemberType.Adult, "090375734", "Jon", "Doey");
+        Member member1 = new Member(29L, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
+        Member member2 = new Member(30L, "a@y.com", "password", MemberType.ADULT, "090376734", "Johnny", "Deoe");
+        Member member3 = new Member(31L, "a@x.com", "password", MemberType.ADULT, "090375734", "Jon", "Doey");
         when(memberRepository.findAll()).thenReturn(Arrays.asList(member1, member2, member3));
 
         List<Member> members = memberService.getAllMembers();
@@ -62,12 +62,12 @@ public class MemberServiceTest {
 
     @Test
     public void shouldPromoteMember_whenPromoteMemberWithIdCalled() {
-        Member member1 = new Member(29L, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
+        Member member1 = new Member(29L, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
         Long memberId = 29L;
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member1));
         try {
             Member member = memberService.promoteMemberWithId(memberId);
-            assertEquals(MemberType.Committee, member.getMemberType());
+            assertEquals(MemberType.COMMITTEE, member.getMemberType());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,21 +79,21 @@ public class MemberServiceTest {
     @Test
     public void shouldPromoteAdultMemberToCommittee() throws Exception {
         Long memberId = 29L;
-        Member member = new Member(memberId, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(memberRepository.save(member)).thenReturn(member);
 
         Member updatedMember = memberService.promoteMemberWithId(memberId);
 
-        assertEquals(MemberType.Committee, updatedMember.getMemberType());
+        assertEquals(MemberType.COMMITTEE, updatedMember.getMemberType());
         verify(memberRepository).save(member);
     }
 
     @Test
     public void shouldThrowExceptionWhenPromotingNonAdultMember() {
         Long memberId = 29L;
-        Member member = new Member(memberId, "a@z.com", "password", MemberType.Committee, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "password", MemberType.COMMITTEE, "090378734", "John", "Doe");
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
@@ -123,21 +123,21 @@ public class MemberServiceTest {
     @Test
     public void shouldDemoteCommitteeMemberToAdult() throws Exception {
         Long memberId = 29L;
-        Member member = new Member(memberId, "a@z.com", "password", MemberType.Committee, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "password", MemberType.COMMITTEE, "090378734", "John", "Doe");
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(memberRepository.save(member)).thenReturn(member);
 
         Member updatedMember = memberService.demoteMemberWithId(memberId);
 
-        assertEquals(MemberType.Adult, updatedMember.getMemberType());
+        assertEquals(MemberType.ADULT, updatedMember.getMemberType());
         verify(memberRepository).save(member);
     }
 
     @Test
     public void shouldThrowExceptionWhenDemotingNonCommitteeMember() {
         Long memberId = 29L;
-        Member member = new Member(memberId, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
 
@@ -167,7 +167,7 @@ public class MemberServiceTest {
     @Test
     public void shouldAddMemberToNewBand_whenMemberIsInNoneBand() throws Exception {
         Long memberId = 29L;
-        Member member = new Member(memberId, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
         member.setBand(BandInPractice.None);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
@@ -181,7 +181,7 @@ public class MemberServiceTest {
     @Test
     public void shouldUpdateBandToBoth_whenMemberIsAlreadyInOneBand() throws Exception {
         Long memberId = 29L;
-        Member member = new Member(memberId, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
         member.setBand(BandInPractice.Training);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
@@ -195,7 +195,7 @@ public class MemberServiceTest {
     @Test
     public void shouldThrowException_whenAddingMemberToSameBand() {
         Long memberId = 29L;
-        Member member = new Member(memberId, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
         member.setBand(BandInPractice.Training);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
@@ -210,7 +210,7 @@ public class MemberServiceTest {
     @Test
     public void shouldRemoveMemberFromBand_whenMemberIsInSpecifiedBand() throws Exception {
         Long memberId = 29L;
-        Member member = new Member(memberId, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
         member.setBand(BandInPractice.Training);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
@@ -224,7 +224,7 @@ public class MemberServiceTest {
     @Test
     public void shouldUpdateBandToSingleBand_whenMemberIsInBothBands() throws Exception {
         Long memberId = 29L;
-        Member member = new Member(memberId, "a@z.com", "password", MemberType.Adult, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
         member.setBand(BandInPractice.Both);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
@@ -237,10 +237,10 @@ public class MemberServiceTest {
 
     @Test
     public void shouldReturnCommitteeMembers_whenGetCommitteeMembersIsCalled() {
-        Member member1 = new Member(29L, "a@z.com", "password", MemberType.Committee, "090378734", "John", "Doe");
-        Member member2 = new Member(30L, "a@y.com", "password", MemberType.Committee, "090376734", "Jane", "Doe");
+        Member member1 = new Member(29L, "a@z.com", "password", MemberType.COMMITTEE, "090378734", "John", "Doe");
+        Member member2 = new Member(30L, "a@y.com", "password", MemberType.COMMITTEE, "090376734", "Jane", "Doe");
 
-        when(memberRepository.findByMemberType(MemberType.Committee)).thenReturn(Arrays.asList(member1, member2));
+        when(memberRepository.findByMemberType(MemberType.COMMITTEE)).thenReturn(Arrays.asList(member1, member2));
 
         List<Member> committeeMembers = memberService.getCommitteeMembers();
 
@@ -253,7 +253,7 @@ public class MemberServiceTest {
     public void shouldAuthoriseMember_whenCredentialsMatch() throws Exception {
         Long memberId = 29L;
         String rawPassword = "password";
-        Member member = new Member(memberId, "a@z.com", "$2a$10$hashedpassword", MemberType.Adult, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "$2a$10$hashedpassword", MemberType.ADULT, "090378734", "John", "Doe");
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         //String passwordEncoder;
@@ -268,7 +268,7 @@ public class MemberServiceTest {
     public void shouldNotAuthoriseMember_whenCredentialsDoNotMatch() throws Exception {
         Long memberId = 29L;
         String rawPassword = "wrongPassword";
-        Member member = new Member(memberId, "a@z.com", "$2a$10$hashedpassword", MemberType.Adult, "090378734", "John", "Doe");
+        Member member = new Member(memberId, "a@z.com", "$2a$10$hashedpassword", MemberType.ADULT, "090378734", "John", "Doe");
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(passwordEncoder.matches(rawPassword, member.getPassword())).thenReturn(false);

@@ -6,16 +6,16 @@ public enum MemberType {
     COMMITTEE,
     DIRECTOR;
     
-    // @Override
-    // public String toString() {
-    //     return switch (this) {
-    //         case NON_ADULT -> "Non-adult";
-    //         case ADULT -> "Adult";
-    //         case COMMITTEE -> "Committee";
-    //         case DIRECTOR -> "Director";
-    //         default -> throw new IllegalArgumentException("Unexpected value: " + this);
-    //     };
-    // }
+     @Override
+     public String toString() {
+         return switch (this) {
+             case NON_ADULT -> "Non-adult";
+             case ADULT -> "Adult";
+             case COMMITTEE -> "Committee";
+             case DIRECTOR -> "Director";
+             default -> throw new IllegalArgumentException("Unexpected value: " + this);
+         };
+     }
     
     // static MemberType fromString(String s) {
     //     return switch (s) {
