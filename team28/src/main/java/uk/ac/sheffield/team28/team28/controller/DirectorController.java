@@ -1,6 +1,4 @@
 package uk.ac.sheffield.team28.team28.controller;
-//todo: Children should not be able to use their (adult proxy) account. Therefore the second part of this question is not relevant.
-// TODO:multiple safeguards in place so that this is not accidentally done.
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,86 +44,13 @@ public class DirectorController {
         this.childMemberService = childMemberService;
     }
 
-    public String redirectToPreviousPage(HttpServletRequest request) {
-        // Get the referer URL from the request
-        String referer = request.getHeader("Referer");
-
-        // If the referer is null or empty, you can fall back to a default page
-        if (referer == null || referer.isEmpty()) {
-            referer = "/defaultPage"; // Provide a default URL in case the referer is missing
-        }
-
-        // Redirect to the previous page
-        return "redirect:" + referer;
-    }
+   
 
     @GetMapping("")
     public String directorHome(Model model) {
         model.addAttribute("message", "This is our director page");
         model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         return "directorhome";
-    }
-
-    @GetMapping("/allMembers")
-    public String allMembers(Model model) {
-        List<Member> members = memberService.getAllMembers();
-        List<ChildMember> children = childMemberService.getAllChildren();
-        model.addAttribute("members", members);
-        model.addAttribute("children", children);
-        return "viewAllMembers";
-    }
-
-
-
-
-    @PostMapping("/removeMember/{memberId}")
-    public String removeMember(@PathVariable Long memberId, @RequestParam(value = "redirectTo", required = false) String redirectTo,  RedirectAttributes redirectAttributes) {
-        try {
-            Member member = memberService.findMemberById(memberId);
-            boolean hasChildren = !childMemberService.getChildByParent(member).isEmpty();
-            if (hasChildren) {
-                if (childMemberService.doAnyChildrenHaveLoans(member) == true) {
-                    redirectAttributes.addAttribute("error", true);
-                }
-            }
-            //Check parent
-            boolean cannotDelete = memberService.doesMemberHaveLoans(member);
-            //Delete parent
-            if (!cannotDelete) {
-                if (hasChildren){
-                    childMemberService.deleteChildMembers(member);
-                }
-                memberService.deleteMember(member.getId());
-            }
-            else {
-                redirectAttributes.addAttribute("error", true);
-            }
-            redirectAttributes.addAttribute("success", true);
-
-        } catch (Exception e) {
-            redirectAttributes.addAttribute("error", true);
-        }
-        return "redirect:" + (redirectTo != null ? redirectTo : "/defaultPath");
-    }
-
-
-    @PostMapping("/removeChildMember/{childMemberId}")
-    public String removeChildMember(@PathVariable Long childMemberId, @RequestParam(value = "redirectTo", required = false) String redirectTo, RedirectAttributes redirectAttributes) {
-        try {
-            ChildMember childMember = childMemberService.getChildById(childMemberId);
-            boolean cannotDelete = childMemberService.doesChildHaveLoans(childMember);
-            //Delete parent
-            if (!cannotDelete) {
-                childMemberService.deleteChildMember(childMember);
-            }
-            else {
-                redirectAttributes.addAttribute("error", true);
-            }
-            redirectAttributes.addAttribute("success", true);
-        } catch (Exception e) {
-            redirectAttributes.addAttribute("error", true);
-        }
-        return "redirect:" + (redirectTo != null ? redirectTo : "/defaultPath");
     }
 
     @GetMapping("/committee")
@@ -193,6 +118,31 @@ public class DirectorController {
             return "redirect:/director"; // Redirect to MEANINGFUL PAGE
         }
     }
+//Delete ------------------------------------------------------------------------------------------------------------------
+    @GetMapping("/showMemberT/{memberId}")
+    public String showMemberT(@PathVariable Long memberId, Model model) {
+        //List<Member> committeeMembers = memberService.getCommitteeMembers();
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
+
+        model.addAttribute("member", member);
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
+        System.out.println("Here" + memberId);
+        return "memberDV";
+
+    }
+//Delete
+    @GetMapping("/showMemberS/{memberId}")
+    public String showMemberS(@PathVariable Long memberId, Model model) {
+        //List<Member> committeeMembers = memberService.getCommitteeMembers();
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
+
+        model.addAttribute("member", member);
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
+        System.out.println("Here" + memberId);
+        return "memberSB";
+
+    }
+//Delete ------------------------------------------------------------------------------------------------------------------
 
     @PostMapping("/addToBandByEmail")
     public String addMemberToBandByEmail(@RequestParam String email, @RequestParam BandInPractice band) {
@@ -212,6 +162,7 @@ public class DirectorController {
             return "redirect:/director?error=true"; // Redirect with an error flag
         }
     }
+
 
 
     @PostMapping("/addChildToBandByName")
