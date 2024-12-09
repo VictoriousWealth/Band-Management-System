@@ -6,6 +6,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
+import uk.ac.sheffield.team28.team28.exception.EmailAlreadyInUseException;
+import uk.ac.sheffield.team28.team28.exception.FieldCannotBeBlankException;
+import uk.ac.sheffield.team28.team28.exception.IdNotFoundException;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
 //import uk.ac.sheffield.team28.team28.exception.MemberRegistrationException;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
@@ -14,6 +17,7 @@ import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -76,7 +80,8 @@ public class MemberService {
              ChildMember child = new ChildMember(
                      dto.getChildFirstName(),
                      dto.getChildLastName(),
-                     member);
+                     member,
+                     dto.getChildDateOfBirth());
              childMemberRepository.save(child);
          }
 
@@ -110,21 +115,40 @@ public class MemberService {
     }
 
 
+    public Member promoteMemberWithId(Long memberId) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+
+        if (member.getMemberType() == MemberType.ADULT) {
+            member.setMemberType(MemberType.COMMITTEE);
+        } else
+            throw new Exception("Member cannot be added.");
+
+        // Save updated member
+        memberRepository.save(member);
+        return member;
+    }
+
     public Member addMemberToBand(Long memberId, BandInPractice newBand) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
 
-        if (member.getBand() != newBand && member.getBand() != BandInPractice.None && member.getBand() != BandInPractice.Both) {
-            member.setBand(BandInPractice.Both);
-        } else if (member.getBand() == BandInPractice.None){
-            member.setBand((newBand));
-        } else {
+        if (member.getBand() == newBand) {
             throw new Exception("Member is already in this band.");
         }
-        //Save it
+        if (member.getBand() == BandInPractice.None) {
+            member.setBand(newBand);
+        } else if (member.getBand() != BandInPractice.Both) {
+            member.setBand(BandInPractice.Both);
+        } else {
+            throw new Exception("Member is already in both bands.");
+        }
+
+        // Save updated member
         memberRepository.save(member);
         return member;
     }
+
 
     public Member removeMemberFromBand(Long memberId, BandInPractice oldBand) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
@@ -145,8 +169,40 @@ public class MemberService {
         return member;
     }
 
-    public List<Member> getCommitteeMembers() {
-        return memberRepository.findByMemberType(MemberType.ADULT); //Currently set to ADULT since no committee
+    public List<Member> getCOMMITTEEMembers() {
+        return memberRepository.findByMemberType(MemberType.COMMITTEE); //Currently set to ADULT since no COMMITTEE
+    }
+    public List<Member> getADULTMembers() {
+        return memberRepository.findByMemberType(MemberType.ADULT); //Currently set to ADULT since no COMMITTEE
+    }
+    public List<Member> getAllMembersBands() {
+        List<Member> allMembers = new ArrayList<>();
+
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.None));
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Training));
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
+
+        return allMembers; //Currently set to ADULT since no COMMITTEE
+    }
+    public List<Member> getTrainingBandMembers() {
+        List<Member> allMembers = new ArrayList<>();
+
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Training));
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
+        return allMembers; //Currently set to ADULT since no COMMITTEE
+    }
+
+    public List<Member> getSeniorBandMembers() {
+        List<Member> allMembers = new ArrayList<>();
+
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
+        allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
+        return allMembers; //Currently set to ADULT since no COMMITTEE
+    }
+
+    public void setNone () {
+
     }
 
     public boolean authorise(Long memberId, String password) throws Exception {
@@ -156,8 +212,89 @@ public class MemberService {
         // Compare the hashed password with the provided password
         return passwordEncoder.matches(password,member.getPassword());
 
+    }
 
+    public List<Exception> updateMemberInfo(Long id, String firstName, String lastName, String phone, String email) {
+        List<Exception> exceptions = new ArrayList<>();
+        System.out.println(id);
+        if (memberRepository.findById(id).isPresent()) {
+            Member memberToBeUpdated = memberRepository.findById(id).get();
+
+            //TODO check if firstname is in valid format
+            if (firstName != null && !firstName.isBlank()) {
+                memberToBeUpdated.setFirstName(firstName);
+            } else {
+                exceptions.add(new FieldCannotBeBlankException("First name cannot be empty"));
+            }
+
+            //TODO check if lastname is in valid format
+            if (lastName != null && !lastName.isBlank()) {
+                memberToBeUpdated.setLastName(lastName);
+            } else {
+                exceptions.add(new FieldCannotBeBlankException("Last name cannot be empty"));
+            }
+
+            //TODO check if phone number is in valid format
+            if (phone != null) {
+                memberToBeUpdated.setPhone(phone);
+            } else {
+                exceptions.add(new FieldCannotBeBlankException("Phone cannot be empty"));
+            }
+
+            //TODO check if email is in valid format
+            if (!email.equals(memberToBeUpdated.getEmail()) && !memberRepository.existsByEmail(email)) {
+                memberToBeUpdated.setEmail(email);
+            } else if (email.equals(memberToBeUpdated.getEmail())) {
+                memberToBeUpdated.setEmail(email);
+            } else {
+                exceptions.add(new EmailAlreadyInUseException());
+            }
+
+            memberRepository.save(memberToBeUpdated);
+        } else {
+            exceptions.add(new IdNotFoundException());
+        }
+        return exceptions;
+    }
+
+    public Member findMemberByFullName(String memberName) {
+        String[] nameParts = memberName.trim().split("\\s+");
+        if (nameParts.length < 2) {
+            throw new IllegalArgumentException("Full name must include both first and last name.");
+        }
+
+        String firstName = nameParts[0];
+        String lastName = nameParts[nameParts.length - 1];
+
+        // Query the repository by first name
+        List<Member> membersWithFirstName = memberRepository.findByFirstName(firstName);
+
+        // Verify that the last name matches
+        for (Member member : membersWithFirstName) {
+            if (member.getLastName().equalsIgnoreCase(lastName)) {
+                return member;
+            }
+        }
+
+        // If no match is found
+        throw new IllegalArgumentException("No member found with the full name: " + memberName);
+    }
+    public Member demoteMemberWithId(Long memberId) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+
+        if (member.getMemberType() == MemberType.COMMITTEE) {
+            member.setMemberType(MemberType.ADULT);
+        } else
+            throw new Exception("Member cannot be demoted.");
+
+        // Save updated member
+        memberRepository.save(member);
+        return member;
     }
 
 
+    public Member getMemberWithId(Long id) {
+        return memberRepository.findById(id).get();
+    }
 }

@@ -5,68 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Sludgate Brass Band</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        /* Flexbox layout for sticky footer */
-        html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        body {
-            background-color: #f7f7f7;
-        }
-
-        .content-wrapper {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding-top: 70px; /* Adjust based on navbar height */
-        }
-
-        .register-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-submit {
-            width: 100%;
-        }
-
-        .footer {
-            background-color: #343a40;
-            color: #fff;
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        /* Password Requirements Styling */
-        .password-requirements ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 10px 0 0;
-        }
-
-        .password-requirements li {
-            font-size: 14px;
-            color: #d9534f; /* Default: invalid (red) */
-        }
-
-        .password-requirements li.valid {
-            color: #5cb85c; /* Valid: green */
-        }
-
-        .hidden {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
     <!-- Navbar -->
@@ -193,4 +132,3 @@
     </script>
 </body>
 </html>
-x

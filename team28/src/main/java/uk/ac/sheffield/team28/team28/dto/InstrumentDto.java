@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public class InstrumentDto {
 
+    private Long instrumentId;
+
     @NotBlank(message = "Instrument cannot be empty.")
     private String instrumentInput;
     @NotBlank(message = "Make cannot be blank.")
@@ -16,8 +18,9 @@ public class InstrumentDto {
     //Constructors
     public InstrumentDto(){}
 
-    public InstrumentDto(String instrumentInput, String make, String serialNumber, Boolean inStorage,
+    public InstrumentDto(Long instrumentId, String instrumentInput, String make, String serialNumber, Boolean inStorage,
                          String note){
+        this.instrumentId = instrumentId;
         this.instrumentInput = instrumentInput;
         this.make = make;
         this.serialNumber = serialNumber;
@@ -27,6 +30,15 @@ public class InstrumentDto {
     }
 
     //Getters and setters
+
+
+    public Long getInstrumentId() {
+        return instrumentId;
+    }
+
+    public void setInstrumentId(Long instrumentId) {
+        this.instrumentId = instrumentId;
+    }
 
     public String getInstrumentInput() {
         return instrumentInput;

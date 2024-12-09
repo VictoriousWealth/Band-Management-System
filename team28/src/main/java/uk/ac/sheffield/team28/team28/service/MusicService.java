@@ -1,36 +1,40 @@
 package uk.ac.sheffield.team28.team28.service;
 
 import org.springframework.stereotype.Service;
-
-import uk.ac.sheffield.team28.team28.model.BandInPractice;
+import uk.ac.sheffield.team28.team28.dto.MusicDto;
+import uk.ac.sheffield.team28.team28.model.Item;
+import uk.ac.sheffield.team28.team28.model.ItemType;
 import uk.ac.sheffield.team28.team28.model.Music;
-import uk.ac.sheffield.team28.team28.model.MusicStatus;
+import uk.ac.sheffield.team28.team28.repository.ItemRepository;
 import uk.ac.sheffield.team28.team28.repository.MusicRepository;
 
 @Service
 public class MusicService {
 
     private final MusicRepository musicRepository;
+    private final ItemRepository itemRepository;
 
-    public MusicService(MusicRepository musicRepository){
+    public MusicService(MusicRepository musicRepository, ItemRepository itemRepository){
         this.musicRepository = musicRepository;
+        this.itemRepository = itemRepository;
     }
 
-    public void putMusicIntoPractice(Long musicId, BandInPractice band) {
-        Music music = musicRepository.findById(musicId)
-                .orElseThrow(() -> new IllegalArgumentException("Music not found"));
-        
-        music.setStatus(MusicStatus.IN_PRACTICE);
-        music.setBandInPractice(band);
-        musicRepository.save(music);
-    }
+    public void saveMusic(MusicDto dto){
+        //Create and save item
+        Item item = new Item();
+        item.setItemType(ItemType.Music);
+        item.setNameTypeOrTitle(dto.getMusicInput());
+        item.setMakeOrComposer(dto.getComposer());
+        item.setNote(String.valueOf(dto.getSuitableForTraining()));
 
-    public void returnMusicToStorage(Long musicId) {
-        Music music = musicRepository.findById(musicId)
-                .orElseThrow(() -> new IllegalArgumentException("Music not found"));
+        Item savedItem = itemRepository.save(item);
 
-        music.setStatus(MusicStatus.STORAGE);
-        music.setBandInPractice(BandInPractice.None);
+        //Create and save music
+        Music music = new Music();
+        music.setArranger(dto.getArranger());
+        music.setBandInPractice(dto.getBandInPractice());
+        music.setItem(savedItem);
+
         musicRepository.save(music);
     }
 }

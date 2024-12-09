@@ -12,41 +12,32 @@ public class Music {
 
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
-    private Item item; 
+    private Item item;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "band_in_practice", nullable = true)
+    @Column(name = "arranger")
+    private String arranger;
+
+    @Column(name = "band_in_practice")
     private BandInPractice bandInPractice;
-
-    @Column(name = "is_suitable_for_training", nullable = false)
-    private boolean isSuitableForTraining;
 
     //Getters and setters
     public Music(){}
 
-    public Music(Item item, BandInPractice bandInPractice, boolean isSuitableForTraining) {
+    public Music(Item item, String arranger, BandInPractice bandInPractice){
         this.item = item;
-        this.bandInPractice = bandInPractice;
-        this.isSuitableForTraining = isSuitableForTraining;
+        this.arranger = arranger;
+        this.bandInPractice =bandInPractice;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getArranger(){
+        return arranger;
     }
 
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
-    public BandInPractice getBandInPractice() {
+    public BandInPractice getBandInPractice(){
         return bandInPractice;
     }
 
@@ -54,11 +45,15 @@ public class Music {
         this.bandInPractice = bandInPractice;
     }
 
-    public boolean isSuitableForTraining() {
-        return isSuitableForTraining;
+    public void setArranger(String arranger) {
+        this.arranger = arranger;
     }
 
-    public void setSuitableForTraining(boolean suitableForTraining) {
-        isSuitableForTraining = suitableForTraining;
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    public Item getItem() {
+        return item;
     }
 }

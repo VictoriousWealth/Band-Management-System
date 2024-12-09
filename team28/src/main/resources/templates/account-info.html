@@ -11,40 +11,43 @@
             rel="stylesheet"
             href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
-
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .content-wrapper {
-            padding-top: 60px;
-            flex: 1;
-            display: flex;
-            text-align: center;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-        }
-
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/customContentWrapper.css}"/>
+    <link rel="stylesheet" th:href="@{/css/customBody.css}"/>
 </head>
 <body>
 
-<div th:replace="~{fragments/navbarforloggedinusers}"></div>
+
+<div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
+    <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
+</div>
+<div th:if="${memberType.equals('Committee')}">
+    <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
+</div>
+<div th:if="${memberType.equals('Director')}">
+    <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
+</div>
+
 
 <div class="content-wrapper">
     <div id="viewDetails">
         <h1>Account Information</h1>
+
+        <div th:if="${hasBeenRequested==true}" class="alert alert-success mt-3">Your request to change your credentials has been successfully been sent to the director</div>
+
+        <div th:if="${success != null && success==true}" class="alert alert-success mt-3">Successfully has been updated</div>
+        <div th:if="${success != null && success==false}" class="alert alert-danger mt-3">Partially has been updated</div>
+        <div th:if="${errors != null}">
+            <div th:each="error : ${errors}" class="alert alert-danger mt-3" th:text="${error}"></div>
+        </div>
+
+
         <p><strong>Email:</strong> <span th:text="${member.email}"></span></p>
         <p><strong>First Name:</strong> <span th:text="${member.firstName}"></span></p>
         <p><strong>Last Name:</strong> <span th:text="${member.lastName}"></span></p>
         <p><strong>Phone:</strong> <span th:text="${member.phone}"></span></p>
 
+        <!-- if hasBeenAccepted is true then button should be clicked to proceed and above it should show wha't-->
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal">
             Request Account Information Change
         </button>
@@ -61,7 +64,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{/account/update}" method="post">
+                    <form th:if="${isAuthorised}" th:action="@{/account/request-update}" method="post">
                         <label for="email">Email:</label>
                         <input type="email" name="email" id="email" th:value="${member.email}" /><br>
 
@@ -76,10 +79,22 @@
 
                         <button type="submit" class="btn btn-success">Request Changes</button>
                     </form>
+
+                    <form th:if="${isAuthorised == null || !isAuthorised}" th:action="@{/account/request-update}" method="post">
+
+                        <p><strong>Email:</strong> <span th:text="${member.email}"></span></p>
+                        <p><strong>First Name:</strong> <span th:text="${member.firstName}"></span></p>
+                        <p><strong>Last Name:</strong> <span th:text="${member.lastName}"></span></p>
+                        <p><strong>Phone:</strong> <span th:text="${member.phone}"></span></p>
+
+                        <button type="submit" class="btn btn-success">Authorise yourself before requesting changes</button>
+                    </form>
+
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

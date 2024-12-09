@@ -2,6 +2,7 @@ package uk.ac.sheffield.team28.team28.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.model.MemberType;
 
@@ -15,5 +16,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findByMemberType(MemberType memberType);
 
+    List<Member> findByBand(BandInPractice bandInPractice);
+
     Optional<Member> findByEmail(String username);
+
+
+    List<Member> findByFirstName(String firstName);
 }

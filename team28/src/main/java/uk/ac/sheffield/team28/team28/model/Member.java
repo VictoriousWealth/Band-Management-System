@@ -3,10 +3,11 @@ package uk.ac.sheffield.team28.team28.model;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import uk.ac.sheffield.team28.team28.model.MemberType;
 @Entity
-@Table(name = "Member")
+@Table(name = "member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +23,8 @@ public class Member {
     @Column(name = "member_type", nullable = false)
     private MemberType memberType = MemberType.ADULT;
 
-    @Column(name = "band")
-    private BandInPractice band;
+    @Column(name = "band", nullable = false)
+    private BandInPractice band = BandInPractice.None;
 
     @Column(name="phone")
     private String phone;
@@ -36,7 +37,11 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column
-    private BandInPractice bandInPractice;
+    private BandInPractice bandInPractice = BandInPractice.None;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChildMember> childMembers = new HashSet<>();
+
 
     public Member() {}
     public Member(Long id, String email, String password, MemberType memberType, String phone, String firstName, String lastName) {
@@ -52,11 +57,15 @@ public class Member {
     }
 
     public Member(Long id, String email, String password, String phone, String firstName, String lastName) {
-        this(id, email, password,  MemberType.ADULT, phone, firstName, lastName);
-    }
 
-    public boolean isCommitteeMember() {
-        return this.memberType == MemberType.COMMITTEE;
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.memberType = MemberType.ADULT;
+        this.phone = phone;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.band = BandInPractice.None;
     }
 
     public Long getId() {

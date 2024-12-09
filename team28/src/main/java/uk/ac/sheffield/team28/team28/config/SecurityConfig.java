@@ -26,7 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/auth/register", "/auth/login", "/", "/js/registrationFormJS.js").permitAll() // Public access to register and login
+                .requestMatchers("/auth/register", "/auth/login", "/", "/js/registrationFormJS.js", "/css/style.css").permitAll() // Public access to register and login
                 .requestMatchers("/dashboard").authenticated()
                 .anyRequest().authenticated()                       // Require authentication for all other endpoints
             )
