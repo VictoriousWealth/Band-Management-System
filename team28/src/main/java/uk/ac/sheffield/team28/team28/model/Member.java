@@ -21,7 +21,7 @@ public class Member {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "member_type", nullable = false)
-    private MemberType memberType = MemberType.Adult;
+    private MemberType memberType = MemberType.ADULT;
 
     @Column(name = "band", nullable = false)
     private BandInPractice band = BandInPractice.None;
@@ -48,7 +48,7 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.memberType = memberType != null ? memberType : MemberType.Adult;
+        this.memberType = memberType != null ? memberType : MemberType.ADULT;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -61,7 +61,7 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.memberType = MemberType.Adult;
+        this.memberType = MemberType.ADULT;
         this.phone = phone;
         this.firstName = firstName;
         this.lastName = lastName;

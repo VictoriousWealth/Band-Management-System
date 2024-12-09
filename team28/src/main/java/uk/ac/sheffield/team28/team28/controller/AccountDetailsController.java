@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.model.Request;
+import uk.ac.sheffield.team28.team28.service.ChildMemberService;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 import uk.ac.sheffield.team28.team28.service.RequestService;
 
@@ -19,17 +21,23 @@ import java.util.List;
 @Controller
 public class AccountDetailsController {
     private final MemberService memberService;
+    private final ChildMemberService childMemberService;
+
     private final RequestService requestService;
 
-    public AccountDetailsController(MemberService memberService, RequestService requestService) {
+    public AccountDetailsController(MemberService memberService, ChildMemberService childMemberService, RequestService requestService) {
         this.memberService = memberService;
         this.requestService = requestService;
+        this.childMemberService = childMemberService;
     }
 
     @GetMapping("/account-info")
     public String accountInfo(HttpSession session, Model model) {
         Member member = memberService.findMember();
+        List<ChildMember> children = childMemberService.getChildByParent(member);
         model.addAttribute("member", member);
+        model.addAttribute("children", children);
+
         model.addAttribute("memberType", member.getMemberType().toString());
         model.addAttribute("isAuthorised", session.getAttribute("isAuthorised"));
         System.out.println(member.getMemberType());
@@ -88,6 +96,7 @@ public class AccountDetailsController {
 
     @PostMapping("/account/update/{id}")
     public String actualUpdateAccountInfo(@PathVariable Long id, Model model) {
+        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         List<String> details = getMemberUpdatedDetails(requestService.getRequestWithId(id).getDescription());
 
         Member oldMember = memberService.findMember(); // old member as in original member with no changes
@@ -111,13 +120,11 @@ public class AccountDetailsController {
                 model.addAttribute("exceptionList", exceptionList); // all the exceptions occurred during the attempt at updating the record, NOTE: if we were to redirect it won't show on the account-info page, as re-directing causes reset of the model values
             }
             model.addAttribute("hasBeenAccepted", false);
-            model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
             requestService.deleteRequest(requestService.getRequestWithId(id));
             model.addAttribute("requests", requestService.getAllApprovedRequestWhereRequesterIs(memberService.findMember()));
             return "account-info";
         }
         model.addAttribute("hasBeenAccepted", false);
-        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         return "redirect:/account-info";
 
     }

@@ -1,5 +1,6 @@
 package uk.ac.sheffield.team28.team28.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +16,9 @@ import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
+import uk.ac.sheffield.team28.team28.repository.LoanRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
+import uk.ac.sheffield.team28.team28.repository.OrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +29,22 @@ import java.util.regex.Pattern;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final LoanRepository loanRepository;
+
+    private final OrderRepository orderRepository;
+
     private final ChildMemberRepository childMemberRepository;
      private final PasswordEncoder passwordEncoder;
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z]).{8,}$");
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder,
-                         ChildMemberRepository childMemberRepository) {
+
+    public MemberService(MemberRepository memberRepository,LoanRepository loanRepository, PasswordEncoder passwordEncoder,
+                         ChildMemberRepository childMemberRepository, OrderRepository orderRepository) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.childMemberRepository = childMemberRepository;
+        this.loanRepository = loanRepository;
+        this.orderRepository = orderRepository;
     }
 
      public Member registerMember(MemberRegistrationDto dto) throws Exception {
@@ -66,7 +76,7 @@ public class MemberService {
         Member member = new Member();
         member.setEmail(dto.getEmail());
         member.setPassword(hashedPassword);
-        member.setMemberType(MemberType.Adult);
+        member.setMemberType(MemberType.ADULT);
         member.setPhone(dto.getPhone());
         member.setFirstName(dto.getFirstName());
         member.setLastName(dto.getLastName());
@@ -119,8 +129,8 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
 
-        if (member.getMemberType() == MemberType.Adult) {
-            member.setMemberType(MemberType.Committee);
+        if (member.getMemberType() == MemberType.ADULT) {
+            member.setMemberType(MemberType.COMMITTEE);
         } else
             throw new Exception("Member cannot be added.");
 
@@ -170,10 +180,10 @@ public class MemberService {
     }
 
     public List<Member> getCommitteeMembers() {
-        return memberRepository.findByMemberType(MemberType.Committee); //Currently set to ADULT since no committee
+        return memberRepository.findByMemberType(MemberType.COMMITTEE); //Currently set to ADULT since no COMMITTEE
     }
     public List<Member> getAdultMembers() {
-        return memberRepository.findByMemberType(MemberType.Adult); //Currently set to ADULT since no committee
+        return memberRepository.findByMemberType(MemberType.ADULT); //Currently set to ADULT since no COMMITTEE
     }
     public List<Member> getAllMembersBands() {
         List<Member> allMembers = new ArrayList<>();
@@ -183,14 +193,14 @@ public class MemberService {
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
 
-        return allMembers; //Currently set to ADULT since no committee
+        return allMembers; //Currently set to ADULT since no COMMITTEE
     }
     public List<Member> getTrainingBandMembers() {
         List<Member> allMembers = new ArrayList<>();
 
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Training));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
-        return allMembers; //Currently set to ADULT since no committee
+        return allMembers; //Currently set to ADULT since no COMMITTEE
     }
 
     public List<Member> getSeniorBandMembers() {
@@ -198,7 +208,7 @@ public class MemberService {
 
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
-        return allMembers; //Currently set to ADULT since no committee
+        return allMembers; //Currently set to ADULT since no COMMITTEE
     }
 
     public void setNone () {
@@ -212,6 +222,12 @@ public class MemberService {
         // Compare the hashed password with the provided password
         return passwordEncoder.matches(password,member.getPassword());
 
+    }
+
+    public Member findMemberById(Long memberId) throws Exception {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+        return member;
     }
 
     public List<Exception> updateMemberInfo(Long id, String firstName, String lastName, String phone, String email) {
@@ -283,8 +299,8 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
 
-        if (member.getMemberType() == MemberType.Committee) {
-            member.setMemberType(MemberType.Adult);
+        if (member.getMemberType() == MemberType.COMMITTEE) {
+            member.setMemberType(MemberType.ADULT);
         } else
             throw new Exception("Member cannot be demoted.");
 
@@ -296,5 +312,18 @@ public class MemberService {
 
     public Member getMemberWithId(Long id) {
         return memberRepository.findById(id).get();
+    }
+
+    public boolean doesMemberHaveLoans(Member member) {
+        return loanRepository.memberHasActiveLoans(member.getId());
+    }
+    @Transactional //Delete member
+    public void deleteMember(Long memberId) throws Exception {
+        // Check if the member has active loans
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+        loanRepository.deleteLoansByMemberId(memberId);
+        orderRepository.deleteOrdersByMemberId(memberId);
+        memberRepository.deleteById(memberId);
     }
 }

@@ -57,7 +57,7 @@ public class DashboardController {
         model.addAttribute("memberType", member.getMemberType().toString());
 
         //If member is a committee member, get all instruments, and orders
-        if (member.getMemberType() == MemberType.Committee || member.getMemberType() == MemberType.Director) {
+        if (member.getMemberType() == MemberType.COMMITTEE || member.getMemberType() == MemberType.DIRECTOR) {
             List<ChildMember> children = childMemberService.getChildByParent(member);
             int childNum = children.size();
             model.addAttribute("childNum", childNum);
@@ -81,7 +81,7 @@ public class DashboardController {
             model.addAttribute("musicOrders", orders);
             model.addAttribute("orderService", orderService);
 
-        } else if (member.getMemberType() == MemberType.Adult){
+        } else if (member.getMemberType() == MemberType.ADULT){
 
             //Get music based on band
             BandInPractice band = member.getBand();
