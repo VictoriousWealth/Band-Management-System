@@ -294,6 +294,41 @@
                 })
                 .catch(error => console.error('Error fetching performance details:', error));
         }
+
+        function putMusicIntoPractice(musicId) {
+            const band = prompt("Enter the band (Training, Senior, Both):");
+
+            if (band) {
+                fetch(`/api/music/${musicId}/put-into-practice?band=${band}`, {
+                    method: 'POST',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Music set to practice successfully!');
+                        // Refresh list
+                    } else {
+                        alert('Failed to set music to practice.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function returnMusicToStorage(musicId) {
+            fetch(`/api/music/${musicId}/return-to-storage`, {
+                method: 'POST',
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Music returned to storage successfully!');
+                    // Refresh list
+                } else {
+                    alert('Failed to return music to storage.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
     </script>
 </body>
 </html>
