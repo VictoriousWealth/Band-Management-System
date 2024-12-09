@@ -1,6 +1,7 @@
 package uk.ac.sheffield.team28.team28.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 public interface ChildMemberRepository extends JpaRepository<ChildMember, Long> {
 
-    //Custom query to get child members given a parent id
+    //REFACTOR ALL OF THIS
     @Query("SELECT c FROM ChildMember c WHERE c.parent = :parent")
     List<ChildMember> findAllByParent(@Param("parent") Member parent);
 
@@ -25,6 +26,11 @@ public interface ChildMemberRepository extends JpaRepository<ChildMember, Long> 
     @Query("SELECT c FROM ChildMember c WHERE CONCAT(c.firstName, ' ', c.lastName) = :fullName")
     Optional<ChildMember> findByName(@Param("fullName") String fullName);
 
+    @Modifying
+    @Query("DELETE FROM ChildMember c WHERE c.id = :childMemberId")
+    void deleteById(@Param("childMemberId") Long childMemberId);
 
     List<ChildMember> findByBand(BandInPractice bandInPractice);
+
+
 }
