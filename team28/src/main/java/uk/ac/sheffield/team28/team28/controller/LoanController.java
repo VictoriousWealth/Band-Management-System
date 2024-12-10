@@ -33,7 +33,7 @@ public class LoanController {
             } else {
                 return ResponseEntity.badRequest().body("Invalid action specified: " + loanRequest.getAction());
             }
-            response.sendRedirect("/dashboard");
+            response.sendRedirect("/committee/dashboard");
             return ResponseEntity.ok("Action processed successfully");
         } catch (IllegalStateException | NoSuchElementException | IOException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

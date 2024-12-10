@@ -121,12 +121,12 @@
                         <div class="form-group">
                             <label>Band</label><br>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="band" id="bandA" value="Training">
-                                <label class="form-check-label" for="Training">Training Band</label>
+                                <input class="form-check-input" type="radio" name="band" id="trainingBand" value="Training">
+                                <label class="form-check-label" for="trainingBand">Training Band</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="band" id="bandB" value="Senior">
-                                <label class="form-check-label" for="bandB">Senior Bank</label>
+                                <input class="form-check-input" type="radio" name="band" id="seniorBand" value="Senior">
+                                <label class="form-check-label" for="seniorBand">Senior Bank</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="band" id="bothBands" value="Both">
@@ -136,7 +136,7 @@
                         <div class="form-group">
                             <label for="playlist">Select Music for Playlist</label>
                             <select id="playlist" name="playlist" class="form-control" multiple>
-                                <!-- Dynamically populate music options -->
+                                <!-- Need to be implemented that all music should appear here dynamically -->
                                 <option value="1">Song A</option>
                                 <option value="2">Song B</option>
                                 <option value="3">Song C</option>
@@ -149,186 +149,496 @@
                 </div>
             </div>
 
-            <!-- Items Tab -->
+            <!-- committee items Tab -->
             <div class="tab-pane fade" id="items" role="tabpanel" aria-labelledby="items-tab">
-                <h3>Items</h3>
-                <ul id="itemsList" class="list-group">
-                    <li class="list-group-item">
-                        Sample Item
-                        <button class="btn btn-sm btn-secondary float-right" onclick="toggleLoanStatus('Sample Item')">Loan/Return</button>
-                    </li>
-                </ul>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Instrument</th>
+                        <th>Make</th>
+                        <th>Serial Number</th>
+                        <th>In Storage</th>
+                        <th>Note</th>
+                        <th>Action</th>
+                        <th>Loan/Return</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="instrument: ${instruments}">
+                        <td th:text="${instrument.item.nameTypeOrTitle}"></td>
+                        <td th:text="${instrument.item.makeOrComposer}"></td>
+                        <td th:text="${instrument.serialNumber}"></td>
+                        <td>
+                            <span th:if="${instrument.item?.inStorage}" class="badge badge-success">Yes</span>
+                            <span th:if="${!instrument.item?.inStorage}" class="badge badge-danger">No</span>
+                        </td>
+                        <td th:text="${instrument.item.note}"></td>
+                        <td>
+                            <button class="btn btn-primary"
+                                    data-toggle="modal"
+                                    data-target="#editInstrumentModal"
+                                    th:attr="data-id=${instrument.id}, data-inStorage=${instrument.item.inStorage}"
+                                    onclick="populateEditForm(this)"> Edit </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary"
+                                    th:if="${instrument.item.inStorage}"
+                                    data-toggle="modal"
+                                    data-target="#loanModal"
+                                    th:attr="data-id=${instrument.id}"
+                                    data-action="loan"
+                                    onclick="setAction(this)">Loan</button>
+                            <button class="btn btn-warning"
+                                    th:if="${!instrument.item.inStorage}"
+                                    data-toggle="modal"
+                                    data-target="#returnModal"
+                                    th:attr="data-id=${instrument.id}"
+                                    data-action="return"
+                                    onclick="setAction(this)">Return</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- Button to add instruments to inventory -->
+                <button class="btn btn-primary" data-toggle="modal" data-target="#addInstrument">
+                    Add Instrument</button>
+
+                <!-- Loan modal -->
+                <div class="modal fade" id="loanModal" tabindex="-1" role="dialog" aria-labelledby="loanModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="loanModalLabel">Loan Instrument</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form th:action="@{/loans/loanAction}" id="loanForm" method="post">
+                                <div class="modal-body">
+                                    <input type="hidden" id="loanInstrumentId" name="instrumentId">
+                                    <input type="hidden" id="loanAction" name="action">
+                                    <div class="form-group">
+                                        <label for="memberName">Member Full Name:</label>
+                                        <input type="text" class="form-control" id="memberName" name="memberName" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Return Modal -->
+                <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="returnModalLabel">Return Instrument</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form th:action="@{/loans/loanAction}" id="returnForm" method="post">
+                                <div class="modal-body">
+                                    <input type="hidden" id="returnInstrumentId" name="instrumentId">
+                                    <input type="hidden" id="returnAction" name="action">
+                                    <p>Are you sure you want to return this instrument?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-warning">Return</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Type modal with form to add instrument-->
+                <div class="modal fade" id="addInstrument" tabindex="-1" role="dialog"
+                     aria-labelledby="addInstrument" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addInstrumentLabel">Add Instrument</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form th:action="@{/addInstrument}" method="post">
+                                <div class="modal-body">
+                                    <div class="form-group" >
+                                        <label for="instrumentInput">Instrument:</label>
+                                        <input type="text" class="form-control" id="instrumentInput" name="instrumentInput" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="make">Make:</label>
+                                        <input type="text" class="form-control" id="make" name="make" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="serialNumber">Serial Number:</label>
+                                        <input type="text" class="form-control" id="serialNumber" name="serialNumber" required>
+                                    </div>
+                                    <input type="hidden" name="inStorage" value = "true">
+                                    <div class="form-group">
+                                        <label for="note">Note:</label>
+                                        <input type="text" class="form-control" id="note" name="note">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Type modal to edit or delete instrument -->
+                <div class="modal fade" id="editInstrumentModal" tabindex="-1" role="dialog" aria-labelledby="editInstrumentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editInstrumentModalLabel">Edit Instrument</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form th:action="@{/editInstrument}" method="post">
+                                <div class="modal-body">
+                                    <input type="hidden" id="editInstrumentId" name="instrumentId"/>
+                                    <div class="form-group">
+                                        <label for="editInstrumentInput">Instrument:</label>
+                                        <input type="text" class="form-control" id="editInstrumentInput" name="instrumentInput" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editMake">Make:</label>
+                                        <input type="text" class="form-control" id="editMake" name="make" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editSerialNumber">Serial Number:</label>
+                                        <input type="text" class="form-control" id="editSerialNumber" name="serialNumber" required>
+                                    </div>
+                                    <input type="hidden" name="inStorage" id="editInStorage">
+                                    <div class="form-group">
+                                        <label for="editNote">Note:</label>
+                                        <input type="text" class="form-control" id="editNote" name="note">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                            <!-- Button to delete an Instrument -->
+                            <form id="deleteForm" th:action="@{/deleteInstrument}" method="post" style="display: inline;">
+                                <input type="hidden" name="instrumentId" id="deleteInstrumentId" />
+                                <button type="button" class="btn btn-danger" id="deleteButton" onclick="confirmDelete()">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
 
             <!-- Music Tab -->
             <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
-                <h3>Music</h3>
-                <ul id="musicList" class="list-group">
-                    <li class="list-group-item">
-                        Sample Music
-                        <button class="btn btn-sm btn-success float-right" onclick="markAsInPractice('Sample Music')">Put into Practice</button>
-                        <button class="btn btn-sm btn-warning float-right mr-2" onclick="markAsInStorage('Sample Music')">Return to Storage</button>
-                    </li>
-                </ul>
-                <button class="btn btn-primary mt-3" onclick="viewOutstandingOrders()">Outstanding Orders</button>
+                <h3><span th:unless="${memberType.equals('Committee')} or ${memberType.equals('Director')}">Your </span>Music</h3>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Composer</th>
+                        <th>Arranger</th>
+                        <th th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
+                            Band practicing</th>
+                        <th th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
+                            Suitable for training band?</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="music: ${musics}">
+                        <td th:text="${music.item.nameTypeOrTitle}"></td>
+                        <td th:text="${music.item.makeOrComposer}"></td>
+                        <td th:text="${music.arranger}"></td>
+                        <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
+                            th:text="${music.bandInPractice.toString()}"></td>
+                        <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
+                            th:text="${music.item.note == 'true' ? 'True' : 'False'}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- Button to add music and to see order requests-->
+                <span th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#addMusic">
+                            Add Music</button>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#viewOrders">
+                            View Orders</button>
+                    </span>
+                <!-- Type modal with form to add music-->
+                <div class="modal fade" id="addMusic" tabindex="-1" role="dialog"
+                     aria-labelledby="addMusic" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addMusicLabel">Add Music</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form th:action="@{/addMusic}" method="post">
+                                <div class="modal-body">
+                                    <div class="form-group" >
+                                        <label for="musicInput">Name:</label>
+                                        <input type="text" class="form-control" id="musicInput" name="musicInput" required >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="composer">Composer:</label>
+                                        <input type="text" class="form-control" id="composer" name="composer" required >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="arranger">Arranger:</label>
+                                        <input type="text" class="form-control" id="arranger" name="arranger">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="bandInPractice">Band practicing:</label>
+                                        <select id="bandInPractice" name="bandInPractice" required>
+                                            <option th:each="band : ${T(uk.ac.sheffield.team28.team28.model.BandInPractice).values()}"
+                                                    th:value="${band}"
+                                                    th:text="${band.toString() != null ? band.toString() : band.toString()}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Is this suitable for the Training Band?</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="suitableForTraining" id="suitableForTrainingYes" value="true" checked>
+                                            <label class="form-check-label" for="suitableForTrainingYes">Yes</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="suitableForTraining" id="suitableForTrainingNo" value="false">
+                                            <label class="form-check-label" for="suitableForTrainingNo">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Type modal with form to view music orders-->
+                <div class="modal fade" id="viewOrders" tabindex="-1" role="dialog"
+                     aria-labelledby="viewOrders" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="viewOrderLabel">View orders</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form th:action="@{/orders/changeOrderStatus}" method="post">
+                                <!-- Table that shows all music orders that are not fulfilled -->
+                                <table id="orderTable" class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>Name</th>
+                                        <th>Composer</th>
+                                        <th>Arranger</th>
+                                        <th>Note</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="musicOrder : ${musicOrders}">
+                                        <td>
+                                            <input type="radio" name="orderId" th:value="${musicOrder.id}">
+                                        </td>
+                                        <td th:text="${musicOrder.item.nameTypeOrTitle}"></td>
+                                        <td th:text="${musicOrder.item.makeOrComposer}"></td>
+                                        <td th:text="${orderService.getArrangerForOrder(musicOrder.id)}"></td>
+                                        <td th:text="${musicOrder.note}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Fulfill Order</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        &copy; 2024 Sludgate Brass Bandss. All Rights Reserved.
-    </div>
+    <footer>
+        <div th:replace="~{fragments/footer :: footer}"></div>
 
-    <!-- Bootstrap JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script th:src="@{js/editInstrument.js}"></script>
+        <script th:src="@{js/confirmDelete.js}"></script>
+        <script th:src="@{js/dashboardLoan.js}"></script>
 
-    <!-- Custom Scripts -->
-    <script>
-        function showCreatePerformanceForm() {
-            document.getElementById('createPerformanceForm').style.display = 'block';
-        }
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        function hideCreatePerformanceForm() {
-            document.getElementById('createPerformanceForm').style.display = 'none';
-        }
-
-        function submitPerformance() {
-            const name = document.getElementById('name').value;
-            const venue = document.getElementById('venue').value;
-            const dateTime = document.getElementById('dateTime').value;
-            const band = document.querySelector('input[name="band"]:checked')?.value;
-            const playlist = Array.from(document.getElementById('playlist').selectedOptions).map(option => option.value);
-
-            if (!name || !venue || !dateTime || !band) {
-                alert('Please fill all fields.');
-                return;
+        <script>
+            function showCreatePerformanceForm() {
+                document.getElementById('createPerformanceForm').style.display = 'block';
             }
 
-            // Submit the performance data to the backend
-            fetch('/performances', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name, venue, dateTime, band, playlist })
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Performance created successfully!');
-                    hideCreatePerformanceForm();
-                    // Refresh the list
-                } else {
-                    alert('Failed to create performance.');
+            function hideCreatePerformanceForm() {
+                document.getElementById('createPerformanceForm').style.display = 'none';
+            }
+
+            function submitPerformance() {
+                const name = document.getElementById('name').value;
+                const venue = document.getElementById('venue').value;
+                const dateTime = document.getElementById('dateTime').value;
+                const band = document.querySelector('input[name="band"]:checked')?.value;
+                const playlist = Array.from(document.getElementById('playlist').selectedOptions).map(option => option.value);
+
+                if (!name || !venue || !dateTime || !band) {
+                    alert('Please fill all fields.');
+                    return;
                 }
-            })
-            .catch(error => console.error('Error:', error));
-        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            fetch('/performances')
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Parsed data:', data);
-                    const performanceTableBody = document.querySelector('#performanceTable tbody');
-                    performanceTableBody.innerHTML = ''; // Clear any existing items
-
-                    if (data.length === 0) {
-                        // Show a message if there are no performances
-                        const li = document.createElement('li');
-                        li.className = 'list-group-item';
-                        li.textContent = 'No performances available.';
-                        performanceList.appendChild(li);
-                    } else {
-                        // Populate the list with performances
-                        data.forEach(performance => {
-                            const row = document.createElement('tr');
-
-                            // Format date and time
-                            const date = new Date(performance.dateTime);
-                            const formattedDate = date.toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                            });
-                            const formattedTime = date.toLocaleTimeString('en-US', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: true,
-                            });
-
-                            row.innerHTML = `
-                                <td>${performance.name}</td>
-                                <td>${performance.venue}</td>
-                                <td>${formattedDate}, ${formattedTime}</td>
-                                <td>${performance.band}</td>
-                                <td>${performance.playlist && performance.playlist.length > 0 ? performance.playlist.join(', ') : 'No playlist'}</td>
-                            `;
-                            row.addEventListener('click', () => {
-                            viewPerformanceDetails(performance.id);
-                            });
-                            performanceTableBody.appendChild(row);
-                            });
-                    }
-                })
-                .catch(error => console.error('Error fetching performances:', error));
-        });
-
-        function viewPerformanceDetails(performanceId) {
-            fetch(`/performances/${performanceId}/players`)
-                .then(response => response.json())
-                .then(players => {
-                    const playerList = document.getElementById('playerList');
-                    playerList.innerHTML = '';
-
-                    players.forEach(player => {
-                        const li = document.createElement('li');
-                        li.className = 'list-group-item';
-                        li.textContent = player.name;
-                        playerList.appendChild(li);
-                    });
-
-                    $('#performanceModal').modal('show');
-                })
-                .catch(error => console.error('Error fetching performance details:', error));
-        }
-
-        function putMusicIntoPractice(musicId) {
-            const band = prompt("Enter the band (Training, Senior, Both):");
-
-            if (band) {
-                fetch(`/api/music/${musicId}/put-into-practice?band=${band}`, {
+                // Submit the performance data to the backend
+                fetch('/performances', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, venue, dateTime, band, playlist })
                 })
                 .then(response => {
                     if (response.ok) {
-                        alert('Music set to practice successfully!');
-                        // Refresh list
+                        alert('Performance created successfully!');
+                        hideCreatePerformanceForm();
+                        // Refresh the list
                     } else {
-                        alert('Failed to set music to practice.');
+                        alert('Failed to create performance.');
                     }
                 })
                 .catch(error => console.error('Error:', error));
             }
-        }
 
-        function returnMusicToStorage(musicId) {
-            fetch(`/api/music/${musicId}/return-to-storage`, {
-                method: 'POST',
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Music returned to storage successfully!');
-                    // Refresh list
-                } else {
-                    alert('Failed to return music to storage.');
+            document.addEventListener('DOMContentLoaded', () => {
+                fetch('/performances')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Parsed data:', data);
+                        const performanceTableBody = document.querySelector('#performanceTable tbody');
+                        performanceTableBody.innerHTML = ''; // Clear any existing items
+
+                        if (data.length === 0) {
+                            // Show a message if there are no performances
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item';
+                            li.textContent = 'No performances available.';
+                            performanceList.appendChild(li);
+                        } else {
+                            // Populate the list with performances
+                            data.forEach(performance => {
+                                const row = document.createElement('tr');
+
+                                // Format date and time
+                                const date = new Date(performance.dateTime);
+                                const formattedDate = date.toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                });
+                                const formattedTime = date.toLocaleTimeString('en-US', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true,
+                                });
+
+                                row.innerHTML = `
+                                    <td>${performance.name}</td>
+                                    <td>${performance.venue}</td>
+                                    <td>${formattedDate}, ${formattedTime}</td>
+                                    <td>${performance.band}</td>
+                                    <td>${performance.playlist && performance.playlist.length > 0 ? performance.playlist.join(', ') : 'No playlist'}</td>
+                                `;
+                                row.addEventListener('click', () => {
+                                viewPerformanceDetails(performance.id);
+                                });
+                                performanceTableBody.appendChild(row);
+                                });
+                        }
+                    })
+                    .catch(error => console.error('Error fetching performances:', error));
+            });
+
+            function viewPerformanceDetails(performanceId) {
+                fetch(`/performances/${performanceId}/players`)
+                    .then(response => response.json())
+                    .then(players => {
+                        const playerList = document.getElementById('playerList');
+                        playerList.innerHTML = '';
+
+                        players.forEach(player => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item';
+                            li.textContent = player.name;
+                            playerList.appendChild(li);
+                        });
+
+                        $('#performanceModal').modal('show');
+                    })
+                    .catch(error => console.error('Error fetching performance details:', error));
+            }
+
+            function putMusicIntoPractice(musicId) {
+                const band = prompt("Enter the band (Training, Senior, Both):");
+
+                if (band) {
+                    fetch(`/api/music/${musicId}/put-into-practice?band=${band}`, {
+                        method: 'POST',
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Music set to practice successfully!');
+                            // Refresh list
+                        } else {
+                            alert('Failed to set music to practice.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
                 }
-            })
-            .catch(error => console.error('Error:', error));
-        }
+            }
 
-    </script>
+            function returnMusicToStorage(musicId) {
+                fetch(`/api/music/${musicId}/return-to-storage`, {
+                    method: 'POST',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Music returned to storage successfully!');
+                        // Refresh list
+                    } else {
+                        alert('Failed to return music to storage.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+        </script>
+    </footer>
 </body>
 </html>
