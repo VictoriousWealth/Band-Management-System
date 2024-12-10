@@ -46,19 +46,17 @@ public class CommitteeController {
     public String committeeDashboard(Model model, HttpSession session) {
         // removed session used for authorizing users to go in to different parts of the web
         session.removeAttribute("isAuthorised");
+
         //Get logged in member
         Member member = memberService.findMember();
         model.addAttribute("member", member);
         model.addAttribute("memberType", member.getMemberType().toString());
 
-        //If member is a committee member, get all instruments, and orders
         if (member.getMemberType() == MemberType.COMMITTEE || member.getMemberType() == MemberType.DIRECTOR) {
             List<ChildMember> children = childMemberService.getChildByParent(member);
             int childNum = children.size();
             model.addAttribute("childNum", childNum);
             model.addAttribute("children",children);
-
-            //If member is a committee member, get all instruments
 
             List<Instrument> instruments = instrumentRepository.findAll();
             model.addAttribute("instruments", instruments);
@@ -75,22 +73,7 @@ public class CommitteeController {
             List<Order> orders = orderRepository.findByItemTypeAndNotFulfilled(ItemType.Music);
             model.addAttribute("musicOrders", orders);
             model.addAttribute("orderService", orderService);
-
-        } else if (member.getMemberType() == MemberType.ADULT){
-
-            //Get music based on band
-            BandInPractice band = member.getBand();
-            if (band != BandInPractice.None){
-                List<Music> music =
-                        musicRepository.findByBandInPracticeOrBandInPractice(band, BandInPractice.Both);
-                model.addAttribute("musics", music);
-            }
-
         }
-
-        List<Loan> memberLoans = loanService.getActiveLoansByMemberId(member.getId());
-        model.addAttribute("memberLoans", memberLoans);
-
         return "committee-dashboard";
     }
 
