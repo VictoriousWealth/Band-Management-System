@@ -13,8 +13,14 @@
             flex-direction: column;
         }
 
-        body {
-            background-color: #f7f7f7;
+        .content-wrapper {
+            padding-top: 60px;
+            flex: 1;
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
         }
 
         .content-wrapper {
@@ -31,17 +37,37 @@
             color: white;
         }
 
-        .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 10px 0;
-            text-align: center;
+        .floating-buttons {
+            position: fixed;
+            padding-bottom: 65px;
+            bottom: 100px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
+
+        .floating-buttons button {
+            background-color: navy; /* Changes the button color to navy */
+            color: white; /* Ensures the text is readable */
+            border: none; /* Optional: removes any border */
+            padding: 5px 15px; /* Adjusts padding for better appearance */
+            border-radius: 5px; /* Adds rounded corners */
+            font-size: 16px; /* Sets a readable font size */
+            cursor: pointer; /* Changes cursor to pointer on hover */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: adds a slight shadow */
+            width: 150px;
+            height: 50px;
+        }
+
+        .floating-buttons button:hover {
+            background-color: darkblue; /* Changes to a slightly darker navy on hover */
+        }
+
+
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <div th:replace="~{fragments/navbar-for-logged-in-users}"> </div>
 
     <!-- Content Wrapper -->
     <div class="content-wrapper container mt-5">
@@ -214,7 +240,7 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form th:action="@{/loans/loanAction}" id="loanForm" method="post">
+                            <form th:action="@{/loans/loanAction}" id="loanRequestDto" method="post">
                                 <div class="modal-body">
                                     <input type="hidden" id="loanInstrumentId" name="instrumentId">
                                     <input type="hidden" id="loanAction" name="action">
@@ -480,8 +506,31 @@
                         </div>
                     </div>
                 </div>
+
             </div>
+
+
         </div>
+
+
+    </div>
+
+    <div class="floating-buttons">
+
+        <button
+                class="btn btn-info"
+                th:onclick="'window.location.href=\'/committee/allow-to-go-to-director\';'"
+                th:if="${memberType.equals('Director')}">
+            Director View
+        </button>
+        <button
+                class="btn btn-info"
+                th:onclick="'window.location.href=\'/dashboard\';'"
+                th:if="${memberType.equals('Committee') || memberType.equals('Director')}">
+            Return to Adult View
+        </button>
+
+
     </div>
 
     <footer>
@@ -636,6 +685,18 @@
                     }
                 })
                 .catch(error => console.error('Error:', error));
+            }
+
+            function setAction(button) {
+                // Get the data attributes from the clicked button
+                const instrumentId = button.getAttribute('data-id');
+                const action = button.getAttribute('data-action');
+
+                // Set the values to the hidden input fields in the form
+                document.getElementById('loanInstrumentId').value = instrumentId;
+                document.getElementById('returnInstrumentId').value = instrumentId;
+                document.getElementById('loanAction').value = action;
+                document.getElementById('returnAction').value = action;
             }
 
         </script>

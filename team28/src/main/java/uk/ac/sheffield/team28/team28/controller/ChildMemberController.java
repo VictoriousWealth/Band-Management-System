@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
+import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.service.ChildMemberService;
 
 import java.security.Principal;
@@ -35,6 +36,16 @@ public class ChildMemberController {
         // Handle the logic for displaying the child's dashboard
         model.addAttribute("childMemberId", childMemberId);
         return "childDashboard";
+    }
+
+    @GetMapping("allow-to-go-parent")
+    public String allowToGoParent(HttpSession session) {
+        Boolean isAuthorised = (Boolean) session.getAttribute("isAuthorised");
+        if (isAuthorised == null || !isAuthorised) {
+            session.setAttribute("referer", "/dashboard");
+            return "redirect:/authorise";
+        }
+        return "redirect:/child/dashboard/{childMemberId}";
     }
 
 

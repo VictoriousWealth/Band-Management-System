@@ -9,10 +9,6 @@ import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-    boolean existsByDescription(String description);
-
-    List<Request> findByDescription(String description);
-    List<Request> findAllByRequester(Member requester);
     List<Request> findAllByRequesterAndAccepted(Member requester, boolean accepted);
     List<Request> findAllByAccepted(boolean accepted);
 

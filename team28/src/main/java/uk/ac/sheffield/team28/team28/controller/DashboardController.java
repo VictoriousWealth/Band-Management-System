@@ -1,5 +1,6 @@
 package uk.ac.sheffield.team28.team28.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Controller;
@@ -50,7 +51,10 @@ public class DashboardController {
 
 
     @GetMapping("/dashboard")
-    public String showDashboard(Model model) {
+    public String showDashboard(Model model, HttpSession session) {
+        // removed session used for authorizing users to go in to different parts of the web
+        session.removeAttribute("isAuthorised");
+
         //Get logged in member
         Member member = memberService.findMember();
         model.addAttribute("member", member);
@@ -128,7 +132,7 @@ public class DashboardController {
     @PostMapping("/addMusic")
     public String addMusic(@ModelAttribute("music") MusicDto dto){
         musicService.saveMusic(dto);
-        return "redirect:/committee-dashboard";
+        return "redirect:/committee/dashboard";
     }
 
     @PostMapping("/orderMusic")
