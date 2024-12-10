@@ -19,11 +19,7 @@ import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import javax.servlet.http.HttpServletRequest;
 
 
-import java.util.List;
-
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 
 @Controller // Use @Controller instead of @RestController for Thymeleaf views
@@ -217,8 +213,15 @@ public class DirectorController {
     @PostMapping("/addChildToBandByName")
     public String addChildToBandByName(@RequestParam String fullName) {
         try {
+
+            String [] names = fullName.split(" ");
+            String firstName = names[0];
+            String lastName = names[names.length - 1];
+            String fullFirstName = Character.toUpperCase(firstName.charAt(0)) + firstName.substring(1).toLowerCase();
+            String fullLastName = lastName.isEmpty() ? "" : Character.toUpperCase(lastName.charAt(0)) + lastName.substring(1).toLowerCase();
+            String newFullName = fullFirstName + " " + fullLastName;
             // Fetch the member by email
-            ChildMember childMember = childMemberRepository.findByName(fullName)
+            ChildMember childMember = childMemberRepository.findByName(newFullName)
                     .orElseThrow(() -> new RuntimeException("Member not found with email: " + fullName));
             // Update the member's band
             childMemberService.addChildMemberToBand(childMember.getId());

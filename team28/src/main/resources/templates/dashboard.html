@@ -544,14 +544,13 @@
             <button
                     class="btn btn-info"
                     th:onclick="'window.location.href=\'/committee/dashboard\';'"
-                    th:if="${memberType.equals('Committee')}">
+                    th:if="${memberType.equals('COMITTEE')}">
                 Committee View
             </button>
             <button
                     class="btn btn-primary"
                     data-toggle="modal"
                     data-target="#addChildModal">
-<!--                    th:if="${childNum < 2}">-->
                 Add Child
             </button>
             <button

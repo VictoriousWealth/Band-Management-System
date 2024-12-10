@@ -55,16 +55,15 @@ public class DashboardController {
         Member member = memberService.findMember();
         model.addAttribute("member", member);
         model.addAttribute("memberType", member.getMemberType().toString());
+        List <ChildMember> children = childMemberService.getChildByParent(member);
+        int childNum = children.size();
+        model.addAttribute("childNum", childNum);
+        model.addAttribute("children",children);
 
         //If member is a committee member, get all instruments, and orders
         if (member.getMemberType() == MemberType.COMMITTEE || member.getMemberType() == MemberType.DIRECTOR) {
-            List<ChildMember> children = childMemberService.getChildByParent(member);
-            int childNum = children.size();
-            model.addAttribute("childNum", childNum);
-            model.addAttribute("children",children);
 
             //If member is a committee member, get all instruments
-
             List<Instrument> instruments = instrumentRepository.findAll();
             model.addAttribute("instruments", instruments);
 
