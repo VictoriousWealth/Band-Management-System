@@ -42,19 +42,6 @@ public class DirectorController {
         this.childMemberService = childMemberService;
     }
 
-    public String redirectToPreviousPage(HttpServletRequest request) {
-        // Get the referer URL from the request
-        String referer = request.getHeader("Referer");
-
-        // If the referer is null or empty, you can fall back to a default page
-        if (referer == null || referer.isEmpty()) {
-            referer = "/defaultPage"; // Provide a default URL in case the referer is missing
-        }
-
-        // Redirect to the previous page
-        return "redirect:" + referer;
-    }
-
     @GetMapping("")
     public String directorHome(Model model) {
         model.addAttribute("message", "This is our director page");
