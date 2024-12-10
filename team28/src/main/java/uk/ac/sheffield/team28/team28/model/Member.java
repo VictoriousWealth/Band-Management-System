@@ -35,15 +35,16 @@ public class Member {
     @Column(name="last_name", nullable = false)
     private String lastName;
 
-    @Enumerated(EnumType.STRING)
-    @Column
-    private BandInPractice bandInPractice = BandInPractice.None;
+//    @Enumerated(EnumType.STRING)
+//    @Column
+//    private BandInPractice bandInPractice = BandInPractice.None;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ChildMember> childMembers = new HashSet<>();
 
 
     public Member() {}
+
     public Member(Long id, String email, String password, MemberType memberType, String phone, String firstName, String lastName) {
         this.id = id;
         this.email = email;
@@ -128,6 +129,25 @@ public class Member {
 
     public void setPhone(String phone) {
     this.phone = phone;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Member convertedObj = (Member) obj;
+        return this.id.equals(convertedObj.id) &&
+                this.email.equals(convertedObj.email) &&
+                this.password.equals(convertedObj.password) &&
+                this.memberType == convertedObj.memberType &&
+                this.firstName.equals(convertedObj.firstName) &&
+                this.lastName.equals(convertedObj.lastName) &&
+                this.phone.equals(convertedObj.phone) &&
+                this.band == convertedObj.band;
     }
 
 }

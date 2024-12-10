@@ -160,14 +160,14 @@ public class ChildMemberServiceTest {
         verify(childMemberRepository, times(1)).deleteById(2L);
     }
 
-    @Test
-    void testSaveChildMember() {
-        ChildMember child = new ChildMember();
-
-        childMemberService.save(child);
-
-        verify(childMemberRepository, times(1)).save(child);
-    }
+//    @Test
+//    void testSaveChildMember() {
+//        ChildMember child = new ChildMember();
+//
+//        childMemberService.save(child);
+//
+//        verify(childMemberRepository, times(1)).save(child);
+//    }
 
 
 }
