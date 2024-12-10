@@ -129,7 +129,7 @@ public class DashboardController {
     @PostMapping("/addMusic")
     public String addMusic(@ModelAttribute("music") MusicDto dto){
         musicService.saveMusic(dto);
-        return "redirect:/committee-dashboard";
+        return "redirect:/committee/dashboard";
     }
 
     @PostMapping("/orderMusic")

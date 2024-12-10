@@ -214,7 +214,7 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form th:action="@{/loans/loanAction}" id="loanForm" method="post">
+                            <form th:action="@{/loans/loanAction}" id="loanRequestDto" method="post">
                                 <div class="modal-body">
                                     <input type="hidden" id="loanInstrumentId" name="instrumentId">
                                     <input type="hidden" id="loanAction" name="action">
@@ -636,6 +636,18 @@
                     }
                 })
                 .catch(error => console.error('Error:', error));
+            }
+
+            function setAction(button) {
+                // Get the data attributes from the clicked button
+                const instrumentId = button.getAttribute('data-id');
+                const action = button.getAttribute('data-action');
+
+                // Set the values to the hidden input fields in the form
+                document.getElementById('loanInstrumentId').value = instrumentId;
+                document.getElementById('returnInstrumentId').value = instrumentId;
+                document.getElementById('loanAction').value = action;
+                document.getElementById('returnAction').value = action;
             }
 
         </script>

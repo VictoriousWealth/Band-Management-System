@@ -20,18 +20,20 @@ public class LoanController {
     }
 
     @PostMapping("/loanAction")
-    public ResponseEntity<String> handleLoanAction(@ModelAttribute LoanRequestDto loanRequest, HttpServletResponse response) {
-        if (loanRequest.getAction() == null) {
+    public ResponseEntity<String> handleLoanAction(@ModelAttribute LoanRequestDto loanRequestDto, HttpServletResponse response) {
+        if (loanRequestDto.getAction() == null) {
             return ResponseEntity.badRequest().body("Action is required");
         }
-        System.out.println(loanRequest.getAction());
+        System.out.println("Loan request "+loanRequestDto.getAction());
+        System.out.println("Member loan request "+loanRequestDto.getMemberName());
+        System.out.println("InstrumentId loan request "+loanRequestDto.getInstrumentId());
         try {
-            if (loanRequest.getAction().equals("loan")) {
-                loanService.loanInstrument(loanRequest.getInstrumentId(), loanRequest.getMemberName());
-            } else if (loanRequest.getAction().equals("return")) {
-                loanService.returnInstrument(loanRequest.getInstrumentId());
+            if (loanRequestDto.getAction().contains("loan")) {
+                loanService.loanInstrument(loanRequestDto.getInstrumentId(), loanRequestDto.getMemberName());
+            } else if (loanRequestDto.getAction().contains("return")) {
+                loanService.returnInstrument(loanRequestDto.getInstrumentId());
             } else {
-                return ResponseEntity.badRequest().body("Invalid action specified: " + loanRequest.getAction());
+                return ResponseEntity.badRequest().body("Invalid action specified: " + loanRequestDto.getAction());
             }
             response.sendRedirect("/committee/dashboard");
             return ResponseEntity.ok("Action processed successfully");

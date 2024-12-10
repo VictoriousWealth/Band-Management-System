@@ -33,7 +33,17 @@
         </thead>
         <tbody>
         <tr th:each="request: ${requests}">
-            <td th:text="${request.description}"></td>
+            <td>User desires to change from</td>
+            <td th:text="${request.oldFirstName}"></td>
+            <td th:text="${request.oldLastName}"></td>
+            <td th:text="${request.oldPhone}"></td>
+            <td th:text="${request.oldEmail}"></td>
+            <td>To</td>
+            <td th:text="${request.newFirstName}"></td>
+            <td th:text="${request.newLastName}"></td>
+            <td th:text="${request.newPhone}"></td>
+            <td th:text="${request.newEmail}"></td>
+
             <td>
                 <div class="d-flex justify-content-around">
                     <form th:action="@{/request/approve/{id}(id=${request.id})}" method="post" onsubmit="return confirmApprove();">

@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import uk.ac.sheffield.team28.team28.model.MemberType;
 import uk.ac.sheffield.team28.team28.model.Request;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 import uk.ac.sheffield.team28.team28.service.RequestService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -25,35 +27,31 @@ public class RequestController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/show/approved")
+    @GetMapping("/show")
     public String showApprovedRequests(Model model) {
-        List<Request> requests = requestService.getAllApprovedRequestWhereRequesterIs(memberService.findMember());
-        model.addAttribute("requests", requests);
-        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
-        return "approved-changes";
+        if (memberService.findMember().getMemberType()!=MemberType.DIRECTOR) {
+            List<Request> requests = requestService.getAllApprovedRequestWhereRequesterIs(memberService.findMember());
+            model.addAttribute("requests", requests);
+            return "approved-changes";
+        } else {
+            List<Request> requests = requestService.getAllToBeApprovedRequests();
+            model.addAttribute("requests", requests);
+            return "changes-to-be-approved";
+        }
 
-    }
-
-    @GetMapping("/show/all")
-    public String showAllRequests(Model model) {
-        List<Request> requests = requestService.getAllToBeApprovedRequests();
-        model.addAttribute("requests", requests);
-        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
-        return "changes-to-be-approved";
     }
 
     @PostMapping("/approve/{id}")
     public String fulfilRequest(@PathVariable Long id, Model model) {
-        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         Request requestToBeApproved = requestService.getRequestWithId(id);
         if (requestToBeApproved == null) {
             model.addAttribute("error", "Request with id " + id + " does not exist");
-            return "redirect:/request/show/all";
+            return "redirect:/request/show";
         } else {
             boolean approvedFlag = requestService.approveRequest(requestToBeApproved);
             if (!approvedFlag) {
                 model.addAttribute("error", "Request with id " + id + " contains input errors");
-                return "redirect:/request/show/all";
+                return "redirect:/request/show";
             }
             model.addAttribute("approvedFlag", true);
         }
@@ -63,11 +61,10 @@ public class RequestController {
 
     @PostMapping("/reject/{id}")
     public String rejectRequest(@PathVariable Long id, Model model) {
-        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         boolean deletedFlag = requestService.deleteRequest(requestService.getRequestWithId(id));
         if (!deletedFlag) {
             model.addAttribute("error", "Request with id " + id + " does not exist");
-            return "redirect:/request/show/all";
+            return "redirect:/request/show";
         }
         model.addAttribute("deletedFlag", true);
         model.addAttribute("requests", requestService.getAllToBeApprovedRequests());
@@ -76,11 +73,10 @@ public class RequestController {
 
     @PostMapping("/discard/{id}")
     public String deleteRequest(@PathVariable Long id, Model model) {
-        model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
         boolean deletedFlag = requestService.deleteRequest(requestService.getRequestWithId(id));
         if (!deletedFlag) {
             model.addAttribute("error", "Request with id " + id + " does not exist");
-            return "redirect:/request/show/approve";
+            return "redirect:/request/show";
         }
         model.addAttribute("deletedFlag", true);
         model.addAttribute("requests", requestService.getAllApprovedRequestWhereRequesterIs(memberService.findMember()));
