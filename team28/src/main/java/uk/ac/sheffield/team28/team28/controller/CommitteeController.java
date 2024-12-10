@@ -1,19 +1,93 @@
 package uk.ac.sheffield.team28.team28.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import uk.ac.sheffield.team28.team28.model.Member;
+import uk.ac.sheffield.team28.team28.model.*;
+import uk.ac.sheffield.team28.team28.repository.InstrumentRepository;
+import uk.ac.sheffield.team28.team28.repository.MusicRepository;
+import uk.ac.sheffield.team28.team28.repository.OrderRepository;
+import uk.ac.sheffield.team28.team28.service.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 @Controller
 @RequestMapping("/committee")
 public class CommitteeController {
+
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private LoanService loanService;
+    @Autowired
+    private InstrumentRepository instrumentRepository;
+    @Autowired
+    private InstrumentService instrumentService;
+    @Autowired
+    private MusicRepository musicRepository;
+    @Autowired
+    private MusicService musicService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private ItemService itemService;
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private ChildMemberService childMemberService;
     
     @GetMapping("/dashboard")
-    public String committeeDashboard() {
+    public String committeeDashboard(Model model) {
+        //Get logged in member
+        Member member = memberService.findMember();
+        model.addAttribute("member", member);
+        model.addAttribute("memberType", member.getMemberType().toString());
+
+        //If member is a committee member, get all instruments, and orders
+        if (member.getMemberType() == MemberType.COMMITTEE || member.getMemberType() == MemberType.DIRECTOR) {
+            List<ChildMember> children = childMemberService.getChildByParent(member);
+            int childNum = children.size();
+            model.addAttribute("childNum", childNum);
+            model.addAttribute("children",children);
+
+            //If member is a committee member, get all instruments
+
+            List<Instrument> instruments = instrumentRepository.findAll();
+            model.addAttribute("instruments", instruments);
+
+            //Get all music
+            List<Music> music = musicRepository.findAll();
+            model.addAttribute("musics", music);
+
+            //Get band types
+            List<BandInPractice> bands = Arrays.asList(BandInPractice.values());
+            model.addAttribute("bands", bands);
+
+            //Get all orders
+            List<Order> orders = orderRepository.findByItemTypeAndNotFulfilled(ItemType.Music);
+            model.addAttribute("musicOrders", orders);
+            model.addAttribute("orderService", orderService);
+
+        } else if (member.getMemberType() == MemberType.ADULT){
+
+            //Get music based on band
+            BandInPractice band = member.getBand();
+            if (band != BandInPractice.None){
+                List<Music> music =
+                        musicRepository.findByBandInPracticeOrBandInPractice(band, BandInPractice.Both);
+                model.addAttribute("musics", music);
+            }
+
+        }
+
+        List<Loan> memberLoans = loanService.getActiveLoansByMemberId(member.getId());
+        model.addAttribute("memberLoans", memberLoans);
+
         return "committee-dashboard";
     }
 }

@@ -102,19 +102,19 @@ public class DashboardController {
     @PostMapping("/addInstrument")
     public String addInstrument(@ModelAttribute("instrument") InstrumentDto dto){
         instrumentService.saveInstrument(dto);
-        return "redirect:/dashboard";
+        return "redirect:/committee/dashboard";
     }
 
     @PostMapping("/editInstrument")
     public String editInstrument(@ModelAttribute("instrument") InstrumentDto dto){
         instrumentService.updateInstrument(dto);
-        return "redirect:/dashboard"; // Adjust as needed
+        return "redirect:/committee/dashboard";
     }
 
     @PostMapping("/deleteInstrument")
     public String deleteInstrument(@RequestParam("instrumentId") Long id) {
         instrumentService.deleteInstrument(id);
-        return "redirect:/dashboard"; // Adjust as needed
+        return "redirect:/committee/dashboard";
     }
 
     @GetMapping("/loanDetails")
@@ -129,7 +129,7 @@ public class DashboardController {
     @PostMapping("/addMusic")
     public String addMusic(@ModelAttribute("music") MusicDto dto){
         musicService.saveMusic(dto);
-        return "redirect:/dashboard";
+        return "redirect:/committee-dashboard";
     }
 
     @PostMapping("/orderMusic")
