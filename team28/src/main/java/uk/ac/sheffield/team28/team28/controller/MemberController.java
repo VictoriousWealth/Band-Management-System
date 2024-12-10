@@ -134,5 +134,14 @@ public class MemberController {
     }
 
 
+    @GetMapping("allow-to-go-committee")
+    public String allowToGoParent(HttpSession session) {
+        Boolean isAuthorised = (Boolean) session.getAttribute("isAuthorised");
+        if (isAuthorised == null || !isAuthorised) {
+            session.setAttribute("referer", "/committee/dashboard");
+            return "redirect:/authorise";
+        }
+        return "redirect:/dashboard";
+    }
 
 }

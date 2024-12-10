@@ -1,5 +1,6 @@
 package uk.ac.sheffield.team28.team28.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +43,9 @@ public class CommitteeController {
     private ChildMemberService childMemberService;
     
     @GetMapping("/dashboard")
-    public String committeeDashboard(Model model) {
+    public String committeeDashboard(Model model, HttpSession session) {
+        // removed session used for authorizing users to go in to different parts of the web
+        session.removeAttribute("isAuthorised");
         //Get logged in member
         Member member = memberService.findMember();
         model.addAttribute("member", member);
@@ -89,5 +92,15 @@ public class CommitteeController {
         model.addAttribute("memberLoans", memberLoans);
 
         return "committee-dashboard";
+    }
+
+    @GetMapping("/allow-to-go-to-director")
+    public String allowToGoToDirector(HttpSession session) {
+        Boolean isAuthorised = (Boolean) session.getAttribute("isAuthorised");
+        if (isAuthorised == null || !isAuthorised) {
+            session.setAttribute("referer", "/director");
+            return "redirect:/authorise";
+        }
+        return "redirect:/committee/dashboard";
     }
 }

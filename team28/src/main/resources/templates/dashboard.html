@@ -539,33 +539,27 @@
         </div>
 
         </div>
+
         <!-- Buttons for Add Child, Child View, and Committee View -->
         <div class="floating-buttons">
             <button
                     class="btn btn-info"
-                    th:onclick="'window.location.href=\'/committee/dashboard\';'"
-                    th:if="${memberType.equals('COMITTEE')}">
+                    th:onclick="'window.location.href=\'/allow-to-go-committee\';'"
+                    th:if="${memberType.equals('Committee') || memberType.equals('Director')}">
                 Committee View
+            </button>
+            <button
+                    class="btn btn-secondary"
+                    data-toggle="modal"
+                    data-target="#selectChildModal"
+                    th:if="${childNum >= 1}">
+                Child View
             </button>
             <button
                     class="btn btn-primary"
                     data-toggle="modal"
                     data-target="#addChildModal">
                 Add Child
-            </button>
-            <button
-                    class="btn btn-secondary"
-                    th:onclick="'window.location.href=\'/child/dashboard/' + ${children[0].id} + '\';'"
-                    th:if="${childNum == 1}">
-                Child View
-            </button>
-
-            <button
-                    class="btn btn-secondary"
-                    data-toggle="modal"
-                    data-target="#selectChildModal"
-                    th:if="${childNum >= 2}">
-                Child View
             </button>
 
 

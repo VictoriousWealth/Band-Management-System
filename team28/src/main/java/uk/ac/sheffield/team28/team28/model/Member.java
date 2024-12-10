@@ -3,9 +3,7 @@ package uk.ac.sheffield.team28.team28.model;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import uk.ac.sheffield.team28.team28.model.MemberType;
 @Entity
 @Table(name = "member")
 public class Member {
@@ -34,10 +32,6 @@ public class Member {
 
     @Column(name="last_name", nullable = false)
     private String lastName;
-
-    @Enumerated(EnumType.STRING)
-    @Column
-    private BandInPractice bandInPractice = BandInPractice.None;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ChildMember> childMembers = new HashSet<>();
