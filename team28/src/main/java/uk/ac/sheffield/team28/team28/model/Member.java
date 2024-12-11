@@ -53,7 +53,6 @@ public class Member {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.band = BandInPractice.None;
 
     }
 
@@ -66,7 +65,6 @@ public class Member {
         this.phone = phone;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.band = BandInPractice.None;
     }
 
     public Long getId() {
