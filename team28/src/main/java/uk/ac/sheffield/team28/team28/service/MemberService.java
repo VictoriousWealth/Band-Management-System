@@ -99,7 +99,7 @@ public class MemberService {
          return savedMember;
     }
 
-    private boolean isValidPassword(String password) {
+    public boolean isValidPassword(String password) {
         return PASSWORD_PATTERN.matcher(password).matches();
     }
 
@@ -108,12 +108,10 @@ public class MemberService {
     }
 
     public Member findMember(){
-        String email;
+        String email = "";
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails){
             email = ((UserDetails) principal).getUsername();
-        } else {
-            email = principal.toString();
         }
 
 
@@ -305,11 +303,6 @@ public class MemberService {
         // Save updated member
         memberRepository.save(member);
         return member;
-    }
-
-
-    public Member getMemberWithId(Long id) {
-        return memberRepository.findById(id).get();
     }
 
     public boolean doesMemberHaveLoans(Member member) {
