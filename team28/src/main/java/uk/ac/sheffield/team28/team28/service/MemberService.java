@@ -211,10 +211,6 @@ public class MemberService {
         return allMembers; //Currently set to ADULT since no COMMITTEE
     }
 
-    public void setNone () {
-
-    }
-
     public boolean authorise(Long memberId, String password) throws Exception {
         //return true;
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
@@ -325,5 +321,11 @@ public class MemberService {
         loanRepository.deleteLoansByMemberId(memberId);
         orderRepository.deleteOrdersByMemberId(memberId);
         memberRepository.deleteById(memberId);
+    }
+
+    @Transactional
+    public Member saveAndFlushMember(Member member) {
+        // Save and flush the entity
+        return memberRepository.saveAndFlush(member);
     }
 }
