@@ -98,6 +98,10 @@ public class Member {
         return band;
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
 
     public void setEmail(String email) {
         this.email = email;

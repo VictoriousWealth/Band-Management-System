@@ -1,9 +1,12 @@
 package uk.ac.sheffield.team28.team28.service;
 
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 import uk.ac.sheffield.team28.team28.model.Item;
 import uk.ac.sheffield.team28.team28.repository.ItemRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -12,6 +15,11 @@ public class ItemService {
 
     public ItemService(ItemRepository itemRepository){
         this.itemRepository = itemRepository;
+    }
+
+    @Transactional
+    public List<Item> getAllItems() {
+        return itemRepository.findAll();
     }
 
     //Add Item methods here
