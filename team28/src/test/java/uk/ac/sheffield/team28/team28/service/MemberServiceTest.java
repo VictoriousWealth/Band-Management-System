@@ -5,16 +5,23 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.model.MemberType;
+import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 import uk.ac.sheffield.team28.team28.repository.LoanRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
 import uk.ac.sheffield.team28.team28.repository.OrderRepository;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +35,9 @@ public class MemberServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private ChildMemberRepository childMemberRepository;
 
     @Mock
     private LoanRepository loanRepository;
@@ -463,9 +473,33 @@ public class MemberServiceTest {
         verify(memberRepository, never()).save(any(Member.class));
     }
 
+    @Test
+    void testFindMemberById_MemberExists() throws Exception {
+        //Make member
+        Member member1 = new Member(29L, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
+        // Make the repo response
+        when(memberRepository.findById(member1.getId())).thenReturn(Optional.of(member1));
+        //Get the member by id
+        Member result = memberService.findMemberById(member1.getId());
+        //Check the result
+        assertNotNull(result);
+        assertEquals(member1.getId(), result.getId());
+        verify(memberRepository, times(1)).findById(member1.getId());
+    }
 
-
-
+    @Test
+    void testFindMemberById_MemberDoesntExist() {
+        Long memberId = 209L;
+        //Mock the repo response
+        when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
+        //Get the exception
+        Exception exception = assertThrows(Exception.class, () -> {
+            memberService.findMemberById(memberId);
+        });
+        //Compare the exception
+        assertEquals("Member not found with ID: " + memberId, exception.getMessage());
+        verify(memberRepository, times(1)).findById(memberId);
+    }
 
     @Test
     void testDoesMemberHaveLoans_MemberHasLoans() {
@@ -525,6 +559,201 @@ public class MemberServiceTest {
         verify(memberRepository, never()).deleteById(memberId);
     }
 
+    @Test
+    void testFindMemberByFullName_whenMemberExists() {
+        String fullName = "John Doe";
+        Member member1 = new Member(29L, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
+        List<Member> membersWithFirstName = List.of(member1);
+        //Mock repo response
+        when(memberRepository.findByFirstName("John")).thenReturn(membersWithFirstName);
+        //get results
+        Member result = memberService.findMemberByFullName(fullName);
+        //Check the result
+        assertNotNull(result);
+        assertEquals("Doe", result.getLastName());
+    }
+
+    @Test
+    void testFindMemberByFullName_whenNameIsInvalid() {
+        String invalidName = "John";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            memberService.findMemberByFullName(invalidName);
+        });
+        assertEquals("Full name must include both first and last name.", exception.getMessage());
+    }
+
+    @Test
+    void findMemberByFullName_whenMemberDoesntExist() {
+        String fullName = "John Kent";
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            memberService.findMemberByFullName(fullName);
+        });
+        assertEquals("No member found with the full name: John Kent", exception.getMessage());
+    }
+
+    @Test
+    void testFindMember_UserFound() {
+        //Mock the classes
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        UserDetails userDetails = mock(UserDetails.class);
+        SecurityContextHolder.setContext(securityContext);
+        //Mock the responses
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+        when(userDetails.getUsername()).thenReturn("a@z.com");
+        //Make member mock memeber return
+        Member member1 = new Member(29L, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
+        when(memberRepository.findByEmail("a@z.com")).thenReturn(Optional.of(member1));
+        //Get result
+        Member result = memberService.findMember();
+        //Check the result
+        assertNotNull(result);
+        assertEquals("a@z.com", result.getEmail());
+    }
+
+    @Test
+    void testFindMember_UserIsntFound() {
+        //Mock the classes
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        UserDetails userDetails = mock(UserDetails.class);
+        SecurityContextHolder.setContext(securityContext);
+        //Mock the responses
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+        when(userDetails.getUsername()).thenReturn("a@z.com");
+        //Make member mock memeber return
+        when(memberRepository.findByEmail("a@z.com")).thenReturn(Optional.empty());
+        Member result = memberService.findMember();
+        //Check the result is null
+        assertNull(result);
+    }
+
+
+
+    @Test
+    void testValidPasswords() {
+        Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z]).{8,}$");
+        assertTrue(memberService.isValidPassword("Password123"));
+        assertTrue(memberService.isValidPassword("Abcdefgh"));
+        assertTrue(memberService.isValidPassword("Averylongpassword1"));
+        assertFalse(memberService.isValidPassword("Pass"));
+        assertFalse(memberService.isValidPassword("A"));
+        assertFalse(memberService.isValidPassword("..."));
+    }
+
+
+
+    @Test
+    void testRegisterMember_SuccessfulRegistration() throws Exception {
+        // Mock dto
+        MemberRegistrationDto dto = new MemberRegistrationDto();
+        dto.setEmail("a@r.com");
+        dto.setPassword("Password1");
+        dto.setPhone("1478932489790");
+        dto.setFirstName("John");
+        dto.setLastName("Doe");
+        dto.setAddChild(false);
+
+        when(memberRepository.existsByEmail(dto.getEmail())).thenReturn(false);
+        when(passwordEncoder.encode(dto.getPassword())).thenReturn("hashedPassword");
+
+        Member expectedMember = new Member();
+        expectedMember.setEmail("a@r.com");
+        when(memberRepository.save(any(Member.class))).thenReturn(expectedMember);
+
+        Member result = memberService.registerMember(dto);
+
+        assertNotNull(result);
+        assertEquals("a@r.com", result.getEmail());
+
+        verify(memberRepository).existsByEmail(dto.getEmail());
+        verify(passwordEncoder).encode(dto.getPassword());
+        verify(memberRepository).save(any(Member.class));
+        verifyNoInteractions(childMemberRepository);
+    }
+
+    @Test
+    void testRegisterMember_EmailAlreadyExists() {
+        MemberRegistrationDto dto = new MemberRegistrationDto();
+        dto.setEmail("a@y.com");
+        dto.setPassword("Password1");
+
+        when(memberRepository.existsByEmail(dto.getEmail())).thenReturn(true);
+
+        Exception exception = assertThrows(Exception.class, () -> memberService.registerMember(dto));
+        assertEquals("Email is already in use. Please login to continue.", exception.getMessage());
+
+        verify(memberRepository).existsByEmail(dto.getEmail());
+        verifyNoInteractions(passwordEncoder, childMemberRepository);
+    }
+
+    @Test
+    void testRegisterMember_InvalidPassword() {
+
+        MemberRegistrationDto dto = new MemberRegistrationDto();
+        dto.setEmail("a@r.com");
+        dto.setPassword("...");
+
+        when(memberRepository.existsByEmail(dto.getEmail())).thenReturn(false);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> memberService.registerMember(dto));
+        assertEquals("Password must be at least 8 characters long and contain at least one uppercase letter.", exception.getMessage());
+
+        verify(memberRepository).existsByEmail(dto.getEmail());
+        verifyNoInteractions(passwordEncoder, childMemberRepository);
+    }
+
+    @Test
+    void testRegisterMember_AddChildWithEmptyFields() {
+        MemberRegistrationDto dto = new MemberRegistrationDto();
+        dto.setEmail("a@r.com");
+        dto.setPassword("Password1");
+        dto.setAddChild(true);
+        dto.setChildFirstName("");
+        dto.setChildLastName("");
+
+        when(memberRepository.existsByEmail(dto.getEmail())).thenReturn(false);
+
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> memberService.registerMember(dto));
+        assertEquals("Child first and/or last name cannot be empty", exception.getMessage());
+
+        verify(memberRepository).existsByEmail(dto.getEmail());
+        verifyNoInteractions(passwordEncoder, childMemberRepository);
+    }
+
+    @Test
+    void testRegisterMember_AddChildSuccessfully() throws Exception {
+        MemberRegistrationDto dto = new MemberRegistrationDto();
+        dto.setEmail("a@r.com");
+        dto.setPassword("Password1");
+        dto.setPhone("1478932489790");
+        dto.setFirstName("Clark");
+        dto.setLastName("Kent");
+        dto.setAddChild(true);
+        dto.setChildFirstName("Jane");
+        dto.setChildLastName("Kent");
+        dto.setChildDateOfBirth(LocalDate.of(2010, 1, 1));
+
+        when(memberRepository.existsByEmail(dto.getEmail())).thenReturn(false);
+        when(passwordEncoder.encode(dto.getPassword())).thenReturn("hashedPassword");
+
+        Member expectedMember = new Member();
+        expectedMember.setEmail("a@r.com");
+        when(memberRepository.save(any(Member.class))).thenReturn(expectedMember);
+
+        Member result = memberService.registerMember(dto);
+
+        assertNotNull(result);
+        assertEquals("a@r.com", result.getEmail());
+
+        verify(memberRepository).existsByEmail(dto.getEmail());
+        verify(passwordEncoder).encode(dto.getPassword());
+        verify(memberRepository).save(any(Member.class));
+        verify(childMemberRepository).save(any(ChildMember.class));
+    }
 
 
 

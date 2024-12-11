@@ -80,12 +80,12 @@ public class DirectorController {
                     childMemberService.deleteChildMembers(member);
                 }
                 memberService.deleteMember(member.getId());
+                redirectAttributes.addAttribute("success", true);
+
             }
             else {
                 redirectAttributes.addAttribute("error", true);
             }
-            redirectAttributes.addAttribute("success", true);
-
         } catch (Exception e) {
             redirectAttributes.addAttribute("error", true);
         }
