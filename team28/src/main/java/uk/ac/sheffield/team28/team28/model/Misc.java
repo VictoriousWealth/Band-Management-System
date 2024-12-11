@@ -2,6 +2,7 @@ package uk.ac.sheffield.team28.team28.model;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name = "Misc")
 public class Misc {
@@ -9,47 +10,48 @@ public class Misc {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
-
-    @Column(name = "quantity")
-    private int quantity;
-
-    @Column(name = "sub_class")
-    private String subClass;
-
-    @Column(name = "amount_on_loan")
-    private int amountOnLoan;
+    @Column
+    private String miscSerialNumber;
+    @Column
+    private Integer miscQuantity;
 
     //Getters and setters
     public Misc(){}
 
-    public Misc(Item item, int quantity, String subClass, int amountOnLoan){
+    public Misc(Item item, String miscSerialNumber, Integer miscQuantity) {
         this.item = item;
-        this.quantity = quantity;
-        this.subClass = subClass;
-        this.amountOnLoan = amountOnLoan;
+        this.miscSerialNumber = miscSerialNumber;
+        this.miscQuantity = miscQuantity;
     }
+
 
     public Long getId() {
         return id;
     }
 
-    public Item getItem(){
+    public Item getMiscItem(){
         return item;
     }
+    public void setMiscItem(Item item){
+        this.item = item;
 
-    public int getQuantity(){
-        return quantity;
     }
 
-    public String getSubClass(){
-        return subClass;
+    public String getMiscSerialNumber(String miscSerialNumber){
+        return miscSerialNumber;
     }
 
-    public int getAmountOnLoan(){
-        return amountOnLoan;
+    public void setMiscSerialNumber(String miscSerialNumber){
+        this.miscSerialNumber = miscSerialNumber;
     }
-}
+    public void setMiscQuantity(Integer miscQuantity){
+        this.miscQuantity = miscQuantity;
+    }
+
+    }
+
+
+

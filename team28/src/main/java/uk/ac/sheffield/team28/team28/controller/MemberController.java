@@ -41,25 +41,25 @@ public class MemberController {
         this.childMemberService = childMemberService;
     }
 
-    @PostMapping("/{memberId}/addToBand")
-    public ResponseEntity<Member> addMemberToBand(@PathVariable Long memberId, @PathVariable BandInPractice oldBand) {
-        try {
-            Member member = memberService.addMemberToBand(memberId, oldBand);
-            return ResponseEntity.ok(member);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
-
-    @DeleteMapping("/{memberId}/removeFromBand")
-    public ResponseEntity<Member> removeMemberFromBand(@PathVariable Long memberId, @PathVariable BandInPractice newBand) {
-        try {
-            Member member = memberService.removeMemberFromBand(memberId, newBand);
-            return ResponseEntity.ok(member);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
+//    @PostMapping("/{memberId}/addToBand")
+//    public ResponseEntity<Member> addMemberToBand(@PathVariable Long memberId, @PathVariable BandInPractice oldBand) {
+//        try {
+//            Member member = memberService.addMemberToBand(memberId, oldBand);
+//            return ResponseEntity.ok(member);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//    }
+//
+//    @DeleteMapping("/{memberId}/removeFromBand")
+//    public ResponseEntity<Member> removeMemberFromBand(@PathVariable Long memberId, @PathVariable BandInPractice newBand) {
+//        try {
+//            Member member = memberService.removeMemberFromBand(memberId, newBand);
+//            return ResponseEntity.ok(member);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//    }
 
     @GetMapping("/authorise")
     public String showAuthorisePage(Model model) {
@@ -144,5 +144,7 @@ public class MemberController {
         }
         return "redirect:/dashboard";
     }
+
+
 
 }

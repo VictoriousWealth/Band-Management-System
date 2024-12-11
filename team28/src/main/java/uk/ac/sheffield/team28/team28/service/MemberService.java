@@ -1,6 +1,8 @@
 package uk.ac.sheffield.team28.team28.service;
 
 import jakarta.transaction.Transactional;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -99,7 +101,7 @@ public class MemberService {
          return savedMember;
     }
 
-    private boolean isValidPassword(String password) {
+    public boolean isValidPassword(String password) {
         return PASSWORD_PATTERN.matcher(password).matches();
     }
 
@@ -108,12 +110,10 @@ public class MemberService {
     }
 
     public Member findMember(){
-        String email;
+        String email = "";
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails){
             email = ((UserDetails) principal).getUsername();
-        } else {
-            email = principal.toString();
         }
 
 
@@ -292,6 +292,7 @@ public class MemberService {
         // If no match is found
         throw new IllegalArgumentException("No member found with the full name: " + memberName);
     }
+
     public Member demoteMemberWithId(Long memberId) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
@@ -306,14 +307,10 @@ public class MemberService {
         return member;
     }
 
-
-    public Member getMemberWithId(Long id) {
-        return memberRepository.findById(id).get();
-    }
-
     public boolean doesMemberHaveLoans(Member member) {
         return loanRepository.memberHasActiveLoans(member.getId());
     }
+
     @Transactional //Delete member
     public void deleteMember(Long memberId) throws Exception {
         // Check if the member has active loans
@@ -322,5 +319,23 @@ public class MemberService {
         loanRepository.deleteLoansByMemberId(memberId);
         orderRepository.deleteOrdersByMemberId(memberId);
         memberRepository.deleteById(memberId);
+    }
+
+    public Long getAuthenticatedMemberId() {
+        // Retrieve the currently authenticated user's principal
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        // Assuming the username is used to identify the member
+        String username = authentication.getName();
+
+        // Find the member in the database based on the username
+        Member member = memberRepository.findByEmail(username)
+                .orElseThrow(() -> new IllegalArgumentException("No member found with username: " + username));
+
+        return member.getId();
     }
 }

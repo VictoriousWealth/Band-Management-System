@@ -163,7 +163,6 @@ public class DirectorController {
             memberService.removeMemberFromBand(memberId, newBand);
             redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
-            e.printStackTrace();
             redirectAttributes.addAttribute("error", true);
         }
         return "redirect:" + (redirectTo != null ? redirectTo : "/director" + (newBand==BandInPractice.Training? "/trainingBand" : "/seniorBand"));

@@ -9,23 +9,13 @@
         <title>Sludgate Brass Band</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
         <style>
-            html,
+            /* html,
             body {
                 height: 100%;
                 margin: 0;
                 display: flex;
                 flex-direction: column;
-            }
-
-            .content-wrapper {
-                padding-top: 60px;
-                flex: 1;
-                display: flex;
-                text-align: center;
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: center;
-            }
+            } */
 
 
             .floating-buttons {
@@ -98,9 +88,22 @@
         </ul>
 
         <div class="tab-content mt-3" id="myTabContent">
-            <div class="tab-pane fade show active" id="performance" role="tabpanel" aria-labelledby="performance-tab">
-                <h3>Performance Schedule</h3>
-                <p>Details of upcoming performances...</p>
+            <div class="tab-pane fade show active" id="participation" role="tabpanel" aria-labelledby="participation-tab">
+                <h3>Your Performances</h3>
+                <table class="table table-striped" id="participationTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Venue</th>
+                            <th>Date and Time</th>
+                            <th>Participating</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be dynamically added here -->
+                    </tbody>
+                </table>
             </div>
 
             <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
@@ -310,6 +313,8 @@
             <script th:src="@{js/editInstrument.js}"></script>
             <script th:src="@{js/confirmDelete.js}"></script>
             <script th:src="@{js/dashboardLoan.js}"></script>
+            <script src="/js/member-performance.js"></script>
+
     </footer>
 
 

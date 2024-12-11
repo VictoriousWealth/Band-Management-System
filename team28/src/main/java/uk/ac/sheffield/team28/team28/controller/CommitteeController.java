@@ -5,10 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import uk.ac.sheffield.team28.team28.dto.MiscDto;
 import uk.ac.sheffield.team28.team28.model.*;
 import uk.ac.sheffield.team28.team28.repository.InstrumentRepository;
+import uk.ac.sheffield.team28.team28.repository.MiscRepository;
 import uk.ac.sheffield.team28.team28.repository.MusicRepository;
 import uk.ac.sheffield.team28.team28.repository.OrderRepository;
 import uk.ac.sheffield.team28.team28.service.*;
@@ -41,7 +45,11 @@ public class CommitteeController {
     private OrderRepository orderRepository;
     @Autowired
     private ChildMemberService childMemberService;
-    
+    @Autowired
+    private MiscService miscService;
+    @Autowired
+    private MiscRepository miscRepository;
+
     @GetMapping("/dashboard")
     public String committeeDashboard(Model model, HttpSession session) {
         // removed session used for authorizing users to go in to different parts of the web
@@ -60,6 +68,10 @@ public class CommitteeController {
 
             List<Instrument> instruments = instrumentRepository.findAll();
             model.addAttribute("instruments", instruments);
+
+            List<Misc> miscs =miscRepository.findAll();
+            model.addAttribute("miscs", miscs);
+
 
             //Get all music
             List<Music> music = musicRepository.findAll();
@@ -86,4 +98,6 @@ public class CommitteeController {
         }
         return "redirect:/committee/dashboard";
     }
+
+
 }

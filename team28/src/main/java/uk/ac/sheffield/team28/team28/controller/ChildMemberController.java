@@ -41,11 +41,8 @@ public class ChildMemberController {
     @GetMapping("allow-to-go-parent")
     public String allowToGoParent(HttpSession session) {
         Boolean isAuthorised = (Boolean) session.getAttribute("isAuthorised");
-        if (isAuthorised == null || !isAuthorised) {
-            session.setAttribute("referer", "/dashboard");
-            return "redirect:/authorise";
-        }
-        return "redirect:/child/dashboard/{childMemberId}";
+        session.setAttribute("referer", "/dashboard");
+        return "redirect:/authorise";
     }
 
 
