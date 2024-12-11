@@ -46,8 +46,21 @@ public class LoanService {
         return loanRepository.findByMemberId(memberId);
     }
 
+    public List<Loan> getLoansByChildMemberId(Long memberId) {
+        return loanRepository.findByChildMemberId(memberId);
+    }
+
     public List<Loan> getActiveLoansByMemberId(Long memberId) {
         List<Loan> allLoans = this.getLoansByMemberId(memberId);
+        return getActiveLoans(allLoans);
+    }
+
+    public List<Loan> getActiveLoansByChildMemberId(Long childMemberId) {
+        List<Loan> allLoans = this.getLoansByMemberId(childMemberId);
+        return getActiveLoans(allLoans);
+    }
+
+    public List<Loan> getActiveLoans(List<Loan> allLoans){
         List<Loan> activeLoans = new ArrayList<>();
         for (Loan loan : allLoans) {
             if (loan.getReturnDate() == null) {
