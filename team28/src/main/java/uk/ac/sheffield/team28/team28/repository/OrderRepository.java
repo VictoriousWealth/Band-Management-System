@@ -20,4 +20,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o WHERE o.item.itemType = :itemType AND o.isFulfilled = false")
     List<Order> findByItemTypeAndNotFulfilled(@Param("itemType") ItemType itemType);
 
+
+
 }
