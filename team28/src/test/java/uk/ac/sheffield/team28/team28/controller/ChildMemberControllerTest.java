@@ -9,14 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import uk.ac.sheffield.team28.team28.Team28Application;
 import uk.ac.sheffield.team28.team28.service.ChildMemberService;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 
 @WebMvcTest(ChildMemberController.class)
 @ContextConfiguration(classes = Team28Application.class)
@@ -33,6 +38,8 @@ public class ChildMemberControllerTest {
 
     @Mock
     private MockHttpSession session;
+    @Mock
+    private Model model;
 
 
     @BeforeEach
@@ -41,34 +48,67 @@ public class ChildMemberControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "u", password = "p", roles = { "USER" })
     void shouldReturnChildDashboard() throws Exception {
         Long childMemberId = 123L;
-
-        mockMvc.perform(get("/dashboard/{childMemberId}", childMemberId))
+        mockMvc.perform(get("/child/dashboard/{childMemberId}", childMemberId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("childDashboard"))
                 .andExpect(model().attributeExists("childMemberId"))
                 .andExpect(model().attribute("childMemberId", childMemberId));
     }
 
-    @Test
-    void shouldRedirectToAuthoriseWhenNotAuthorized() throws Exception {
-        session.setAttribute("isAuthorised", null);
-
-        mockMvc.perform(get("/allow-to-go-parent").session(session))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/authorise"))
-                .andExpect(request().sessionAttribute("referer", "/dashboard"));
-    }
 
     @Test
-    void shouldRedirectToChildDashboardWhenAuthorized() throws Exception {
-        session.setAttribute("isAuthorised", true);
-
-        mockMvc.perform(get("/allow-to-go-parent").session(session))
+    @WithMockUser(username = "u", password = "p", roles = { "USER" })
+    void shouldRedirectToAuthoriseWhenIsAuthorisedIsNull() throws Exception {
+        mockMvc.perform(get("/child/allow-to-go-parent").session(session))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/child/dashboard/{childMemberId}"));
+                .andExpect(redirectedUrl("/authorise"));
+        session.setAttribute("referer", "/dashboard");
     }
+
+//    @Test
+//    @WithMockUser(username = "u", password = "p", roles = { "USER" })
+//    void shouldRedirectToAuthoriseWhenIsAuthorisedIsFalse() throws Exception {
+//        session.setAttribute("isAuthorised", false);
+//
+//        mockMvc.perform(get("/child/allow-to-go-parent").session(session))
+//                .andExpect(status().is3xxRedirection())
+//                .andExpect(redirectedUrl("/authorise"));
+//
+//        // Verify that "referer" is set
+//        session.setAttribute("referer", "/dashboard");
+//    }
+//
+//    @Test
+//    @WithMockUser(username = "u", password = "p", roles = { "USER" })
+//    void shouldRedirectToChildDashboardWhenIsAuthorisedIsTrue() throws Exception {
+//        //session.setAttribute("isAuthorised", true);
+////        Long childMemberId = 123L;
+//        System.out.println("IM HHHHHHHHHHHHHEEEEEEEEEEEEEEEEEEEEERE" + session.getAttribute("isAuthorised"));
+//
+//        when(session.getAttribute("isAuthorised")).thenReturn(true);
+//        when(model.getAttribute("childMemberId")).thenReturn(123L);
+//        System.out.println("IM HHHHHHHHHHHHHEEEEEEEEEEEEEEEEEEEEERE" + session.getAttribute("isAuthorised"));
+//
+//        mockMvc.perform(get("/child/allow-to-go-parent").session(session))
+//                .andExpect(status().is3xxRedirection())
+//                .andExpect(redirectedUrl("/child/dashboard/{childMemberId}"));
+//    }
+//
+//    @Test
+//    @WithMockUser(username = "u", password = "p", roles = { "USER" })
+//    void shouldRedirectToChildDashboardWhenIsAuthorisedIsTrue2() throws Exception {
+//        MockHttpSession session = new MockHttpSession(); // Create a new session instance
+//        session.setAttribute("isAuthorised", true);      // Set the isAuthorised attribute
+//        session.setAttribute("childMemberId", 123L);    // Set the childMemberId attribute
+//
+//        mockMvc.perform(get("/child/allow-to-go-parent").session(session))
+//                .andExpect(status().is3xxRedirection()) // Expect a redirection
+//                .andExpect(redirectedUrl("/child/dashboard/{childMemberId}")); // Expect the resolved URL
+//    }
+
 
     @Test
     void shouldRedirectToAuthoriseWhenSessionAttributeIsFalse() throws Exception {

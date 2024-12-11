@@ -32,10 +32,6 @@ public class LoanService {
         this.loanRepository = loanRepository;
     }
 
-    public Loan createLoan(Loan loan) {
-        return loanRepository.save(loan);
-    }
-
     // Finds a loan by ID
     public Optional<Loan> findLoanById(Long id) {
         return loanRepository.findById(id);
@@ -69,10 +65,6 @@ public class LoanService {
     // Retrieves all loans
     public List<Loan> getAllLoans() {
         return loanRepository.findAll();
-    }
-
-    public Loan updateLoan(Loan loan) {
-        return loanRepository.save(loan);
     }
 
     // Delete a loan by ID
