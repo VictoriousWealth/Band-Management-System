@@ -81,6 +81,7 @@ public class ChildMemberRepositoryTest {
 
     }
 
+
     @Test
     void testFindByName() {
         LocalDate date = LocalDate.of(2018, 1, 8);

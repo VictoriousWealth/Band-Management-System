@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>All Members</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" th:href="@{/css/style.css}"/>
+
     </head>
     <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -70,9 +72,6 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <!--                                <form th:action="@{/director/removeMember/{memberId}(memberId=${member.id})}" method="post">-->
-            <!--                                    <button type="submit" class="btn btn-danger">Delete</button>-->
-            <!--                                </form>-->
                                             <form th:action="@{/director/removeMember/{memberId}(memberId=${member.id})}" method="post">
                                                 <input type="hidden" name="redirectTo" value="/director/allMembers" />
                                                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -123,9 +122,6 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <!--                                <form th:action="@{/director/removeChildMember/{childId}(childId=${child.id})}" method="post">-->
-            <!--                                    <button type="submit" class="btn btn-danger">Delete</button>-->
-            <!--                                </form>-->
                                             <form th:action="@{/director/removeChildMember/{childId}(childId=${child.id})}" method="post">
                                                 <input type="hidden" name="redirectTo" value="/director/allMembers" />
                                                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -141,8 +137,11 @@
                     </tbody>
                 </table>
             </div>
+            <div>
+                <button class="back-button" onclick="goBack()">Go Back</button>
+            </div>
         <div th:replace="~{fragments/footer :: footer}"></div>
-        <!-- Bootstrap JS -->
+        <script th:src="@{/js/general.js}"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
