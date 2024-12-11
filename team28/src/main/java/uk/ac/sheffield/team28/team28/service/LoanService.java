@@ -8,7 +8,7 @@ import uk.ac.sheffield.team28.team28.model.Loan;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.repository.InstrumentRepository;
 import uk.ac.sheffield.team28.team28.repository.LoanRepository;
-import uk.ac.sheffield.team28.team28.repository.MemberRepository;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +19,6 @@ import java.util.Optional;
 @Service
 public class LoanService {
 
-
     private final LoanRepository loanRepository;
 
     @Autowired
@@ -27,6 +26,7 @@ public class LoanService {
 
     @Autowired
     private InstrumentRepository instrumentRepository;
+
 
     public LoanService(LoanRepository loanRepository) {
         this.loanRepository = loanRepository;
@@ -130,4 +130,7 @@ public class LoanService {
         item.setInStorage(true);
         instrumentRepository.save(instrument);
     }
-}
+
+
+    }
+

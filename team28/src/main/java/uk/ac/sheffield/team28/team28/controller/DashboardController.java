@@ -2,7 +2,6 @@ package uk.ac.sheffield.team28.team28.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.sheffield.team28.team28.dto.InstrumentDto;
+import uk.ac.sheffield.team28.team28.dto.MiscDto;
 import uk.ac.sheffield.team28.team28.dto.MusicDto;
 import uk.ac.sheffield.team28.team28.dto.OrderDto;
 import uk.ac.sheffield.team28.team28.model.*;
@@ -20,8 +20,6 @@ import uk.ac.sheffield.team28.team28.repository.MusicRepository;
 import uk.ac.sheffield.team28.team28.repository.OrderRepository;
 import uk.ac.sheffield.team28.team28.service.*;
 
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -48,6 +46,8 @@ public class DashboardController {
     private OrderRepository orderRepository;
     @Autowired
     private ChildMemberService childMemberService;
+    @Autowired
+    private MiscService miscService;
 
 
     @GetMapping("/dashboard")
@@ -121,6 +121,16 @@ public class DashboardController {
         dto.setOrderDate(LocalDate.now());
         orderService.save(dto);
         return "redirect:/dashboard";
+    }
+    @PostMapping("/addMisc")
+    public String addMisc(@ModelAttribute("misc") MiscDto dto){
+        miscService.saveMisc(dto);
+        return "redirect:/committee/dashboard";
+    }
+    @PostMapping("/editMisc")
+    public String editMisc(@ModelAttribute("misc") MiscDto dto){
+        miscService.updateMisc(dto);
+        return "redirect:/committee/dashboard";
     }
 
 
