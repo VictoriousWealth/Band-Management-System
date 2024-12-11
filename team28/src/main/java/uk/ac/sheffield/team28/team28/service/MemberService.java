@@ -1,6 +1,8 @@
 package uk.ac.sheffield.team28.team28.service;
 
 import jakarta.transaction.Transactional;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -307,6 +309,7 @@ public class MemberService {
     public boolean doesMemberHaveLoans(Member member) {
         return loanRepository.memberHasActiveLoans(member.getId());
     }
+
     @Transactional //Delete member
     public void deleteMember(Long memberId) throws Exception {
         // Check if the member has active loans
@@ -317,16 +320,21 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
-    public boolean doesMemberHaveLoans(Member member) {
-        return loanRepository.memberHasActiveLoans(member.getId());
-    }
-    @Transactional //Delete member
-    public void deleteMember(Long memberId) throws Exception {
-        // Check if the member has active loans
-        Member member = memberRepository.findById(memberId).orElseThrow(() ->
-                new Exception("Member not found with ID: " + memberId));
-        loanRepository.deleteLoansByMemberId(memberId);
-        orderRepository.deleteOrdersByMemberId(memberId);
-        memberRepository.deleteById(memberId);
+    public Long getAuthenticatedMemberId() {
+        // Retrieve the currently authenticated user's principal
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        // Assuming the username is used to identify the member
+        String username = authentication.getName();
+
+        // Find the member in the database based on the username
+        Member member = memberRepository.findByEmail(username)
+                .orElseThrow(() -> new IllegalArgumentException("No member found with username: " + username));
+
+        return member.getId();
     }
 }

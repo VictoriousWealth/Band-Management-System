@@ -60,12 +60,6 @@ public class ChildMemberService {
         return childMember;
     }
 
-    public ChildMember getChildById(Long childMemberId) throws Exception {
-        ChildMember childMember = childMemberRepository.findById(childMemberId).orElseThrow(() ->
-                new Exception("Member not found with ID: " + childMemberId));
-        return childMember;
-    }
-
     public List<ChildMember> getAllChildren(){
         return childMemberRepository.findAllChildren();
     }

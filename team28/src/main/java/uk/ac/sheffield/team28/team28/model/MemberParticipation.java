@@ -1,5 +1,7 @@
 package uk.ac.sheffield.team28.team28.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +14,7 @@ public class MemberParticipation {
 
     @ManyToOne
     @JoinColumn(name = "performance_id", nullable = false)
+    @JsonBackReference
     private Performance performance;
 
     @ManyToOne

@@ -22,7 +22,6 @@ import java.util.List;
 @Controller
 public class AccountDetailsController {
     private final MemberService memberService;
-    private final ChildMemberService childMemberService;
 
     private final ChildMemberService childMemberService;
 
@@ -32,13 +31,11 @@ public class AccountDetailsController {
         this.memberService = memberService;
         this.requestService = requestService;
         this.childMemberService = childMemberService;
-        this.childMemberService = childMemberService;
     }
 
     @GetMapping("/account-info")
     public String accountInfo(HttpSession session, Model model) {
         Member member = memberService.findMember();
-        List<ChildMember> children = childMemberService.getChildByParent(member);
         List<ChildMember> children = childMemberService.getChildByParent(member);
         model.addAttribute("member", member);
         model.addAttribute("children", children);
