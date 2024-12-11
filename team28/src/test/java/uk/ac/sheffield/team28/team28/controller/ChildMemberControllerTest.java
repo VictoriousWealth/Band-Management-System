@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
@@ -30,6 +31,8 @@ public class ChildMemberControllerTest {
     @Mock
     private BindingResult bindingResult;
 
+    @Mock
+    private MockHttpSession session;
 
 
     @BeforeEach
@@ -70,4 +73,5 @@ public class ChildMemberControllerTest {
     @Test
     void shouldRedirectToAuthoriseWhenSessionAttributeIsFalse() throws Exception {
         session.setAttribute("isAuthorised", false);
+    }
 }

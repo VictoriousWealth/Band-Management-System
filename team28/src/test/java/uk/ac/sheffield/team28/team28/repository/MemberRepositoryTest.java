@@ -65,6 +65,7 @@ public class MemberRepositoryTest {
  
      @Test
      void testFindByBand() {
+        int initialSize = memberRepository.findByBand(BandInPractice.Training).size();
         //Make members in the training band
          Member member1 = new Member(29L, "a@z.com", "password", MemberType.ADULT, "090378734", "John", "Doe");
          member1.setBand(BandInPractice.Training);
@@ -76,8 +77,9 @@ public class MemberRepositoryTest {
          //Find all the trainign band memebers
          List<Member> members = memberRepository.findByBand(BandInPractice.Training);
          //Should be 2 members
-         assert members.size() == 2;
-         assert members.stream().allMatch(m -> m.getBand().equals(BandInPractice.Training));
+         List<Member> theNewMembers = members.subList(members.size() - 2, members.size());
+         assert members.size() == initialSize + 2;
+         assert theNewMembers.stream().allMatch(m -> m.getBand().equals(BandInPractice.Training));
      }
  
      @Test
@@ -90,16 +92,16 @@ public class MemberRepositoryTest {
          memberRepository.save(member1);
          //Find the member
          Optional<Member> foundMember = memberRepository.findByEmail(email);
-         assert foundMember.isPresent(); //Find that the email
-         assert foundMember.get().getEmail().equals(email); // Check the email
+         assert foundMember.isPresent();
+         assert foundMember.get().getEmail().equals(email);
      }
 
-//    @Test
-//    void testDeleteById() {
-//        Member member1 = new Member(99L, "z@x.com", "password", MemberType.ADULT, "090378734", "Joehn", "Doe");
-//        memberRepository.save(member1);
-//        memberRepository.deleteById(member1.getId());
-//        Optional<Member> deleted = memberRepository.findById(member1.getId());
-//        assert(deleted.isEmpty());
-//    }
+    @Test
+    void testDeleteById() {
+        Member member1 = new Member(99L, "z@x.com", "password", MemberType.ADULT, "090378734", "Joehn", "Doe");
+        memberRepository.save(member1);
+        memberRepository.deleteById(member1.getId());
+        Optional<Member> deleted = memberRepository.findById(member1.getId());
+        assert(deleted.isEmpty());
+    }
 }

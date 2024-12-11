@@ -211,9 +211,6 @@ public class MemberService {
         return allMembers; //Currently set to ADULT since no COMMITTEE
     }
 
-    public void setNone () {
-
-    }
 
     public boolean authorise(Long memberId, String password) throws Exception {
         //return true;

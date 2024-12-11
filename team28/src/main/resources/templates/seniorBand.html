@@ -18,17 +18,45 @@
 </nav>
 
 
+<!-- Alert for Success or Error -->
+<div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    Error: This member does not exist
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+    Success: Member added to senior band.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div th:if="${param.errorR}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    Error: Member has not been removed from senior band
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div th:if="${param.successR}" class="alert alert-success alert-dismissible fade show" role="alert">
+    Success: Member has been removed from senior band
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 <div class="container mt-4">
     <!-- Form to add a member to the Senior Band -->
     <h2 class="text-center mb-4">Add Member to Senior Band</h2>
+
     <form th:action="@{/director/addToBandByEmail}" method="post" class="mb-4">
         <div class="form-group">
             <label for="email">Add Member by Email:</label>
             <input type="email" id="email" name="email" class="form-control" placeholder="Enter member email" required>
         </div>
-        <input type="hidden" name="band" value="Senior"> <!-- Hidden input for Training band -->
+        <input type="hidden" name="band" value="Training"> <!-- Hidden input for Training band -->
         <button type="submit" class="btn btn-primary">Add to Senior Band</button>
     </form>
+
 
     <!-- Table for Training Band Members -->
     <h2 class="text-center mb-4">Senior Band Members</h2>
@@ -89,5 +117,6 @@
 <script th:src="@{/js/general.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

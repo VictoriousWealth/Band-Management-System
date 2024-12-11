@@ -99,7 +99,7 @@ public class ChildMemberService {
         }
     }
 
-    @Transactional //Delete all a parent's children
+    @Transactional //Delete a parent's children
     public void deleteChildMember(ChildMember child) throws Exception {
         loanRepository.deleteLoansByChildMemberId(child.getId());
         childMemberRepository.deleteById(child.getId());
@@ -130,6 +130,8 @@ public class ChildMemberService {
         childMemberRepository.save(childMember);
         return childMember;
     }
+
+
 
 
     public ChildMember removeChildMemberFromBand(Long childMemberId) throws Exception {

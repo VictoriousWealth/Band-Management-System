@@ -72,9 +72,6 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <!--                                <form th:action="@{/director/removeMember/{memberId}(memberId=${member.id})}" method="post">-->
-            <!--                                    <button type="submit" class="btn btn-danger">Delete</button>-->
-            <!--                                </form>-->
                                             <form th:action="@{/director/removeMember/{memberId}(memberId=${member.id})}" method="post">
                                                 <input type="hidden" name="redirectTo" value="/director/allMembers" />
                                                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -125,9 +122,6 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <!--                                <form th:action="@{/director/removeChildMember/{childId}(childId=${child.id})}" method="post">-->
-            <!--                                    <button type="submit" class="btn btn-danger">Delete</button>-->
-            <!--                                </form>-->
                                             <form th:action="@{/director/removeChildMember/{childId}(childId=${child.id})}" method="post">
                                                 <input type="hidden" name="redirectTo" value="/director/allMembers" />
                                                 <button type="submit" class="btn btn-danger">Delete</button>
