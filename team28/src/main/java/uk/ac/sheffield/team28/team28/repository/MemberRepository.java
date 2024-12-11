@@ -1,9 +1,11 @@
 package uk.ac.sheffield.team28.team28.repository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import uk.ac.sheffield.team28.team28.model.BandInPractice;
 import uk.ac.sheffield.team28.team28.model.Member;
@@ -29,4 +31,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query("DELETE FROM Member m WHERE m.id = :memberId")
     void deleteById(@Param("memberId") Long memberId);
+
 }
