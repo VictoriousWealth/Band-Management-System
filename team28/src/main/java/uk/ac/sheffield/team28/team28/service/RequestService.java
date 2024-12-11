@@ -19,10 +19,7 @@ public class RequestService {
     }
 
     public boolean addRequest(Request request) {
-        if (request == null) return false;
-        if (request.getRequester() == null) return false;
-        if (request.getDescription() == null) return false;
-        if (request.getDescription().isBlank()) return false;
+        if (checkInvalidityOfRequest(request)) return false;
 
         requestRepository.save(request);
         return true;
@@ -32,19 +29,14 @@ public class RequestService {
         return requestRepository.findById(id).orElse(null);
     }
 
-    public List<Request> getAllRequestWhereRequesterIs(Member requester) {
-        return requestRepository.findAllByRequester(requester);
-    }
 
     public List<Request> getAllApprovedRequestWhereRequesterIs(Member requester) {
         return requestRepository.findAllByRequesterAndAccepted(requester, true);
     }
 
     public boolean approveRequest(Request request) {
-        if (request == null) return false;
-        if (request.getRequester() == null) return false;
-        if (request.getDescription() == null) return false;
-        if (request.getDescription().isBlank()) return false;
+        if (checkInvalidityOfRequest(request)) return false;
+
         request.setAccepted(true);
         requestRepository.save(request);
         return true;
@@ -59,6 +51,16 @@ public class RequestService {
         if (request.getRequester() == null) return false;
         requestRepository.delete(request);
         return true;
+    }
+
+    private boolean checkInvalidityOfRequest(Request request) {
+        if (request == null) return true;
+        if (request.getRequester() == null) return true;
+        if (request.getNewFirstName() == null || request.getNewFirstName().isBlank()) return true;
+        if (request.getNewLastName() == null || request.getNewLastName().isBlank()) return true;
+        if (request.getNewPhone() == null || request.getNewPhone().isBlank()) return true;
+        if (request.getNewEmail() == null || request.getNewEmail().isBlank()) return true;
+        return false;
     }
 
 }

@@ -1,5 +1,6 @@
 package uk.ac.sheffield.team28.team28.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Controller;
@@ -50,47 +51,25 @@ public class DashboardController {
 
 
     @GetMapping("/dashboard")
-    public String showDashboard(Model model) {
+    public String showDashboard(Model model, HttpSession session) {
+        // removed session used for authorizing users to go in to different parts of the web
+        session.removeAttribute("isAuthorised");
+
         //Get logged in member
         Member member = memberService.findMember();
         model.addAttribute("member", member);
         model.addAttribute("memberType", member.getMemberType().toString());
+        List <ChildMember> children = childMemberService.getChildByParent(member);
+        int childNum = children.size();
+        model.addAttribute("childNum", childNum);
+        model.addAttribute("children",children);
 
-        //If member is a committee member, get all instruments, and orders
-        if (member.getMemberType() == MemberType.COMMITTEE || member.getMemberType() == MemberType.DIRECTOR) {
-            List<ChildMember> children = childMemberService.getChildByParent(member);
-            int childNum = children.size();
-            model.addAttribute("childNum", childNum);
-            model.addAttribute("children",children);
-
-            //If member is a committee member, get all instruments
-
-            List<Instrument> instruments = instrumentRepository.findAll();
-            model.addAttribute("instruments", instruments);
-
-            //Get all music
-            List<Music> music = musicRepository.findAll();
+        //Get music based on band
+        BandInPractice band = member.getBand();
+        if (band != BandInPractice.None) {
+            List<Music> music =
+                    musicRepository.findByBandInPracticeOrBandInPractice(band, BandInPractice.Both);
             model.addAttribute("musics", music);
-
-            //Get band types
-            List<BandInPractice> bands = Arrays.asList(BandInPractice.values());
-            model.addAttribute("bands", bands);
-
-            //Get all orders
-            List<Order> orders = orderRepository.findByItemTypeAndNotFulfilled(ItemType.Music);
-            model.addAttribute("musicOrders", orders);
-            model.addAttribute("orderService", orderService);
-
-        } else if (member.getMemberType() == MemberType.ADULT){
-
-            //Get music based on band
-            BandInPractice band = member.getBand();
-            if (band != BandInPractice.None){
-                List<Music> music =
-                        musicRepository.findByBandInPracticeOrBandInPractice(band, BandInPractice.Both);
-                model.addAttribute("musics", music);
-            }
-
         }
 
         List<Loan> memberLoans = loanService.getActiveLoansByMemberId(member.getId());
@@ -102,19 +81,19 @@ public class DashboardController {
     @PostMapping("/addInstrument")
     public String addInstrument(@ModelAttribute("instrument") InstrumentDto dto){
         instrumentService.saveInstrument(dto);
-        return "redirect:/dashboard";
+        return "redirect:/committee/dashboard";
     }
 
     @PostMapping("/editInstrument")
     public String editInstrument(@ModelAttribute("instrument") InstrumentDto dto){
         instrumentService.updateInstrument(dto);
-        return "redirect:/dashboard"; // Adjust as needed
+        return "redirect:/committee/dashboard";
     }
 
     @PostMapping("/deleteInstrument")
     public String deleteInstrument(@RequestParam("instrumentId") Long id) {
         instrumentService.deleteInstrument(id);
-        return "redirect:/dashboard"; // Adjust as needed
+        return "redirect:/committee/dashboard";
     }
 
     @GetMapping("/loanDetails")
@@ -129,7 +108,7 @@ public class DashboardController {
     @PostMapping("/addMusic")
     public String addMusic(@ModelAttribute("music") MusicDto dto){
         musicService.saveMusic(dto);
-        return "redirect:/dashboard";
+        return "redirect:/committee/dashboard";
     }
 
     @PostMapping("/orderMusic")

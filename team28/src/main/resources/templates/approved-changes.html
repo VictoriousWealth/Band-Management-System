@@ -11,19 +11,18 @@
 </head>
 <body>
 
-<div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
-    <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
-</div>
-<div th:if="${memberType.equals('Committee')}">
-    <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
-</div>
+<div th:replace="~{fragments/navbar-for-logged-in-users}"> </div>
+
 
 <div class="content-wrapper">
     <h1>Approved changes</h1>
     <table class="table">
         <tr th:each="request: ${requests}">
-            <th>Director/Committee has approved changes regarding:</th>
-            <td th:text="${request.description}"></td>
+            <th>Director/Committee has approved account details changes to:</th>
+            <td th:text="${request.newFirstName}"></td>
+            <td th:text="${request.newLastName}"></td>
+            <td th:text="${request.newPhone}"></td>
+            <td th:text="${request.newEmail}"></td>
             <td>
                 <div class="d-flex justify-content-around">
                     <form th:action="@{/account/update/{id}(id=${request.id})}" method="post" onsubmit="return confirmProceed();">

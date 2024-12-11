@@ -1,45 +1,55 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parents</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Parents</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" th:href="@{/css/style.css}"/>
 
-    <div th:if="${memberType.equals('Committee')}">
-        <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
-    </div>
-    <div th:if="${memberType.equals('Director')}">
-        <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
-    </div>
+    </head>
+    <body>
 
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Parents</h2>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Parent Name</th>
-                <th>Email</th>
-                <th>Child 1 Name</th>
-                <th>Child 2 Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="entry : ${parentsWithChildren}">
-                <td th:text="${entry.key.firstName} + ' ' + ${entry.key.lastName}">(Parent Name)</td>
-                <td th:text="${entry.key.email}">Email</td>
-                <td th:text="${entry.value.size() > 0 ? entry.value.get(0).firstName + ' ' + entry.value.get(0).lastName : 'N/A'}">Child 1 Name</td>
-                <td th:text="${entry.value.size() > 1 ? entry.value.get(1).firstName + ' ' + entry.value.get(1).lastName : 'N/A'}">Child 2 Name</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand ml-3" th:href="@{/director}">Sludgate Brass Band</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
 
-    <div th:replace="~{fragments/footer :: footer}"></div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <div class="container mt-4">
+            <h2 class="text-center mb-4">Parents and Their Children</h2>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Parent Name</th>
+                    <th>Email</th>
+                    <th>Children</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="entry : ${parentsWithChildren}">
+                    <td th:text="${entry.key.firstName} + ' ' + ${entry.key.lastName}">(Parent Name)</td>
+                    <td th:text="${entry.key.email}">Email</td>
+                    <td>
+                        <ul>
+                            <li th:each="child : ${entry.value}" th:text="${child.firstName} + ' ' + ${child.lastName}">
+                                (Child Name)
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <button class="back-button" onclick="goBack()">Go Back</button>
+        </div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script th:src="@{/js/general.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
 </html>

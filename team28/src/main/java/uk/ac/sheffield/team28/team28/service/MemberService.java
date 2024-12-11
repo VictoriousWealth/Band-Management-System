@@ -99,7 +99,7 @@ public class MemberService {
          return savedMember;
     }
 
-    private boolean isValidPassword(String password) {
+    public boolean isValidPassword(String password) {
         return PASSWORD_PATTERN.matcher(password).matches();
     }
 
@@ -108,12 +108,10 @@ public class MemberService {
     }
 
     public Member findMember(){
-        String email;
+        String email = "";
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails){
             email = ((UserDetails) principal).getUsername();
-        } else {
-            email = principal.toString();
         }
 
 
@@ -211,9 +209,6 @@ public class MemberService {
         return allMembers; //Currently set to ADULT since no COMMITTEE
     }
 
-    public void setNone () {
-
-    }
 
     public boolean authorise(Long memberId, String password) throws Exception {
         //return true;
@@ -309,9 +304,17 @@ public class MemberService {
         return member;
     }
 
-
-    public Member getMemberWithId(Long id) {
-        return memberRepository.findById(id).get();
+    public boolean doesMemberHaveLoans(Member member) {
+        return loanRepository.memberHasActiveLoans(member.getId());
+    }
+    @Transactional //Delete member
+    public void deleteMember(Long memberId) throws Exception {
+        // Check if the member has active loans
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + memberId));
+        loanRepository.deleteLoansByMemberId(memberId);
+        orderRepository.deleteOrdersByMemberId(memberId);
+        memberRepository.deleteById(memberId);
     }
 
     public boolean doesMemberHaveLoans(Member member) {

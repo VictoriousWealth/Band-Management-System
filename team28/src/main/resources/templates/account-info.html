@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Account Information</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/customContentWrapper.css}" />
+    <link rel="stylesheet" th:href="@{/css/customBody.css}" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" th:href="@{/css/style.css}" />
     <link rel="stylesheet" th:href="@{/css/customContentWrapper.css}" />
@@ -11,23 +16,19 @@
 </head>
 <body>
 
-<div th:if="${memberType.equals('Adult') || memberType.equalsIgnoreCase('Non-Adult')}">
-    <div th:replace="~{fragments/navbar-for-logged-in-users}" />
-</div>
-<div th:if="${memberType.equals('Committee')}">
-    <div th:replace="~{fragments/nav-bar-for-logged-in-committee}" />
-</div>
-<div th:if="${memberType.equals('Director')}">
-    <div th:replace="~{fragments/navbar-for-logged-in-director}" />
-</div>
+<div th:replace="~{fragments/navbar-for-logged-in-users}"> </div>
+
 
 <div class="content-wrapper">
     <div id="viewDetails">
         <h1>Account Information</h1>
 
-        <strong><ul><li th:if="${hasBeenRequested==true}">Successfully has been requested won't show until the director approves your request and you click to proceed on your request tab</li></ul></strong>
-        <strong><ul><li th:if="${success != null && success==true}">Successfully has been updated</li></ul></strong>
-        <strong><ul><li th:if="${success != null && success==false}">Partially has been updated</li></ul></strong>
+        <div th:if="${hasBeenRequested==true}" class="alert alert-success mt-3">Your request to change your credentials has been successfully been sent to the director</div>
+        <div th:if="${success != null && success==true}" class="alert alert-success mt-3">Successfully has been updated</div>
+        <div th:if="${success != null && success==false}" class="alert alert-danger mt-3">Partially has been updated</div>
+        <div th:if="${errors != null}">
+            <div th:each="error : ${errors}" class="alert alert-danger mt-3" th:text="${error}"></div>
+        </div>
 
         <p><strong>Email:</strong> <span th:text="${member.email}"></span></p>
         <p><strong>First Name:</strong> <span th:text="${member.firstName}"></span></p>
@@ -40,10 +41,11 @@
         </button>
 
         <!-- Delete Member Button -->
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">
-            Delete Member
-        </button>
-
+        <div th:if="${member.memberType != 'DIRECTOR'}">
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmDeleteModal">
+                Delete Member
+            </button>
+        </div>
         <!-- Confirmation Modal for Member Deletion -->
         <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">

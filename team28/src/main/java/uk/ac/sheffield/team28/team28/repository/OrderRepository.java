@@ -13,6 +13,10 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    @Modifying
+    @Query("DELETE FROM Order o WHERE o.member.id = :memberId")
+    void deleteOrdersByMemberId(@Param("memberId") Long memberId);
+
     @Query("SELECT o FROM Order o WHERE o.item.itemType = :itemType AND o.isFulfilled = false")
     List<Order> findByItemTypeAndNotFulfilled(@Param("itemType") ItemType itemType);
 

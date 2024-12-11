@@ -12,6 +12,7 @@ import uk.ac.sheffield.team28.team28.model.ChildMember;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.model.Request;
 import uk.ac.sheffield.team28.team28.service.ChildMemberService;
+import uk.ac.sheffield.team28.team28.service.ChildMemberService;
 import uk.ac.sheffield.team28.team28.service.MemberService;
 import uk.ac.sheffield.team28.team28.service.RequestService;
 
@@ -23,11 +24,14 @@ public class AccountDetailsController {
     private final MemberService memberService;
     private final ChildMemberService childMemberService;
 
+    private final ChildMemberService childMemberService;
+
     private final RequestService requestService;
 
     public AccountDetailsController(MemberService memberService, ChildMemberService childMemberService, RequestService requestService) {
         this.memberService = memberService;
         this.requestService = requestService;
+        this.childMemberService = childMemberService;
         this.childMemberService = childMemberService;
     }
 
@@ -35,10 +39,10 @@ public class AccountDetailsController {
     public String accountInfo(HttpSession session, Model model) {
         Member member = memberService.findMember();
         List<ChildMember> children = childMemberService.getChildByParent(member);
+        List<ChildMember> children = childMemberService.getChildByParent(member);
         model.addAttribute("member", member);
         model.addAttribute("children", children);
 
-        model.addAttribute("memberType", member.getMemberType().toString());
         model.addAttribute("isAuthorised", session.getAttribute("isAuthorised"));
         System.out.println(member.getMemberType());
         return "account-info";
@@ -50,6 +54,7 @@ public class AccountDetailsController {
         Boolean isAuthorised = (Boolean) session.getAttribute("isAuthorised");
         Member oldMember = memberService.findMember(); // old member as in original member with no changes
         model.addAttribute("memberType", oldMember.getMemberType().toString());
+        model.addAttribute("children", childMemberService.getChildByParent(oldMember));
         if (isAuthorised == null || !isAuthorised) {
             session.setAttribute("referer", "/account-info");
             return "redirect:/authorise";
@@ -79,73 +84,46 @@ public class AccountDetailsController {
             return "account-info";
         }
 
-        String description = getString(desiredUpdatedMember, oldMember);
-        requestService.addRequest(new Request(oldMember, false, description));
+        requestService.addRequest(new Request(oldMember, false, oldMember, desiredUpdatedMember));
 
         session.removeAttribute("isAuthorised");
         model.addAttribute("hasBeenRequested", true);
         return "account-info";
     }
 
-
-    private static String getString(Member desiredUpdatedMember, Member oldMember) {
-        String oldMemberInStringFormat = "{First Name: " + oldMember.getFirstName() + ", Last Name: " + oldMember.getLastName() + ", Email: " + oldMember.getEmail() + ", Phone: " + oldMember.getPhone()+"}";
-        String desiredUpdatedMemberInStringFormat = "{First Name: " + desiredUpdatedMember.getFirstName() + ", Last Name: " + desiredUpdatedMember.getLastName() + ", Email: " + desiredUpdatedMember.getEmail() + ", Phone: " + desiredUpdatedMember.getPhone()+"}";
-        return "User wants to change account info from: "+oldMemberInStringFormat+" to "+desiredUpdatedMemberInStringFormat;
-    }
-
     @PostMapping("/account/update/{id}")
     public String actualUpdateAccountInfo(@PathVariable Long id, Model model) {
         model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
-        List<String> details = getMemberUpdatedDetails(requestService.getRequestWithId(id).getDescription());
+        model.addAttribute("children", childMemberService.getChildByParent(memberService.findMember()));
+        Request request = requestService.getRequestWithId(id);
 
         Member oldMember = memberService.findMember(); // old member as in original member with no changes
 
-        if (!details.contains("")) {
-            List<Exception> exceptionList = memberService.updateMemberInfo(
+        List<Exception> exceptionList =
+                memberService.updateMemberInfo(
                     oldMember.getId(),
-                    details.get(0), // first name
-                    details.get(1), // last name
-                    details.get(2), // phone
-                    details.get(3) // email
+                    request.getNewFirstName(),
+                    request.getNewLastName(),
+                    request.getNewPhone(),
+                    request.getNewEmail()
             );
-            if (exceptionList.isEmpty()) {
-                Member updatedMember = memberService.findMember();
-                model.addAttribute("member", updatedMember);
-                model.addAttribute("success", true);
-            } else {
-                Member partiallyUpdatedMember = memberService.findMember(); // because the email might be valid, but the first name might be invalid (i.e. empty)
-                model.addAttribute("member", partiallyUpdatedMember); // so it shows under account info as it should, (yes if we were to redirect this line will be un-neded)
-                model.addAttribute("success", false);
-                model.addAttribute("exceptionList", exceptionList); // all the exceptions occurred during the attempt at updating the record, NOTE: if we were to redirect it won't show on the account-info page, as re-directing causes reset of the model values
-            }
-            model.addAttribute("hasBeenAccepted", false);
-            requestService.deleteRequest(requestService.getRequestWithId(id));
-            model.addAttribute("requests", requestService.getAllApprovedRequestWhereRequesterIs(memberService.findMember()));
-            return "account-info";
+
+        if (exceptionList.isEmpty()) {
+            Member updatedMember = memberService.findMember();
+            model.addAttribute("member", updatedMember);
+            model.addAttribute("success", true);
+        } else {
+            Member partiallyUpdatedMember = memberService.findMember(); // because the email might be valid, but the first name might be invalid (i.e. empty)
+            model.addAttribute("member", partiallyUpdatedMember); // so it shows under account info as it should, (yes if we were to redirect this line will be un-neded)
+            model.addAttribute("success", false);
+            model.addAttribute("exceptionList", exceptionList); // all the exceptions occurred during the attempt at updating the record, NOTE: if we were to redirect it won't show on the account-info page, as re-directing causes reset of the model values
         }
         model.addAttribute("hasBeenAccepted", false);
-        return "redirect:/account-info";
+        requestService.deleteRequest(requestService.getRequestWithId(id));
+        model.addAttribute("requests", requestService.getAllApprovedRequestWhereRequesterIs(memberService.findMember()));
+        return "account-info";
 
     }
 
-    private List<String> getMemberUpdatedDetails(String description) {
-        String newInfo = description.substring(description.indexOf("} to {"));
-        String actualNewInfo = newInfo.substring(newInfo.indexOf("{"));
-        String firstName = actualNewInfo.substring(actualNewInfo.indexOf("First Name: ")+"First Name: ".length(), actualNewInfo.indexOf(", Last Name: "));
-        String lastName = actualNewInfo.substring(actualNewInfo.indexOf("Last Name: ")+"Last Name: ".length(), actualNewInfo.indexOf(", Email: "));
-        String email = actualNewInfo.substring(actualNewInfo.indexOf(" Email: ")+" Email:".length(), actualNewInfo.indexOf(", Phone: "));
-        String phone = actualNewInfo.substring(actualNewInfo.indexOf(" Phone: ")+" Phone: ".length(), actualNewInfo.indexOf("}"));
-
-        List<String> details = new ArrayList<>();
-        details.add(firstName.strip());
-        details.add(lastName.strip());
-        details.add(phone.strip());
-        details.add(email.strip());
-
-        System.out.println(details);
-
-        return details;
-    }
 
 }

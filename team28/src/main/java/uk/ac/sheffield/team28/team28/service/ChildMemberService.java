@@ -1,5 +1,5 @@
 package uk.ac.sheffield.team28.team28.service;
-
+//TODO: CHILD MUST BE BETWEEN 4 AND 18
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import uk.ac.sheffield.team28.team28.exception.FieldCannotBeBlankException;
@@ -10,6 +10,8 @@ import uk.ac.sheffield.team28.team28.repository.ChildMemberRepository;
 
 import uk.ac.sheffield.team28.team28.repository.LoanRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
+
+import uk.ac.sheffield.team28.team28.repository.LoanRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -24,11 +26,15 @@ public class ChildMemberService {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
-    public ChildMemberService(ChildMemberRepository childMemberRepository, LoanRepository loanRepository, MemberService memberService, MemberRepository member){
+
+
+
+    public ChildMemberService(ChildMemberRepository childMemberRepository, MemberService memberService, MemberRepository memberRepository, LoanRepository loanRepository ){
         this.childMemberRepository = childMemberRepository;
         this.memberService = memberService;
         this.memberRepository = memberRepository;
         this.loanRepository = loanRepository;
+
     }
 
     public Optional<ChildMember> getChildByFullName(String fullName) {
@@ -46,6 +52,12 @@ public class ChildMemberService {
     }
     public List<ChildMember> getChildByParent(Member parent){
         return childMemberRepository.findAllByParent(parent);
+    }
+
+    public ChildMember getChildById(Long childMemberId) throws Exception {
+        ChildMember childMember = childMemberRepository.findById(childMemberId).orElseThrow(() ->
+                new Exception("Member not found with ID: " + childMemberId));
+        return childMember;
     }
 
     public ChildMember getChildById(Long childMemberId) throws Exception {
@@ -95,7 +107,7 @@ public class ChildMemberService {
         }
     }
 
-    @Transactional //Delete all a parent's children
+    @Transactional //Delete a parent's children
     public void deleteChildMember(ChildMember child) throws Exception {
         loanRepository.deleteLoansByChildMemberId(child.getId());
         childMemberRepository.deleteById(child.getId());
@@ -141,34 +153,5 @@ public class ChildMemberService {
         //Save changes
         childMemberRepository.save(childMember);
         return childMember;
-    }
-
-    public List<Exception> addNewChild(String firstName, String lastName, Long parentId, LocalDate dateOfBirth) {
-        List<Exception> exceptions = new ArrayList<>();
-        if (firstName == null || firstName.isBlank()) {
-            exceptions.add(new FieldCannotBeBlankException("First name cannot be empty!"));
-        }
-        if (lastName == null || lastName.isBlank()) {
-            exceptions.add(new FieldCannotBeBlankException("Last name cannot be empty!"));
-        }
-        if (dateOfBirth == null) {
-            exceptions.add(new FieldCannotBeBlankException("Date of birth cannot be empty!"));
-        }
-
-        if (dateOfBirth != null && dateOfBirth.isAfter(LocalDate.now())) {
-            exceptions.add(new IllegalArgumentException("Date of birth cannot be in the future!"));
-        }
-
-        if (dateOfBirth != null && dateOfBirth.minusDays(1).isBefore(LocalDate.now().minusYears(4))) {
-            exceptions.add(new IllegalArgumentException("Child must be 4 years or older!"));
-        }
-        if (dateOfBirth != null && Period.between(dateOfBirth, LocalDate.now()).getYears() >= 18) {
-            exceptions.add(new IllegalArgumentException("Child cannot be 18 years or older!"));
-        }
-        ChildMember childMember = new ChildMember(firstName, lastName, memberService.getMemberWithId(parentId), dateOfBirth);
-        if (exceptions.isEmpty()) {
-            childMemberRepository.save(childMember);
-        }
-        return exceptions;
     }
 }

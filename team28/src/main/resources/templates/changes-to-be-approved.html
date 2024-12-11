@@ -18,12 +18,7 @@
 </head>
 <body>
 
-    <div th:if="${memberType.equals('Committee')}">
-        <div th:replace="~{fragments/nav-bar-for-logged-in-committee}"></div>
-    </div>
-    <div th:if="${memberType.equals('Director')}">
-        <div th:replace="~{fragments/navbar-for-logged-in-director}"></div>
-    </div>
+    <div th:replace="~{fragments/navbar-for-logged-in-users}"> </div>
 
     <div class="content-wrapper">
 
@@ -33,12 +28,32 @@
         <thead>
         <tr>
             <th>Description</th>
-            <th>Actions</th>
+            <th>Old First Name</th>
+            <th>Old Last Name</th>
+            <th>Old Phone</th>
+            <th>Old Email</th>
+            <th></th>
+            <th>New First Name</th>
+            <th>New Last Name</th>
+            <th>New Phone</th>
+            <th>New Email</th>
+            <th>Action</th>
+
         </tr>
         </thead>
         <tbody>
         <tr th:each="request: ${requests}">
-            <td th:text="${request.description}"></td>
+            <td>User desires to change from</td>
+            <td th:text="${request.oldFirstName}"></td>
+            <td th:text="${request.oldLastName}"></td>
+            <td th:text="${request.oldPhone}"></td>
+            <td th:text="${request.oldEmail}"></td>
+            <td>To</td>
+            <td th:text="${request.newFirstName}"></td>
+            <td th:text="${request.newLastName}"></td>
+            <td th:text="${request.newPhone}"></td>
+            <td th:text="${request.newEmail}"></td>
+
             <td>
                 <div class="d-flex justify-content-around">
                     <form th:action="@{/request/approve/{id}(id=${request.id})}" method="post" onsubmit="return confirmApprove();">

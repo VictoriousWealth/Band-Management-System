@@ -40,25 +40,25 @@ public class MemberController {
 
     }
 
-    @PostMapping("/{memberId}/addToBand")
-    public ResponseEntity<Member> addMemberToBand(@PathVariable Long memberId, @PathVariable BandInPractice oldBand) {
-        try {
-            Member member = memberService.addMemberToBand(memberId, oldBand);
-            return ResponseEntity.ok(member);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
-
-    @DeleteMapping("/{memberId}/removeFromBand")
-    public ResponseEntity<Member> removeMemberFromBand(@PathVariable Long memberId, @PathVariable BandInPractice newBand) {
-        try {
-            Member member = memberService.removeMemberFromBand(memberId, newBand);
-            return ResponseEntity.ok(member);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-    }
+//    @PostMapping("/{memberId}/addToBand")
+//    public ResponseEntity<Member> addMemberToBand(@PathVariable Long memberId, @PathVariable BandInPractice oldBand) {
+//        try {
+//            Member member = memberService.addMemberToBand(memberId, oldBand);
+//            return ResponseEntity.ok(member);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//    }
+//
+//    @DeleteMapping("/{memberId}/removeFromBand")
+//    public ResponseEntity<Member> removeMemberFromBand(@PathVariable Long memberId, @PathVariable BandInPractice newBand) {
+//        try {
+//            Member member = memberService.removeMemberFromBand(memberId, newBand);
+//            return ResponseEntity.ok(member);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//    }
 
     @GetMapping("/authorise")
     public String showAuthorisePage(Model model) {
@@ -119,6 +119,9 @@ public class MemberController {
             child.setLastName(formattedLastName);
             child.setDateOfBirth(dob);
             child.setParent(parent);
+
+            // Save the child to the database
+
             childMemberRepository.save(child);
             return "redirect:/dashboard";
 
@@ -128,6 +131,17 @@ public class MemberController {
             model.addAttribute("error", "An error occurred: " + e.getMessage());
             return "error"; // Return an error page if something goes wrong
         }
+    }
+
+
+    @GetMapping("allow-to-go-committee")
+    public String allowToGoParent(HttpSession session) {
+        Boolean isAuthorised = (Boolean) session.getAttribute("isAuthorised");
+        if (isAuthorised == null || !isAuthorised) {
+            session.setAttribute("referer", "/committee/dashboard");
+            return "redirect:/authorise";
+        }
+        return "redirect:/dashboard";
     }
 
 

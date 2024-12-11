@@ -18,16 +18,48 @@ public class Request {
     @Column(name = "accepted", nullable = false)
     private boolean accepted;
 
-    @Column(name = "description", length = 500)
-    private String description;
+    @Column(name = "old_first_name", nullable = false)
+    private String oldFirstName;
+
+    @Column(name = "new_first_name", nullable = false)
+    private String newFirstName;
+
+    @Column(name = "old_last_name", nullable = false)
+    private String oldLastName;
+
+    @Column(name = "new_last_name", nullable = false)
+    private String newLastName;
+
+    @Column(name="old_phone")
+    private String oldPhone;
+
+    @Column(name="new_phone")
+    private String newPhone;
+
+    @Column(name = "old_email", nullable = false, unique = true)
+    private String oldEmail;
+
+    @Column(name = "new_email", nullable = false, unique = true)
+    private String newEmail;
+
 
     // Constructors
     public Request() {}
 
-    public Request(Member requester, boolean accepted, String description) {
+    public Request(Member requester, boolean accepted, Member oldMemberInfo, Member newMemberInfo) {
         this.requester = requester;
         this.accepted = accepted;
-        this.description = description;
+
+        this.oldFirstName = oldMemberInfo.getFirstName();
+        this.oldLastName = oldMemberInfo.getLastName();
+        this.oldPhone = oldMemberInfo.getPhone();
+        this.oldEmail = oldMemberInfo.getEmail();
+
+        this.newFirstName = newMemberInfo.getFirstName();
+        this.newLastName = newMemberInfo.getLastName();
+        this.newPhone = newMemberInfo.getPhone();
+        this.newEmail = newMemberInfo.getEmail();
+
     }
 
     // Getters and Setters
@@ -55,39 +87,13 @@ public class Request {
         this.accepted = accepted;
     }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getOldFirstName() {return oldFirstName;}
+    public String getOldLastName() {return oldLastName;}
+    public String getOldPhone() {return oldPhone;}
+    public String getOldEmail() {return oldEmail;}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    // Equals and HashCode
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Request request = (Request) o;
-        return accepted == request.accepted &&
-                Objects.equals(id, request.id) &&
-                Objects.equals(requester, request.requester) &&
-                Objects.equals(description, request.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, requester, accepted, description);
-    }
-
-    // toString
-    @Override
-    public String toString() {
-        return "Request{" +
-                "id=" + id +
-                ", requester=" + requester +
-                ", accepted=" + accepted +
-                ", description='" + description + '\'' +
-                '}';
-    }
+    public String getNewFirstName() {return newFirstName;}
+    public String getNewLastName() {return newLastName;}
+    public String getNewPhone() {return newPhone;}
+    public String getNewEmail() {return newEmail;}
 }

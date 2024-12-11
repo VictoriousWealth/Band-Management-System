@@ -33,7 +33,7 @@ public class SecurityConfig {
             .formLogin((form) -> form
                 .loginProcessingUrl("/auth/login")                       // URL to submit login data
                 .loginPage("/auth/login")                                // Custom login page URL
-                .defaultSuccessUrl("/dashboard")                    // Redirect to /dashboard on successful login
+                .defaultSuccessUrl("/dashboard", true)                    // Redirect to /dashboard on successful login
                 .failureHandler(customAuthenticationFailureHandler())
                 .permitAll()
             )
