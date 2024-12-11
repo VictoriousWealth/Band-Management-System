@@ -39,24 +39,21 @@
             }
 
             .floating-buttons button {
-                background-color: navy; /* Changes the button color to navy */
-                color: white; /* Ensures the text is readable */
-                border: none; /* Optional: removes any border */
-                padding: 5px 15px; /* Adjusts padding for better appearance */
-                border-radius: 5px; /* Adds rounded corners */
-                font-size: 16px; /* Sets a readable font size */
-                cursor: pointer; /* Changes cursor to pointer on hover */
-                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: adds a slight shadow */
+                background-color: navy;
+                color: white;
+                border: none;
+                padding: 5px 15px;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             }
 
             .floating-buttons button:hover {
-                background-color: darkblue; /* Changes to a slightly darker navy on hover */
+                background-color: darkblue;
             }
 
-            footer {
-                position: relative; /* Ensures footer stays at the bottom */
-                z-index: 1; /* Makes sure it appears below floating elements */
-            }
+
 
             .floating-buttons button {
                 width: 150px;
@@ -87,457 +84,139 @@
     <div th:replace="~{fragments/navbar-for-logged-in-users}"></div>
 
     <div class="content-wrapper">
-            <h2>Dashboard</h2>
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="true">Performance Schedule</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="loans-tab" data-toggle="tab" href="#loans" role="tab" aria-controls="loans" aria-selected="false">Loans</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="music-tab" data-toggle="tab" href="#music" role="tab" aria-controls="music" aria-selected="false">Music</a>
-                </li>
-                <li class="nav-item" th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
-                    <a class="nav-link" id="instrument-tab" data-toggle="tab" href="#instrument" role="tab" aria-controls="instrument" aria-selected="false">Instrument</a>
-                </li>
-            </ul>
+        <h2>Dashboard</h2>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="performance-tab" data-toggle="tab" href="#performance" role="tab" aria-controls="performance" aria-selected="true">Performance Schedule</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="loans-tab" data-toggle="tab" href="#loans" role="tab" aria-controls="loans" aria-selected="false">Loans</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="music-tab" data-toggle="tab" href="#music" role="tab" aria-controls="music" aria-selected="false">Music</a>
+            </li>
+        </ul>
 
-            <div class="tab-content mt-3" id="myTabContent">
-                <div class="tab-pane fade show active" id="performance" role="tabpanel" aria-labelledby="performance-tab">
-                    <h3>Performance Schedule</h3>
-                    <p>Details of upcoming performances...</p>
+        <div class="tab-content mt-3" id="myTabContent">
+            <div class="tab-pane fade show active" id="performance" role="tabpanel" aria-labelledby="performance-tab">
+                <h3>Performance Schedule</h3>
+                <p>Details of upcoming performances...</p>
+            </div>
+
+            <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
+                <h3>Loans</h3>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Loaned Instrument</th>
+                        <th>Loaned on</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="loan: ${memberLoans}">
+                        <td th:text="${loan.item.nameTypeOrTitle}"></td>
+                        <td th:text="${loan.loanDate}"></td>
+                        <td>
+                            <button class="btn btn-info"
+                                    th:data-itemName="${loan.item.nameTypeOrTitle}"
+                                    th:data-make="${loan.item.makeOrComposer}"
+                                    th:data-note="${loan.item.note}"
+                                    th:data-loanDate="${loan.loanDate}"
+                                    th:data-memberFirstName="${loan.member.firstName}"
+                                    th:data-memberLastName="${loan.member.lastName}"
+                                    onclick="showLoanDetails(this)"
+                                    data-toggle="modal"
+                                    data-target="#loanDetailsModal">Details</button>
+                        </td>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal fade" id="loanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="loanDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="loanDetailsModalLabel">Loan Item Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Instrument Name:</strong> <span id="modalInstrumentName"></span></p>
+                            <p><strong>Make:</strong> <span id="modalMake"></span></p>
+                            <p><strong>Note:</strong> <span id="modalNote"></span></p>
+                            <p><strong>Loaned to:</strong> <span id="modalMemberName"></span></p>
+                            <p><strong>Date of Loan:</strong> <span id="modalLoanDate"></span></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
-                    <h3>Loans</h3>
-                    <table class="table table-bordered">
-                        <thead>
+            <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
+                <h3>Your Music</h3>
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <th>Loaned Instrument</th>
-                            <th>Loaned on</th>
-                            <th>Action</th>
+                            <th>Name</th>
+                            <th>Composer</th>
+                            <th>Arranger</th>
                         </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="loan: ${memberLoans}">
-                            <td th:text="${loan.item.nameTypeOrTitle}"></td>
-                            <td th:text="${loan.loanDate}"></td>
-                            <td>
-                                <button class="btn btn-info"
-                                        th:data-itemName="${loan.item.nameTypeOrTitle}"
-                                        th:data-make="${loan.item.makeOrComposer}"
-                                        th:data-note="${loan.item.note}"
-                                        th:data-loanDate="${loan.loanDate}"
-                                        th:data-memberFirstName="${loan.member.firstName}"
-                                        th:data-memberLastName="${loan.member.lastName}"
-                                        onclick="showLoanDetails(this)"
-                                        data-toggle="modal"
-                                        data-target="#loanDetailsModal">Details</button>
-                            </td>
-                        </tbody>
-                    </table>
-                </div>
+                    </thead>
+                    <tbody>
+                        <tr th:each="music: ${musics}">
+                            <td th:text="${music.item.nameTypeOrTitle}"></td>
+                            <td th:text="${music.item.makeOrComposer}"></td>
+                            <td th:text="${music.arranger}"></td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                <div class="modal fade" id="loanDetailsModal" tabindex="-1" role="dialog" aria-labelledby="loanDetailsModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="loanDetailsModalLabel">Loan Item Details</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                <!-- Button to request music if you are a normal member -->
+                <button class="btn btn-primary" data-toggle="modal" data-target="#orderMusic">
+                    Order Music
+                </button>
+            </div>
+
+            <!-- Type modal with form to order music-->
+            <div class="modal fade" id="orderMusic" tabindex="-1" role="dialog"
+                 aria-labelledby="addMusic" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="orderMusicLabel">Order Music</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form th:action="@{/orderMusic}" method="post">
+                            <!-- Insert dropdown with all music -->
+                            <div class="form-group">
+                                <label for="selectMusic">Select music piece:</label>
+                                <select id="selectMusic" name="itemId" required>
+                                    <option th:each="music : ${musics}"
+                                            th:value="${music.item.id}"
+                                            th:text="${music.arranger != null && !music.arranger.isEmpty()
+                                                        ? music.item.nameTypeOrTitle + ' - ' + music.item.makeOrComposer + ' - ' + music.arranger
+                                                        : music.item.nameTypeOrTitle + ' - ' + music.item.makeOrComposer}"></option>
+                                </select>
                             </div>
-                            <div class="modal-body">
-                                <p><strong>Instrument Name:</strong> <span id="modalInstrumentName"></span></p>
-                                <p><strong>Make:</strong> <span id="modalMake"></span></p>
-                                <p><strong>Note:</strong> <span id="modalNote"></span></p>
-                                <p><strong>Loaned to:</strong> <span id="modalMemberName"></span></p>
-                                <p><strong>Date of Loan:</strong> <span id="modalLoanDate"></span></p>
+                            <!-- Add note section so user can add a note to their order -->
+                            <div class="form-group">
+                                <label for="noteSelectMusic">Add note:</label>
+                                <input type="text" name="note" id="noteSelectMusic">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="music" role="tabpanel" aria-labelledby="music-tab">
-                    <h3><span th:unless="${memberType.equals('Committee')} or ${memberType.equals('Director')}">Your </span>Music</h3>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Composer</th>
-                                <th>Arranger</th>
-                                <th th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
-                                    Band practicing</th>
-                                <th th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
-                                    Suitable for training band?</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="music: ${musics}">
-                                <td th:text="${music.item.nameTypeOrTitle}"></td>
-                                <td th:text="${music.item.makeOrComposer}"></td>
-                                <td th:text="${music.arranger}"></td>
-                                <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
-                                    th:text="${music.bandInPractice.toString()}"></td>
-                                <td th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}"
-                                    th:text="${music.item.note == 'true' ? 'True' : 'False'}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Button to add music and to see order requests-->
-                    <span th:if="${memberType.equals('Committee')} or ${memberType.equals('Director')}">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#addMusic">
-                            Add Music</button>
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#viewOrders">
-                            View Orders</button>
-                    </span>
-
-                    <!-- Button to request music if you are a normal member -->
-                    <span th:if="${memberType.equals('Adult')} or ${memberType.equals('Non_Adult')}">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#orderMusic">
-                            Order Music
-                        </button>
-                    </span>
-                </div>
-
-                <div class="tab-pane fade" id="instrument" role="tabpanel" aria-labelledby="instrument-tab">
-                    <!-- Insert Instruments table -->
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Instrument</th>
-                            <th>Make</th>
-                            <th>Serial Number</th>
-                            <th>In Storage</th>
-                            <th>Note</th>
-                            <th>Action</th>
-                            <th>Loan/Return</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="instrument: ${instruments}">
-                            <td th:text="${instrument.item.nameTypeOrTitle}"></td>
-                            <td th:text="${instrument.item.makeOrComposer}"></td>
-                            <td th:text="${instrument.serialNumber}"></td>
-                            <td>
-                                <span th:if="${instrument.item?.inStorage}" class="badge badge-success">Yes</span>
-                                <span th:if="${!instrument.item?.inStorage}" class="badge badge-danger">No</span>
-                            </td>
-                            <td th:text="${instrument.item.note}"></td>
-                            <td>
-                                <button class="btn btn-primary"
-                                        data-toggle="modal"
-                                        data-target="#editInstrumentModal"
-                                        th:attr="data-id=${instrument.id}, data-inStorage=${instrument.item.inStorage}"
-                                        onclick="populateEditForm(this)"> Edit </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-primary"
-                                        th:if="${instrument.item.inStorage}"
-                                        data-toggle="modal"
-                                        data-target="#loanModal"
-                                        th:attr="data-id=${instrument.id}"
-                                        data-action="loan"
-                                        onclick="setAction(this)">Loan</button>
-                                <button class="btn btn-warning"
-                                        th:if="${!instrument.item.inStorage}"
-                                        data-toggle="modal"
-                                        data-target="#returnModal"
-                                        th:attr="data-id=${instrument.id}"
-                                        data-action="return"
-                                        onclick="setAction(this)">Return</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <!-- Button to add instruments to inventory -->
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#addInstrument">
-                        Add Instrument</button>
-
-                    <!-- Loan modal -->
-                    <div class="modal fade" id="loanModal" tabindex="-1" role="dialog" aria-labelledby="loanModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="loanModalLabel">Loan Instrument</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form th:action="@{/loans/loanAction}" id="loanForm" method="post">
-                                    <div class="modal-body">
-                                        <input type="hidden" id="loanInstrumentId" name="instrumentId">
-                                        <input type="hidden" id="loanAction" name="action">
-                                        <div class="form-group">
-                                            <label for="memberName">Member Full Name:</label>
-                                            <input type="text" class="form-control" id="memberName" name="memberName" required>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Return Modal -->
-                    <div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="returnModalLabel">Return Instrument</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form th:action="@{/loans/loanAction}" id="returnForm" method="post">
-                                    <div class="modal-body">
-                                        <input type="hidden" id="returnInstrumentId" name="instrumentId">
-                                        <input type="hidden" id="returnAction" name="action">
-                                        <p>Are you sure you want to return this instrument?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-warning">Return</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Type modal with form to add instrument-->
-                    <div class="modal fade" id="addInstrument" tabindex="-1" role="dialog"
-                         aria-labelledby="addInstrument" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="addInstrumentLabel">Add Instrument</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form th:action="@{/addInstrument}" method="post">
-                                    <div class="modal-body">
-                                        <div class="form-group" >
-                                            <label for="instrumentInput">Instrument:</label>
-                                            <input type="text" class="form-control" id="instrumentInput" name="instrumentInput" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="make">Make:</label>
-                                            <input type="text" class="form-control" id="make" name="make" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="serialNumber">Serial Number:</label>
-                                            <input type="text" class="form-control" id="serialNumber" name="serialNumber" required>
-                                        </div>
-                                        <input type="hidden" name="inStorage" value = "true">
-                                        <div class="form-group">
-                                            <label for="note">Note:</label>
-                                            <input type="text" class="form-control" id="note" name="note">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Type modal to edit or delete instrument -->
-                    <div class="modal fade" id="editInstrumentModal" tabindex="-1" role="dialog" aria-labelledby="editInstrumentModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editInstrumentModalLabel">Edit Instrument</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form th:action="@{/editInstrument}" method="post">
-                                    <div class="modal-body">
-                                        <input type="hidden" id="editInstrumentId" name="instrumentId"/>
-                                        <div class="form-group">
-                                            <label for="editInstrumentInput">Instrument:</label>
-                                            <input type="text" class="form-control" id="editInstrumentInput" name="instrumentInput" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editMake">Make:</label>
-                                            <input type="text" class="form-control" id="editMake" name="make" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="editSerialNumber">Serial Number:</label>
-                                            <input type="text" class="form-control" id="editSerialNumber" name="serialNumber" required>
-                                        </div>
-                                        <input type="hidden" name="inStorage" id="editInStorage">
-                                        <div class="form-group">
-                                            <label for="editNote">Note:</label>
-                                            <input type="text" class="form-control" id="editNote" name="note">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                </form>
-                                <!-- Button to delete an Instrument -->
-                                <form id="deleteForm" th:action="@{/deleteInstrument}" method="post" style="display: inline;">
-                                    <input type="hidden" name="instrumentId" id="deleteInstrumentId" />
-                                    <button type="button" class="btn btn-danger" id="deleteButton" onclick="confirmDelete()">
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
-
-        <!-- Type modal with form to add music-->
-        <div class="modal fade" id="addMusic" tabindex="-1" role="dialog"
-             aria-labelledby="addMusic" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addMusicLabel">Add Music</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form th:action="@{/addMusic}" method="post">
-                        <div class="modal-body">
-                            <div class="form-group" >
-                                <label for="musicInput">Name:</label>
-                                <input type="text" class="form-control" id="musicInput" name="musicInput" required >
-                            </div>
-                            <div class="form-group">
-                                <label for="composer">Composer:</label>
-                                <input type="text" class="form-control" id="composer" name="composer" required >
-                            </div>
-                            <div class="form-group">
-                                <label for="arranger">Arranger:</label>
-                                <input type="text" class="form-control" id="arranger" name="arranger">
-                            </div>
-                            <div class="form-group">
-                                <label for="bandInPractice">Band practicing:</label>
-                                <select id="bandInPractice" name="bandInPractice" required>
-                                    <option th:each="band : ${T(uk.ac.sheffield.team28.team28.model.BandInPractice).values()}"
-                                            th:value="${band}"
-                                            th:text="${band.toString() != null ? band.toString() : band.toString()}"></option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Is this suitable for the Training Band?</label>
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="suitableForTraining" id="suitableForTrainingYes" value="true" checked>
-                                    <label class="form-check-label" for="suitableForTrainingYes">Yes</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="suitableForTraining" id="suitableForTrainingNo" value="false">
-                                    <label class="form-check-label" for="suitableForTrainingNo">No</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Type modal with form to view music orders-->
-        <div class="modal fade" id="viewOrders" tabindex="-1" role="dialog"
-             aria-labelledby="viewOrders" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="viewOrderLabel">View orders</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form th:action="@{/orders/changeOrderStatus}" method="post">
-                        <!-- Table that shows all music orders that are not fulfilled -->
-                        <table id="orderTable" class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th>Select</th>
-                                <th>Name</th>
-                                <th>Composer</th>
-                                <th>Arranger</th>
-                                <th>Note</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="musicOrder : ${musicOrders}">
-                                    <td>
-                                        <input type="radio" name="orderId" th:value="${musicOrder.id}">
-                                    </td>
-                                    <td th:text="${musicOrder.item.nameTypeOrTitle}"></td>
-                                    <td th:text="${musicOrder.item.makeOrComposer}"></td>
-                                    <td th:text="${orderService.getArrangerForOrder(musicOrder.id)}"></td>
-                                    <td th:text="${musicOrder.note}"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Fulfill Order</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Type modal with form to order music-->
-        <div class="modal fade" id="orderMusic" tabindex="-1" role="dialog"
-             aria-labelledby="addMusic" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="orderMusicLabel">Order Music</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form th:action="@{/orderMusic}" method="post">
-                        <!-- Insert dropdown with all music -->
-                        <div class="form-group">
-                            <label for="selectMusic">Select music piece:</label>
-                            <select id="selectMusic" name="itemId" required>
-                                <option th:each="music : ${musics}"
-                                        th:value="${music.item.id}"
-                                        th:text="${music.arranger != null && !music.arranger.isEmpty()
-                                                    ? music.item.nameTypeOrTitle + ' - ' + music.item.makeOrComposer + ' - ' + music.arranger
-                                                    : music.item.nameTypeOrTitle + ' - ' + music.item.makeOrComposer}"></option>
-                            </select>
-                        </div>
-                        <!-- Add note section so user can add a note to their order -->
-                        <div class="form-group">
-                            <label for="noteSelectMusic">Add note:</label>
-                            <input type="text" name="note" id="noteSelectMusic">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         </div>
 
         <!-- Buttons for Add Child, Child View, and Committee View -->
@@ -561,8 +240,6 @@
                     data-target="#addChildModal">
                 Add Child
             </button>
-
-
         </div>
 
         <!-- Add Child Modal -->
@@ -598,7 +275,8 @@
                 </div>
             </div>
         </div>
-    <!--Choose child modal-->
+
+        <!--Choose child modal-->
         <div class="modal fade" id="selectChildModal" tabindex="-1" role="dialog" aria-labelledby="selectChildModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -621,6 +299,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
     <footer>
             <div th:replace="~{fragments/footer :: footer}"></div>
