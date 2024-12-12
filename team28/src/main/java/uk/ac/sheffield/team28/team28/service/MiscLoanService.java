@@ -42,12 +42,12 @@ public class MiscLoanService {
     public List<MiscLoan> getActiveMiscLoansByMemberId(Long memberId) {
         List<MiscLoan> allMiscLoans = this.getLoansByMemberId(memberId);
         List<MiscLoan> activeLoans = new ArrayList<>();
-        for (miscLoan miscLoan : allMiscLoans) {
+        for (MiscLoan miscLoan : allMiscLoans) {
             if (miscLoan.getMiscReturnDate() == null) {
-                activeMiscLoans.add(miscLoan);
+                activeLoans.add(miscLoan);
             }
         }
-        return activeMiscLoans;
+        return activeLoans;
     }
 
 
