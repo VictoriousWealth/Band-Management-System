@@ -11,12 +11,13 @@ public class Loan {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne
     @JoinColumn(name = "child_member_id")
     private ChildMember childMember;
+
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
@@ -86,4 +87,10 @@ public class Loan {
         this.returnDate = returnDate;
     }
 
+    public ChildMember getChildMember() {
+        return childMember;
+    }
+    public void setChildMember(ChildMember childMember) {
+        this.childMember = childMember;
+    }
 }

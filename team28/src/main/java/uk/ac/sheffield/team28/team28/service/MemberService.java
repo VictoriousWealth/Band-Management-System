@@ -279,17 +279,13 @@ public class MemberService {
         String firstName = nameParts[0];
         String lastName = nameParts[nameParts.length - 1];
 
-        // Query the repository by first name
         List<Member> membersWithFirstName = memberRepository.findByFirstName(firstName);
 
-        // Verify that the last name matches
         for (Member member : membersWithFirstName) {
             if (member.getLastName().equalsIgnoreCase(lastName)) {
                 return member;
             }
         }
-
-        // If no match is found
         throw new IllegalArgumentException("No member found with the full name: " + memberName);
     }
 

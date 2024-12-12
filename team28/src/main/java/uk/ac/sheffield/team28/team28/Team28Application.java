@@ -3,6 +3,7 @@ package uk.ac.sheffield.team28.team28;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import uk.ac.sheffield.team28.team28.model.Member;
 import uk.ac.sheffield.team28.team28.model.MemberType;
@@ -18,6 +19,7 @@ public class Team28Application {
 		SpringApplication.run(Team28Application.class, args);
 	}
 
+	@Bean
 	public CommandLineRunner createDirector(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
 		return (args) -> {
 			String dirFirstName = "Director";

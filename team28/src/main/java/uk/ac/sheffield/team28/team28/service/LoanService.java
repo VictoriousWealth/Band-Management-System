@@ -2,10 +2,7 @@ package uk.ac.sheffield.team28.team28.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.sheffield.team28.team28.model.Instrument;
-import uk.ac.sheffield.team28.team28.model.Item;
-import uk.ac.sheffield.team28.team28.model.Loan;
-import uk.ac.sheffield.team28.team28.model.Member;
+import uk.ac.sheffield.team28.team28.model.*;
 import uk.ac.sheffield.team28.team28.repository.InstrumentRepository;
 import uk.ac.sheffield.team28.team28.repository.LoanRepository;
 import uk.ac.sheffield.team28.team28.repository.MemberRepository;
@@ -30,8 +27,8 @@ public class LoanService {
 
     @Autowired
     private LoanRepository loanRepository;
-
-
+    @Autowired
+    private ChildMemberService childMemberService;
 
 
     public Loan createLoan(Loan loan) {
@@ -58,10 +55,11 @@ public class LoanService {
     }
 
     public List<Loan> getActiveLoansByChildMemberId(Long childMemberId) {
-        List<Loan> allLoans = this.getLoansByMemberId(childMemberId);
+        List<Loan> allLoans = this.getLoansByChildMemberId(childMemberId);
         return getActiveLoans(allLoans);
     }
 
+    // This returns only the loans that haven't been returned yet
     public List<Loan> getActiveLoans(List<Loan> allLoans){
         List<Loan> activeLoans = new ArrayList<>();
         for (Loan loan : allLoans) {
@@ -96,13 +94,19 @@ public class LoanService {
     }
 
     public void loanInstrument(Long instrumentId, String memberName) {
-        // Find member by full name
-        Member member = memberService.findMemberByFullName(memberName);
-        if (member == null) {
+        Member member = null;
+        try {
+            member = memberService.findMemberByFullName(memberName);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Adult member not found, now trying children.");
+        }
+
+        Optional<ChildMember> child = childMemberService.getChildByFullName(memberName);
+
+        if (member == null && child.isEmpty()) {
             throw new IllegalArgumentException("No member found with that name.");
         }
 
-        // Check if instrument is already on loan
         Instrument instrument = instrumentRepository.findById(instrumentId)
                 .orElseThrow(() -> new NoSuchElementException("Instrument not found"));
 
@@ -110,38 +114,35 @@ public class LoanService {
             throw new IllegalStateException("Instrument is already on loan");
         }
 
-        // Create loan
         Loan loan = new Loan();
-        loan.setMember(member);
+        if (member != null) {
+            loan.setMember(member);
+        } else {
+            loan.setChildMember(child.get());
+        }
+
         loan.setItem(instrument.getItem());
         loan.setLoanDate(LocalDate.now());
         loan.setReturnDate(null);
         loanRepository.save(loan);
 
-        // Update instrument status
         instrument.getItem().setInStorage(false);
         instrumentRepository.save(instrument);
     }
 
     public void returnInstrument(Long instrumentId) {
-        // Fetch the instrument and its associated item
         Instrument instrument = instrumentRepository.findById(instrumentId)
                 .orElseThrow(() -> new NoSuchElementException("Instrument not found"));
         Item item = instrument.getItem();
 
-        // Check if the item is currently on loan
         if (item.getInStorage()) {
             throw new IllegalStateException("Instrument is not currently on loan");
         }
 
-        // Find the active loan for the item
         Loan loan = this.findActiveLoanByItemId(item.getId());
-
-        // Mark the loan as completed (return date set)
         loan.setReturnDate(LocalDate.now());
         loanRepository.save(loan);
 
-        // Update the item's in_storage status
         item.setInStorage(true);
         instrumentRepository.save(instrument);
     }

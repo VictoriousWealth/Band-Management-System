@@ -52,6 +52,7 @@ public class ChildMemberController {
         //Get loans
         List<Loan> memberLoans = loanService.getActiveLoansByChildMemberId(member.getId());
         model.addAttribute("memberLoans", memberLoans);
+        System.out.println("loans: " + memberLoans);
 
         //Get Music
         BandInPractice band = member.getBand();
