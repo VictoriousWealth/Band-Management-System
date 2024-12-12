@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,6 +17,7 @@ import uk.ac.sheffield.team28.team28.security.CustomAuthenticationFailureHandler
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
      public SecurityConfig(CustomUserDetailsService userDetailsService) {
@@ -28,6 +30,9 @@ public class SecurityConfig {
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/auth/register", "/auth/login", "/", "/js/registrationFormJS.js", "/css/style.css").permitAll() // Public access to register and login
                 .requestMatchers("/dashboard").authenticated()
+                .requestMatchers("/committee/**").hasRole("Committee")
+                .requestMatchers("/director/**").hasRole("Director")
+                .requestMatchers("/child/dashboard/**").authenticated()
                 .anyRequest().authenticated()                       // Require authentication for all other endpoints
             )
             .formLogin((form) -> form
