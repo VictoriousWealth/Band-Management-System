@@ -24,9 +24,6 @@ import uk.ac.sheffield.team28.team28.repository.OrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 @Service
 public class MemberService {
@@ -336,5 +333,18 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("No member found with username: " + username));
 
         return member.getId();
+    }
+
+    public String getAuthenticatedUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        System.out.println("Authenticated User Email: " + authentication.getName());
+
+
+        return authentication.getName();
     }
 }
