@@ -101,6 +101,7 @@ public class DashboardController {
         Loan selectedLoan = loanService.findLoanById(loanId)
                 .orElseThrow(() -> new IllegalArgumentException("Loan not found"));
         model.addAttribute("selectedLoan", selectedLoan);
+        model.addAttribute("memberType", memberService.findMember().getMemberType());
         System.out.println("Selected Loan: " + selectedLoan);
         return "dashboard";
     }

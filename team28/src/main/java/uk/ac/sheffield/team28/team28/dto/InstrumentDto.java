@@ -2,6 +2,8 @@ package uk.ac.sheffield.team28.team28.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.Objects;
+
 public class InstrumentDto {
 
     private Long instrumentId;
@@ -80,4 +82,16 @@ public class InstrumentDto {
         this.note = note;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InstrumentDto that = (InstrumentDto) o;
+        return getInStorage() == that.getInStorage() && Objects.equals(getInstrumentId(), that.getInstrumentId()) && Objects.equals(getInstrumentInput(), that.getInstrumentInput()) && Objects.equals(getMake(), that.getMake()) && Objects.equals(getSerialNumber(), that.getSerialNumber()) && Objects.equals(getNote(), that.getNote());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getInstrumentId(), getInstrumentInput(), getMake(), getSerialNumber(), getInStorage(), getNote());
+    }
 }

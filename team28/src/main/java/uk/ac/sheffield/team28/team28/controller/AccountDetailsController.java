@@ -19,7 +19,7 @@ import uk.ac.sheffield.team28.team28.service.RequestService;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@Controller("")
 public class AccountDetailsController {
     private final MemberService memberService;
 
@@ -41,7 +41,6 @@ public class AccountDetailsController {
         model.addAttribute("children", children);
 
         model.addAttribute("isAuthorised", session.getAttribute("isAuthorised"));
-        System.out.println(member.getMemberType());
         return "account-info";
     }
 
@@ -59,19 +58,19 @@ public class AccountDetailsController {
 
         // checking if desiredMember is valid
         List<String> errors = new ArrayList<>();
-        if (desiredUpdatedMember.getFirstName() == null || desiredUpdatedMember.getFirstName().isBlank()) {
+        if (desiredUpdatedMember.getFirstName().isBlank()) {
             desiredUpdatedMember.setFirstName(oldMember.getFirstName());
             errors.add("First name cannot be blank.");
         }
-        if (desiredUpdatedMember.getLastName()==null || desiredUpdatedMember.getLastName().isBlank()) {
+        if (desiredUpdatedMember.getLastName().isBlank()) {
             desiredUpdatedMember.setLastName(oldMember.getLastName());
             errors.add("Last name cannot be blank.");
         }
-        if (desiredUpdatedMember.getEmail()==null || desiredUpdatedMember.getEmail().isBlank()) {
+        if (desiredUpdatedMember.getEmail().isBlank()) {
             desiredUpdatedMember.setEmail(oldMember.getEmail());
             errors.add("Email cannot be blank.");
         }
-        if (desiredUpdatedMember.getPhone()==null || desiredUpdatedMember.getPhone().isBlank()) {
+        if (desiredUpdatedMember.getPhone().isBlank()) {
             desiredUpdatedMember.setPhone(oldMember.getPhone());
             errors.add("Phone cannot be blank.");
         }

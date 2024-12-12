@@ -73,8 +73,7 @@ public class MemberController {
 
     //Add a success message
     @PostMapping("/authorise")
-    public String authorise(
-            @RequestParam String password,
+    public String authorise(@RequestParam String password,
             Model model, HttpSession session) {
         Member member = memberService.findMember();
         model.addAttribute("memberType", member.getMemberType().toString());

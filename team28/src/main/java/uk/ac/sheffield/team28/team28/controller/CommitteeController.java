@@ -85,8 +85,10 @@ public class CommitteeController {
             List<Order> orders = orderRepository.findByItemTypeAndNotFulfilled(ItemType.Music);
             model.addAttribute("musicOrders", orders);
             model.addAttribute("orderService", orderService);
+            return "committee-dashboard";
+        } else {
+            return "dashboard";
         }
-        return "committee-dashboard";
     }
 
     @GetMapping("/allow-to-go-to-director")

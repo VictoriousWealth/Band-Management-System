@@ -96,4 +96,37 @@ public class Request {
     public String getNewLastName() {return newLastName;}
     public String getNewPhone() {return newPhone;}
     public String getNewEmail() {return newEmail;}
+
+
+    public void setNewFirstName(String newFirstName) {
+        this.newFirstName = newFirstName;
+    }
+
+    public void setNewLastName(String newLastName) {
+        this.newLastName = newLastName;
+    }
+
+    public void setOldPhone(String oldPhone) {
+        this.oldPhone = oldPhone;
+    }
+
+    public void setOldEmail(String oldEmail) {
+        this.oldEmail = oldEmail;
+    }
+
+    public void setNewEmail(String newEmail) {
+        this.newEmail = newEmail;
+    }
+
+    public void setOldLastName(String oldLastName) {
+        this.oldLastName = oldLastName;
+    }
+
+    public void setNewPhone(String newPhone) {
+        this.newPhone = newPhone;
+    }
+
+    public void setOldFirstName(String oldFirstName) {
+        this.oldFirstName = oldFirstName;
+    }
 }

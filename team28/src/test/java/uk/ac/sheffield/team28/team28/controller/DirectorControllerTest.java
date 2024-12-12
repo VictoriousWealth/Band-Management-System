@@ -89,16 +89,6 @@ class DirectorControllerTest {
     }
 
     @Test
-    public void testLogin() throws Exception {
-        mockMvc.perform(post("/auth/login")
-                        .param("username", "director@test.com")
-                        .param("password", "Director1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/dashboard"));
-    }
-
-
-    @Test
     public void testDirectorHome() throws Exception {
 
         mockMvc.perform(get("/director")

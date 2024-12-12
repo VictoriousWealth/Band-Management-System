@@ -35,20 +35,6 @@ public class MiscLoanService {
         return miscLoanRepository.findById(id);
     }
 
-    // Find all loans for a particular member
-    public List<MiscLoan> getLoansByMemberId(Long memberId) {
-        return miscLoanRepository.findByMemberId(memberId);
-    }
-    public List<MiscLoan> getActiveMiscLoansByMemberId(Long memberId) {
-        List<MiscLoan> allMiscLoans = this.getLoansByMemberId(memberId);
-        List<MiscLoan> activeLoans = new ArrayList<>();
-        for (miscLoan miscLoan : allMiscLoans) {
-            if (miscLoan.getMiscReturnDate() == null) {
-                activeMiscLoans.add(miscLoan);
-            }
-        }
-        return activeMiscLoans;
-    }
 
 
 

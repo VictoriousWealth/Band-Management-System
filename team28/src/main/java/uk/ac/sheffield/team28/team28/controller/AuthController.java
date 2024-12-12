@@ -44,8 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String performRegister(@Valid @ModelAttribute("member") MemberRegistrationDto registrationDto, 
-                                  BindingResult result, 
+    public String performRegister(@Valid @ModelAttribute("member") MemberRegistrationDto registrationDto,
                                   Model model) {
 
         try {
@@ -56,6 +55,6 @@ public class AuthController {
         }
 
         model.addAttribute("successMessage", "Registration completed successfully, please login.");
-        return "/login"; 
+        return "/login";
     }
 }

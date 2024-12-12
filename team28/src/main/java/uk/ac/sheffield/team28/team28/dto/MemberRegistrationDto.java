@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import uk.ac.sheffield.team28.team28.model.MemberType;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class MemberRegistrationDto {
 
@@ -131,5 +132,18 @@ public class MemberRegistrationDto {
 
     public void setChildDateOfBirth(LocalDate childDateOfBirth) {
         this.childDateOfBirth = childDateOfBirth;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MemberRegistrationDto that = (MemberRegistrationDto) o;
+        return Objects.equals(getEmail(), that.getEmail()) && Objects.equals(getPassword(), that.getPassword()) && getMemberType() == that.getMemberType() && Objects.equals(getPhone(), that.getPhone()) && Objects.equals(getFirstName(), that.getFirstName()) && Objects.equals(getLastName(), that.getLastName()) && Objects.equals(getAddChild(), that.getAddChild()) && Objects.equals(getChildFirstName(), that.getChildFirstName()) && Objects.equals(getChildLastName(), that.getChildLastName()) && Objects.equals(getChildDateOfBirth(), that.getChildDateOfBirth());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getEmail(), getPassword(), getMemberType(), getPhone(), getFirstName(), getLastName(), getAddChild(), getChildFirstName(), getChildLastName(), getChildDateOfBirth());
     }
 }
