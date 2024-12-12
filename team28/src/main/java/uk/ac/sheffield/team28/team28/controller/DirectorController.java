@@ -70,6 +70,7 @@ public class DirectorController {
             if (hasChildren) {
                 if (childMemberService.doAnyChildrenHaveLoans(member) == true) {
                     redirectAttributes.addAttribute("error", true);
+                    return "redirect:" + (redirectTo != null ? redirectTo : "director/allMembers");
                 }
             }
             //Check parent
@@ -81,15 +82,13 @@ public class DirectorController {
                 }
                 memberService.deleteMember(member.getId());
                 redirectAttributes.addAttribute("success", true);
-
-            }
-            else {
+            } else {
                 redirectAttributes.addAttribute("error", true);
             }
         } catch (Exception e) {
             redirectAttributes.addAttribute("error", true);
         }
-        return "redirect:" + (redirectTo != null ? redirectTo : "/defaultPath");
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director/allMembers");
     }
 
 
@@ -101,15 +100,14 @@ public class DirectorController {
             //Delete parent
             if (!cannotDelete) {
                 childMemberService.deleteChildMember(childMember);
+                redirectAttributes.addAttribute("success", true);
+            } else {
+                throw new Exception("Child member has loans");
             }
-            else {
-                redirectAttributes.addAttribute("error", true);
-            }
-            redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
             redirectAttributes.addAttribute("error", true);
         }
-        return "redirect:" + (redirectTo != null ? redirectTo : "/defaultPath");
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director/allMembers");
     }
 
     @GetMapping("/committee")
@@ -162,17 +160,18 @@ public class DirectorController {
     @PostMapping("/removeFromBand/{memberId}/{newBand}")
     public String removeMemberFromBand(@PathVariable Long memberId, @PathVariable BandInPractice newBand, @RequestParam(value = "redirectTo", required = false) String redirectTo, RedirectAttributes redirectAttributes) {
         try {
-            Member member = memberService.removeMemberFromBand(memberId, newBand);
+            memberService.removeMemberFromBand(memberId, newBand);
             redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
-            e.printStackTrace(); // Log the error for debugging
             redirectAttributes.addAttribute("error", true);
         }
-        return "redirect:" + (redirectTo != null ? redirectTo : "/director/committee");
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director" + (newBand==BandInPractice.Training? "/trainingBand" : "/seniorBand"));
     }
 
     @PostMapping("/addToBandByEmail")
-    public String addMemberToBandByEmail(@RequestParam String email, @RequestParam BandInPractice band, @RequestParam(value = "redirectTo", required = false) String redirectTo,
+    public String addMemberToBandByEmail(@RequestParam String email,
+                                         @RequestParam BandInPractice band,
+                                         @RequestParam(value = "redirectTo", required = false) String redirectTo,
                                          RedirectAttributes redirectAttributes) {
         try {
             // Fetch the member by email
@@ -183,7 +182,6 @@ public class DirectorController {
             // Redirect back to the Training Band page
             redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
-            e.printStackTrace(); // Log the error for debugging
             redirectAttributes.addAttribute("error", true);
         }
         return "redirect:" + (redirectTo != null ? redirectTo : "/director");
@@ -196,7 +194,6 @@ public class DirectorController {
     @PostMapping("/addChildToBandByName")
     public ResponseEntity<String> addChildToBandByName(@RequestParam String fullName) {
         try {
-
             String [] names = fullName.split(" ");
             String firstName = names[0];
             String lastName = names[names.length - 1];
@@ -211,7 +208,6 @@ public class DirectorController {
             // Redirect back to the Training Band page
             return ResponseEntity.ok("Member added successfully!");
         } catch (Exception e) {
-            e.printStackTrace(); // Log the error for debugging
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found!");
         }
     }
@@ -219,7 +215,7 @@ public class DirectorController {
     @PostMapping("/removeChildFromBand/{childMemberId}")
     public ResponseEntity<String> removeMemberFromBand(@PathVariable Long childMemberId) {
         try {
-            ChildMember childMember = childMemberService.removeChildMemberFromBand(childMemberId);
+            childMemberService.removeChildMemberFromBand(childMemberId);
             return ResponseEntity.ok("Member added successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found!");
@@ -229,16 +225,12 @@ public class DirectorController {
     @PostMapping("/addToCommitteeByEmail")
     public String addMemberToCommitteeByEmail(@RequestParam String email, @RequestParam(value = "redirectTo", required = false) String redirectTo, RedirectAttributes redirectAttributes) {
         try {
-            // Fetch the member by email
             Member member = memberRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("Member not found with email: " + email));
 
-            // Update the member's band
             memberService.promoteMemberWithId(member.getId());
-            //  Redirect back to the Training Band page
             redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
-            e.printStackTrace(); // Log the error for debugging
             redirectAttributes.addAttribute("error", true);
         }
         return "redirect:" + (redirectTo != null ? redirectTo : "/director/committee");
@@ -251,20 +243,17 @@ public class DirectorController {
         Map<Member, List<ChildMember>> parentsWithChildren = childMemberService.getParentsWithChildren();
         model.addAttribute("parentsWithChildren", parentsWithChildren);
         model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
-        System.out.println("IT IS"+parentsWithChildren.isEmpty());
         return "parents";
     }
 
 
     @PostMapping("/committee/{id}")
     public String removeMemberFromCommittee(@PathVariable Long id, @RequestParam(value = "redirectTo", required = false) String redirectTo, RedirectAttributes redirectAttributes) {
-        System.out.println(id);
         try {
             Member member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("Member not found"));
             memberService.demoteMemberWithId(member.getId());
             redirectAttributes.addAttribute("successR", true);
         } catch (Exception e) {
-            e.printStackTrace(); // Log the error for debugging
             redirectAttributes.addAttribute("errorR", true);
         }
         return "redirect:" + (redirectTo != null ? redirectTo : "/director/committee");

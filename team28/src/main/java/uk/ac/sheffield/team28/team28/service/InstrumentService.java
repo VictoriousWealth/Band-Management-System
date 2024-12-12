@@ -6,14 +6,23 @@ import uk.ac.sheffield.team28.team28.dto.InstrumentDto;
 import uk.ac.sheffield.team28.team28.model.Instrument;
 import uk.ac.sheffield.team28.team28.model.Item;
 import uk.ac.sheffield.team28.team28.model.ItemType;
+import uk.ac.sheffield.team28.team28.model.Loan;
 import uk.ac.sheffield.team28.team28.repository.InstrumentRepository;
 import uk.ac.sheffield.team28.team28.repository.ItemRepository;
+import uk.ac.sheffield.team28.team28.repository.LoanRepository;
+
+import java.util.List;
 
 @Service
 public class InstrumentService {
 
     private final InstrumentRepository instrumentRepository;
     private final ItemRepository itemRepository;
+    private LoanRepository loanRepository;
+
+    @Autowired
+    public LoanService loanService;
+
 
     public InstrumentService(InstrumentRepository instrumentRepository, ItemRepository itemRepository){
         this.instrumentRepository = instrumentRepository;
@@ -57,12 +66,18 @@ public class InstrumentService {
         instrumentRepository.save(instrument);
     }
 
+    // Deletes an instrument by id but only if it cant find any active loans
     public void deleteInstrument(Long id) {
         Instrument instrument = instrumentRepository.getReferenceById(id);
         Item item = instrument.getItem();
 
-        instrumentRepository.delete(instrument);
-        itemRepository.delete(item);
+        try {
+            loanService.findActiveLoanByItemId(item.getId());
+            throw new IllegalArgumentException("The item is currently on loan and cannot be deleted.");
+        } catch (IllegalStateException e) {
+            instrumentRepository.delete(instrument);
+            itemRepository.delete(item);
+        }
     }
 
 }
