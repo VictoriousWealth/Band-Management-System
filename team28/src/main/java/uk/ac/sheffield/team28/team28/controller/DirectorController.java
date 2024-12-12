@@ -145,8 +145,6 @@ public class DirectorController {
         List<Member> nonBandMembers = memberService.getAllMembersBands();
         List<Member> seniorBandMembers = memberService.getSeniorBandMembers();
         nonBandMembers.removeAll(seniorBandMembers);
-
-//        //List<Member> committeeMembers = memberService.getCommitteeMembers();
         model.addAttribute("nonBandMembers", nonBandMembers);
         model.addAttribute("seniorBandMembers", seniorBandMembers);
         model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
@@ -174,12 +172,12 @@ public class DirectorController {
                                          @RequestParam(value = "redirectTo", required = false) String redirectTo,
                                          RedirectAttributes redirectAttributes) {
         try {
-            // Fetch the member by email
+            if (email.equals("director@test.com")) {
+                throw new RuntimeException("Can't add director to band");
+            }
             Member member = memberRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("Member not found with email: " + email));
-            // Update the member's band
             memberService.addMemberToBand(member.getId(), band);
-            // Redirect back to the Training Band page
             redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
             redirectAttributes.addAttribute("error", true);
@@ -194,20 +192,15 @@ public class DirectorController {
     @PostMapping("/addChildToBandByName")
     public String addChildToBandByName(@RequestParam String fullName, @RequestParam(value = "redirectTo", required = false) String redirectTo,RedirectAttributes redirectAttributes) {
         try {
-            System.out.println("8888888888NAMES------------------------" + fullName);
-
             String [] names = fullName.trim().split(" ");
             String firstName = names[0];
             String lastName = names[names.length - 1];
             String fullFirstName = Character.toUpperCase(firstName.charAt(0)) + firstName.substring(1).toLowerCase();
             String fullLastName = lastName.isEmpty() ? "" : Character.toUpperCase(lastName.charAt(0)) + lastName.substring(1).toLowerCase();
             String newFullName = fullFirstName + " " + fullLastName;
-            System.out.println(newFullName.trim());
 
             ChildMember childMember = childMemberService.getChildByFullName(newFullName)
                     .orElseThrow(() -> new RuntimeException("Member not found with name:" + fullName));
-            System.out.println("NAMES------------------------" + childMember.getFirstName());
-            System.out.println(newFullName);
 
             childMemberService.addChildMemberToBand(childMember.getId());
             redirectAttributes.addAttribute("success", true);
