@@ -33,11 +33,12 @@ public class MemberController {
 
     private final ChildMemberRepository childMemberRepository;
     private final static Logger logger = LoggerFactory.getLogger(MemberController.class);
+    private final ChildMemberService childMemberService;
 
-    public MemberController(MemberService memberService, ChildMemberRepository childMemberRepository) {
+    public MemberController(MemberService memberService, ChildMemberRepository childMemberRepository, ChildMemberService childMemberService) {
         this.memberService = memberService;
         this.childMemberRepository = childMemberRepository;
-
+        this.childMemberService = childMemberService;
     }
 
 //    @PostMapping("/{memberId}/addToBand")
@@ -143,5 +144,7 @@ public class MemberController {
         }
         return "redirect:/dashboard";
     }
+
+
 
 }

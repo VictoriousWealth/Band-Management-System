@@ -56,4 +56,9 @@ public class Music {
     public Item getItem() {
         return item;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

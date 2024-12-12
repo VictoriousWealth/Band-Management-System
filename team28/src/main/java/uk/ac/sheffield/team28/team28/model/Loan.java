@@ -27,7 +27,8 @@ public class Loan {
     @Column(name = "return_date")
     private LocalDate returnDate;
 
-    public Loan() {}
+    public Loan() {
+    }
 
     public Loan(Member member, Item item, LocalDate loanDate, LocalDate returnDate) {
         this.member = member;
@@ -84,4 +85,5 @@ public class Loan {
     public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
     }
+
 }

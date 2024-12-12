@@ -3,9 +3,7 @@ package uk.ac.sheffield.team28.team28.model;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import uk.ac.sheffield.team28.team28.model.MemberType;
 @Entity
 @Table(name = "member")
 public class Member {
@@ -53,7 +51,6 @@ public class Member {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.band = BandInPractice.None;
 
     }
 
@@ -66,7 +63,6 @@ public class Member {
         this.phone = phone;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.band = BandInPractice.None;
     }
 
     public Long getId() {
@@ -99,6 +95,10 @@ public class Member {
 
     public BandInPractice getBand() {
         return band;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
 

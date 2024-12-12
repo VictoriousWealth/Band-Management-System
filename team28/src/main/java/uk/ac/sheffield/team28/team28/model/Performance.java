@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "performance")
 public class Performance {
@@ -27,6 +29,7 @@ public class Performance {
     private LocalDateTime dateTime;
 
     @OneToMany(mappedBy = "performance", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<MemberParticipation> participations;
 
     @ManyToMany
@@ -35,6 +38,7 @@ public class Performance {
     joinColumns = @JoinColumn(name = "performance_id"),
     inverseJoinColumns = @JoinColumn(name = "music_id")
     )
+    @JsonManagedReference
     private List<Music> playlist = new ArrayList<>();
 
 
@@ -98,4 +102,9 @@ public class Performance {
     public void setPlaylist(List<Music> playlist) {
         this.playlist = playlist;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

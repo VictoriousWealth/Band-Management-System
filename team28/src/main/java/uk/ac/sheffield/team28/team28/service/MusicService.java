@@ -1,5 +1,7 @@
 package uk.ac.sheffield.team28.team28.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import uk.ac.sheffield.team28.team28.dto.MusicDto;
 import uk.ac.sheffield.team28.team28.model.Item;
@@ -17,6 +19,10 @@ public class MusicService {
     public MusicService(MusicRepository musicRepository, ItemRepository itemRepository){
         this.musicRepository = musicRepository;
         this.itemRepository = itemRepository;
+    }
+
+    public List<Music> getAllMusicWithItemDetails() {
+        return musicRepository.findAll();
     }
 
     public void saveMusic(MusicDto dto){
