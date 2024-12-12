@@ -53,19 +53,28 @@ public class PerformanceService {
 
         List<Member> bandMembers;
         if (performance.getBand() == BandInPractice.Training) {
-            bandMembers = memberRepository.findByBand(BandInPractice.Training);
+            //bandMembers = memberRepository.findByBand(BandInPractice.Training);
+            bandMembers = new ArrayList<>(memberRepository.findByBand(BandInPractice.Training));
+
             bandMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
         } else if (performance.getBand() == BandInPractice.Senior) {
-            bandMembers = memberRepository.findByBand(BandInPractice.Senior);
+            //bandMembers = memberRepository.findByBand(BandInPractice.Senior);
+
+            bandMembers = new ArrayList<>(memberRepository.findByBand(BandInPractice.Senior));
+
             bandMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
 
         } else if (performance.getBand() == BandInPractice.Both) {
-            bandMembers = memberRepository.findByBand(BandInPractice.Both);
+           // bandMembers = memberRepository.findByBand(BandInPractice.Both);
+            bandMembers = new ArrayList<>(memberRepository.findByBand(BandInPractice.Both));
+
             bandMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
             bandMembers.addAll(memberRepository.findByBand(BandInPractice.Training));
         } else {
             bandMembers = new ArrayList<>();
         }
+
+
 
         List<MemberParticipation> participations = new ArrayList<>();
         for (Member member : bandMembers) {

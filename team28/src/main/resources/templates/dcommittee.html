@@ -110,7 +110,9 @@
         </table>
 </div>
 <div>
-    <button class="back-button" onclick="goBack()">Go Back</button>
+    <button class="back-button">
+        <a class="back-button" th:href="@{/director}">Go Back</a>
+    </button>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

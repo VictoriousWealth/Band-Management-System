@@ -31,7 +31,7 @@ public class MiscService {
         Misc misc = new Misc();
         misc.setMiscSerialNumber(dto.getMiscSerialNumber());
         misc.setMiscItem(savedItem);
-        System.out.println(dto.getMiscQuantity());
+       // System.out.println(dto.getMiscQuantity());
         misc.setMiscQuantity(dto.getMiscQuantity());
 
         miscRepository.save(misc);

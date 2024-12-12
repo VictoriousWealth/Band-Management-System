@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import uk.ac.sheffield.team28.team28.dto.MemberRegistrationDto;
 import uk.ac.sheffield.team28.team28.dto.MusicDto;
 import uk.ac.sheffield.team28.team28.dto.OrderDto;
+import uk.ac.sheffield.team28.team28.dto.PerformanceDto;
 import uk.ac.sheffield.team28.team28.model.*;
 import uk.ac.sheffield.team28.team28.repository.*;
 
@@ -47,6 +48,10 @@ public class PerformanceServiceTest {
     private ItemRepository itemRepository;
 
     @Mock
+    private PerformanceDto performanceDto;
+
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
@@ -59,33 +64,45 @@ public class PerformanceServiceTest {
 
     @Test
     void testCreatePerformance_withPlaylist() {
-        // Make performance
+        // Fake the user input
+        PerformanceDto performanceDto = new PerformanceDto();
+        performanceDto.setName("Concert");
+        performanceDto.setVenue("Stadium");
+        performanceDto.setBand(BandInPractice.Senior.toString());
+        performanceDto.setPlaylistIds(List.of(29L, 30L));
+
         Music music1 = new Music();
         music1.setId(29L);
         Music music2 = new Music();
-        music1.setId(30L);
+        music2.setId(30L);
 
-        Performance performance = new Performance();
-        performance.setPlaylist(List.of(music1, music2));
-        //Mock the repo response
+        // Mock the repo responses
         when(musicRepository.findAllById(List.of(29L, 30L))).thenReturn(List.of(music1, music2));
-        //Create the performance
-        performanceService.createPerformance(performance); //Turns the list to 0
-        // Check the result
-        verify(performanceRepository, times(1)).save(performance);
-        assertEquals(2, performance.getPlaylist().size());
+        when(memberRepository.findByBand(BandInPractice.Senior)).thenReturn(List.of(new Member()));
+        when(memberRepository.findByBand(BandInPractice.Both)).thenReturn(List.of(new Member()));
+
+        // Create the performance
+        performanceService.createPerformance(performanceDto);
+
+        // Verify save
+        verify(performanceRepository, times(1)).save(any(Performance.class));
     }
 
     @Test
     void testCreatePerformance_withoutPlaylist() {
-        //Make the performance
-        Performance performance = new Performance();
-        performance.setPlaylist(null); //No music
-        // Make performance
-        performanceService.createPerformance(performance);
-        // Check result
-        verify(performanceRepository, times(1)).save(performance);
-        assertNull(performance.getPlaylist());
+        // Fake user input without playlist
+        PerformanceDto performanceDto = new PerformanceDto();
+        performanceDto.setName("Concert");
+        performanceDto.setVenue("Stadium");
+        performanceDto.setBand("Senior");
+        performanceDto.setPlaylistIds(null);
+        // Mock the repo responses
+        when(memberRepository.findByBand(BandInPractice.Senior)).thenReturn(List.of(new Member()));
+        when(memberRepository.findByBand(BandInPractice.Both)).thenReturn(List.of(new Member()));
+        // Create the performance
+        performanceService.createPerformance(performanceDto);
+        // Verify save
+        verify(performanceRepository, times(1)).save(any(Performance.class));
     }
 
     @Test
@@ -93,7 +110,7 @@ public class PerformanceServiceTest {
         // Make performances
         Performance performance1 = new Performance();
         Performance performance2 = new Performance();
-        //Mock the repo response
+        // Mock the repo response
         when(performanceRepository.findAll()).thenReturn(List.of(performance1, performance2));
         // Get the performances
         List<Performance> performances = performanceService.getAllPerformances();
@@ -109,12 +126,12 @@ public class PerformanceServiceTest {
         MemberParticipation participation = new MemberParticipation();
         participation.setMember(member);
         participation.setWillParticipate(true);
-        //Make a performance
+        // Make a performance
         Performance performance = new Performance();
         performance.setParticipations(List.of(participation));
-        //Mock the repo response
+        // Mock the repo response
         when(performanceRepository.findById(1L)).thenReturn(Optional.of(performance));
-        //Get the performance players
+        // Get the performance players
         List<Member> players = performanceService.getPlayersForPerformance(1L);
         // Check the result
         assertEquals(1, players.size());
@@ -122,10 +139,10 @@ public class PerformanceServiceTest {
     }
 
     @Test
-    void testGetPerformanceById_ASucces() {
+    void testGetPerformanceById_success() {
         // Make performance
         Performance performance = new Performance();
-        //Moch the repo response
+        // Mock the repo response
         when(performanceRepository.findById(1L)).thenReturn(Optional.of(performance));
         // Get the result
         Performance result = performanceService.getPerformanceById(1L);
@@ -138,12 +155,12 @@ public class PerformanceServiceTest {
     void testGetPerformanceById_doesntExist() {
         // Mock the repo response
         when(performanceRepository.findById(1L)).thenReturn(Optional.empty());
-        //Get exception
+        // Get exception
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             performanceService.getPerformanceById(1L);
         });
-        //Check its right
-        assertEquals("Performance not found with id: " + 1L,exception.getMessage());
+        // Check it's right
+        assertEquals("Performance not found with id: " + 1L, exception.getMessage());
     }
 
     @Test
@@ -151,15 +168,16 @@ public class PerformanceServiceTest {
         // Make a performance
         Performance performance = new Performance();
         performance.setVenue("Batcave");
-        //Update it
-        performance.setVenue("Fortress of solitude");
-        //Mock the repo responses
+        // Update it
+        Performance updatedPerformance = new Performance();
+        updatedPerformance.setVenue("Fortress of Solitude");
+        // Mock the repo responses
         when(performanceRepository.findById(1L)).thenReturn(Optional.of(performance));
-        when(performanceRepository.save(performance)).thenReturn(performance);
+        when(performanceRepository.save(performance)).thenReturn(updatedPerformance);
         // Update the performance
-        Performance result = performanceService.updatePerformance(1L, performance);
-        // check result
-        assertEquals("Fortress of solitude", result.getVenue());
+        Performance result = performanceService.updatePerformance(1L, updatedPerformance);
+        // Check result
+        assertEquals("Fortress of Solitude", result.getVenue());
         verify(performanceRepository, times(1)).save(performance);
     }
 
@@ -167,38 +185,44 @@ public class PerformanceServiceTest {
     void testDeletePerformance() {
         // Delete the performance
         performanceService.deletePerformance(1L);
-        // Check its deleted
+        // Check it's deleted
         verify(performanceRepository, times(1)).deleteById(1L);
     }
 
     @Test
-    void testIndicateParticipation_newParticipation() {
-        // Make performance
-        Performance performance = new Performance();
-        Member member = new Member();
-        //Mock repo responses
-        when(performanceRepository.findById(1L)).thenReturn(Optional.of(performance));
-        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
-        //Indicate participation
-        performanceService.indicateParticipation(1L, 1L, true);
-        //Check result
-        verify(memberParticipationRepository, times(1)).save(any(MemberParticipation.class));
+    void testOptOutOfPerformance() {
+        // Make participation object
+        MemberParticipation participation = new MemberParticipation();
+        participation.setWillParticipate(true);
+
+        // Mock the repo response
+        when(memberParticipationRepository.findByPerformanceIdAndMemberId(1L, 1L))
+                .thenReturn(Optional.of(participation));
+
+        // Opt out of the performance
+        performanceService.optOutOfPerformance(1L, 1L);
+
+        // Verify the changes
+        assertFalse(participation.isWillParticipate());
+        verify(memberParticipationRepository, times(1)).save(participation);
     }
 
     @Test
-    void testIndicateParticipation_existingParticipation() {
-        // Make performance
-        Performance performance = new Performance();
-        Member member = new Member();
-        MemberParticipation existingParticipation = new MemberParticipation();
-        //Mock repo responses
-        when(performanceRepository.findById(1L)).thenReturn(Optional.of(performance));
-        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
+    void testOptInToPerformance() {
+        // Make participation object
+        MemberParticipation participation = new MemberParticipation();
+        participation.setWillParticipate(false);
+
+        // Mock the repo response
         when(memberParticipationRepository.findByPerformanceIdAndMemberId(1L, 1L))
-                .thenReturn(Optional.of(existingParticipation));
-        // Indicate participation
-        performanceService.indicateParticipation(1L, 1L, true);
-        // Check result
-        verify(memberParticipationRepository, times(1)).save(existingParticipation);
+                .thenReturn(Optional.of(participation));
+
+        // Opt into it performance
+        performanceService.optInToPerformance(1L, 1L);
+
+        // Verify changes
+        assertTrue(participation.isWillParticipate());
+        verify(memberParticipationRepository, times(1)).save(participation);
     }
+
 }

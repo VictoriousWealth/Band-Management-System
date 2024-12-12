@@ -23,7 +23,7 @@ public interface ChildMemberRepository extends JpaRepository<ChildMember, Long> 
     @Query("SELECT DISTINCT c.parent FROM ChildMember c")
     List<Member> findAllParents();
 
-    @Query("SELECT c FROM ChildMember c WHERE CONCAT(c.firstName, ' ', c.lastName) = :fullName")
+    @Query("SELECT c FROM ChildMember c WHERE CONCAT(c.firstName,' ', c.lastName) = :fullName")
     Optional<ChildMember> findByName(@Param("fullName") String fullName);
 
     @Modifying

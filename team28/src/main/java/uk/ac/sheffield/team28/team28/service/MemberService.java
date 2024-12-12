@@ -139,15 +139,15 @@ public class MemberService {
         return member;
     }
 
-    public Member addMemberToBand(Long memberId, BandInPractice newBand) throws Exception {
+    public Member addMemberToBand(Long memberId, BandInPractice band) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
 
-        if (member.getBand() == newBand) {
+        if (member.getBand() == band) {
             throw new Exception("Member is already in this band.");
         }
         if (member.getBand() == BandInPractice.None) {
-            member.setBand(newBand);
+            member.setBand(band);
         } else if (member.getBand() != BandInPractice.Both) {
             member.setBand(BandInPractice.Both);
         } else {

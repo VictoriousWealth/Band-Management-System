@@ -116,13 +116,12 @@ public class MemberController {
             String formattedLastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
             LocalDate dob = LocalDate.parse(dateOfBirth);
 
-            child.setFirstName(formattedFirstName);
-            child.setLastName(formattedLastName);
+            child.setFirstName(formattedFirstName.trim());
+            child.setLastName(formattedLastName.trim());
             child.setDateOfBirth(dob);
             child.setParent(parent);
 
             // Save the child to the database
-
             childMemberRepository.save(child);
             return "redirect:/dashboard";
 
@@ -130,7 +129,7 @@ public class MemberController {
             // Handle errors
             e.printStackTrace();
             model.addAttribute("error", "An error occurred: " + e.getMessage());
-            return "error"; // Return an error page if something goes wrong
+            return "error";
         }
     }
 

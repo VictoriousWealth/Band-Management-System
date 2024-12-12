@@ -42,6 +42,7 @@ public class ChildMemberRepositoryTest {
 
     @Test
     void testFindAllByParent() {
+        System.out.println("THIS IS THE PARENT  -----------" + parent);
         LocalDate date = LocalDate.of(2018, 1, 8);
         ChildMember child1 = new ChildMember("Johnny", "Doe", parent,date);
         ChildMember child2 = new ChildMember("Jane", "Doe", parent, date);

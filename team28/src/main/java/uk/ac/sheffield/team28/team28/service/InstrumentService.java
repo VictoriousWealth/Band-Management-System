@@ -15,9 +15,13 @@ import java.util.List;
 
 @Service
 public class InstrumentService {
-
+    @Autowired
     private final InstrumentRepository instrumentRepository;
+
+    @Autowired
     private final ItemRepository itemRepository;
+
+    @Autowired
     private LoanRepository loanRepository;
 
     @Autowired

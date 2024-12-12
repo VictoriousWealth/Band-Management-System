@@ -18,7 +18,6 @@
     </nav>
 
     <div class="container mt-4">
-    <!-- Form to add a member to the Training Band -->
     <h2 class="text-center mb-4">Add Member to Training Band</h2>
     <form th:action="@{/director/addToBandByEmail}" method="post" class="mb-4">
         <div class="form-group">
@@ -58,10 +57,10 @@
     <h2 class="text-center mb-4">Add Child to Training Band</h2>
     <form th:action="@{/director/addChildToBandByName}" method="post" class="mb-4">
         <div class="form-group">
-            <label for="fullName">Child's First Name:</label>
+            <label for="fullName">Child's Full Name:</label>
             <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter full name" required>
         </div>
-        <input type="hidden" name="band" value="Training"> <!-- Hidden input for Training band -->
+        <input type="hidden" name="band" value="Training">
         <button type="submit" class="btn btn-primary">Add to Training Band</button>
     </form>
 
@@ -90,7 +89,6 @@
     </table>
 
 
-    <!-- Table for Non-Training Band Members -->
     <h2 class="text-center mt-5 mb-4">Non Members</h2>
     <table class="table table-bordered">
         <thead>
@@ -131,7 +129,9 @@
 </div>
 
 <div>
-    <button class="back-button" onclick="goBack(this)">Go Back</button>
+    <button class="back-button">
+        <a class="back-button" th:href="@{/director}">Go Back</a>
+    </button>
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>

@@ -48,6 +48,7 @@ public class ChildMemberService {
             }
         }
         String result = capitalizedFullName.toString().trim();
+        System.out.println("---------------------------------- " + result);
         return childMemberRepository.findByName(result);
     }
     public List<ChildMember> getChildByParent(Member parent){

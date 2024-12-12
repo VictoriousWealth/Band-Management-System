@@ -157,15 +157,15 @@ public class DirectorController {
 
 
 
-    @PostMapping("/removeFromBand/{memberId}/{newBand}")
-    public String removeMemberFromBand(@PathVariable Long memberId, @PathVariable BandInPractice newBand, @RequestParam(value = "redirectTo", required = false) String redirectTo, RedirectAttributes redirectAttributes) {
+    @PostMapping("/removeFromBand/{memberId}/{band}")
+    public String removeMemberFromBand(@PathVariable Long memberId, @PathVariable BandInPractice band, @RequestParam(value = "redirectTo", required = false) String redirectTo, RedirectAttributes redirectAttributes) {
         try {
-            memberService.removeMemberFromBand(memberId, newBand);
+            memberService.removeMemberFromBand(memberId, band);
             redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
             redirectAttributes.addAttribute("error", true);
         }
-        return "redirect:" + (redirectTo != null ? redirectTo : "/director" + (newBand==BandInPractice.Training? "/trainingBand" : "/seniorBand"));
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director" + (band==BandInPractice.Training? "/trainingBand" : "/seniorBand"));
     }
 
     @PostMapping("/addToBandByEmail")
@@ -184,7 +184,7 @@ public class DirectorController {
         } catch (Exception e) {
             redirectAttributes.addAttribute("error", true);
         }
-        return "redirect:" + (redirectTo != null ? redirectTo : "/director");
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director" + (band==BandInPractice.Training? "/trainingBand" : "/seniorBand"));
     }
 
 
@@ -192,34 +192,43 @@ public class DirectorController {
 
 
     @PostMapping("/addChildToBandByName")
-    public ResponseEntity<String> addChildToBandByName(@RequestParam String fullName) {
+    public String addChildToBandByName(@RequestParam String fullName, @RequestParam(value = "redirectTo", required = false) String redirectTo,RedirectAttributes redirectAttributes) {
         try {
-            String [] names = fullName.split(" ");
+            System.out.println("8888888888NAMES------------------------" + fullName);
+
+            String [] names = fullName.trim().split(" ");
             String firstName = names[0];
             String lastName = names[names.length - 1];
             String fullFirstName = Character.toUpperCase(firstName.charAt(0)) + firstName.substring(1).toLowerCase();
             String fullLastName = lastName.isEmpty() ? "" : Character.toUpperCase(lastName.charAt(0)) + lastName.substring(1).toLowerCase();
             String newFullName = fullFirstName + " " + fullLastName;
-            // Fetch the member by email
-            ChildMember childMember = childMemberRepository.findByName(newFullName)
-                    .orElseThrow(() -> new RuntimeException("Member not found with email: " + fullName));
-            // Update the member's band
+            System.out.println(newFullName.trim());
+
+            ChildMember childMember = childMemberService.getChildByFullName(newFullName)
+                    .orElseThrow(() -> new RuntimeException("Member not found with name:" + fullName));
+            System.out.println("NAMES------------------------" + childMember.getFirstName());
+            System.out.println(newFullName);
+
             childMemberService.addChildMemberToBand(childMember.getId());
-            // Redirect back to the Training Band page
-            return ResponseEntity.ok("Member added successfully!");
+            redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found!");
+            System.err.println("Error occurred: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addAttribute("error", true);
         }
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director/trainingBand");
+
     }
 
     @PostMapping("/removeChildFromBand/{childMemberId}")
-    public ResponseEntity<String> removeMemberFromBand(@PathVariable Long childMemberId) {
+    public String removeMemberFromBand(@PathVariable Long childMemberId, @RequestParam(value = "redirectTo", required = false) String redirectTo,RedirectAttributes redirectAttributes) {
         try {
             childMemberService.removeChildMemberFromBand(childMemberId);
-            return ResponseEntity.ok("Member added successfully!");
+            redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found!");
+            redirectAttributes.addAttribute("error", true);
         }
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director/trainingBand");
     }
 
     @PostMapping("/addToCommitteeByEmail")
