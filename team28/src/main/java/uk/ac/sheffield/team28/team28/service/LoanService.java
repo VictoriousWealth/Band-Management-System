@@ -20,7 +20,7 @@ import java.util.Optional;
 public class LoanService {
 
 
-    private final LoanRepository loanRepository;
+    //private final LoanRepository loanRepository;
 
     @Autowired
     private MemberService memberService;
@@ -28,9 +28,11 @@ public class LoanService {
     @Autowired
     private InstrumentRepository instrumentRepository;
 
-    public LoanService(LoanRepository loanRepository) {
-        this.loanRepository = loanRepository;
-    }
+    @Autowired
+    private LoanRepository loanRepository;
+
+
+
 
     public Loan createLoan(Loan loan) {
         return loanRepository.save(loan);

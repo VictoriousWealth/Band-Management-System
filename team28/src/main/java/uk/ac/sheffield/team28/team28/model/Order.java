@@ -2,6 +2,7 @@ package uk.ac.sheffield.team28.team28.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Orders")
@@ -89,4 +90,22 @@ public class Order {
     public void setItem(Item item) {
         this.item = item;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(member, order.member) &&
+                Objects.equals(item, order.item) &&
+                Objects.equals(orderDate, order.orderDate) &&
+                Objects.equals(note, order.note) &&
+                Objects.equals(isFulfilled, order.isFulfilled);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(member, item, orderDate, note, isFulfilled);
+    }
+
 }

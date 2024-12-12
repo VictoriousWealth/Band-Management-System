@@ -46,7 +46,7 @@ public class MemberServiceTest {
     private OrderRepository orderRepository;
 
     @Mock
-    private PasswordEncoder passwordEncoder;  // Mocked PasswordEncoder
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private MemberService memberService;

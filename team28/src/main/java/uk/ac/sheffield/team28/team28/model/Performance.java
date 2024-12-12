@@ -98,4 +98,9 @@ public class Performance {
     public void setPlaylist(List<Music> playlist) {
         this.playlist = playlist;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

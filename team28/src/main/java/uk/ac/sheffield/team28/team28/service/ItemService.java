@@ -14,7 +14,6 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    //Add Item methods here
     public Item findById(Long id){
         Optional<Item> item = itemRepository.findById(id);
         if (item.isPresent()){
