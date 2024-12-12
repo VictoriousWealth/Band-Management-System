@@ -93,6 +93,13 @@
                     </thead>
                     <tbody>
                         <!-- Rows will be dynamically added here -->
+                    <tr th:each="performance: ${performances}">
+                        <td th:text="${performance.name}"></td>
+                        <td th:text="${performance.venue}"></td>
+                        <td th:text="${performance.dateTime}"></td>
+                        <td>???</td>
+                        <td>Actions??</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

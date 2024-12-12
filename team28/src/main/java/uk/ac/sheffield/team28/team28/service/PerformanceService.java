@@ -158,5 +158,10 @@ public class PerformanceService {
         participation.setWillParticipate(true);
         memberParticipationRepository.save(participation);
     }
+
+    //Get performance based on band
+    public List<Performance> getPerformanceByBand (BandInPractice band1, BandInPractice band2){
+        return performanceRepository.getPerformancesByBandOrBand(band1, band2);
+    }
     
 }

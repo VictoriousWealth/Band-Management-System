@@ -48,6 +48,8 @@ public class DashboardController {
     private ChildMemberService childMemberService;
     @Autowired
     private MiscService miscService;
+    @Autowired
+    private PerformanceService performanceService;
 
 
     @GetMapping("/dashboard")
@@ -64,16 +66,23 @@ public class DashboardController {
         model.addAttribute("childNum", childNum);
         model.addAttribute("children",children);
 
-        //Get music based on band
+        //Get music and performances based on band
         BandInPractice band = member.getBand();
         if (band != BandInPractice.None) {
             List<Music> music =
                     musicRepository.findByBandInPracticeOrBandInPractice(band, BandInPractice.Both);
             model.addAttribute("musics", music);
+            List<Performance> performances =
+                    performanceService.getPerformanceByBand(band, BandInPractice.Both);
+            model.addAttribute("performances", performances);
         }
+
+
 
         List<Loan> memberLoans = loanService.getActiveLoansByMemberId(member.getId());
         model.addAttribute("memberLoans", memberLoans);
+
+
 
         return "dashboard";
     }
