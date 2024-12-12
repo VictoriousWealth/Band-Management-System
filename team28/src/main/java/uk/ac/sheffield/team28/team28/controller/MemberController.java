@@ -41,62 +41,43 @@ public class MemberController {
         this.childMemberService = childMemberService;
     }
 
-//    @PostMapping("/{memberId}/addToBand")
-//    public ResponseEntity<Member> addMemberToBand(@PathVariable Long memberId, @PathVariable BandInPractice oldBand) {
-//        try {
-//            Member member = memberService.addMemberToBand(memberId, oldBand);
-//            return ResponseEntity.ok(member);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-//        }
-//    }
-//
-//    @DeleteMapping("/{memberId}/removeFromBand")
-//    public ResponseEntity<Member> removeMemberFromBand(@PathVariable Long memberId, @PathVariable BandInPractice newBand) {
-//        try {
-//            Member member = memberService.removeMemberFromBand(memberId, newBand);
-//            return ResponseEntity.ok(member);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-//        }
-//    }
+
 
     @GetMapping("/authorise")
     public String showAuthorisePage(Model model) {
         Member member = memberService.findMember();
-        System.out.println("Received memberId: " + member.getFirstName()); // Log the value
+        System.out.println("Received memberId: " + member.getFirstName());
         model.addAttribute("member", member);
         model.addAttribute("memberType", member.getMemberType().toString());
         model.addAttribute("We have got the page");
-        return "authorise"; // This loads the HTML page
+        return "authorise";
     }
 
-    //Add a success message
     @PostMapping("/authorise")
     public String authorise(@RequestParam String password,
             Model model, HttpSession session) {
         Member member = memberService.findMember();
         model.addAttribute("memberType", member.getMemberType().toString());
         System.out.println(model.getAttribute("memberType"));
-        System.out.println("Received memberId: " + member.getId()); // Log the value
-        System.out.println("Received password: " + password); // Log the password
-        System.out.println("Received password: " + member.getPassword()); // Log the password
+        System.out.println("Received memberId: " + member.getId());
+        System.out.println("Received password: " + password);
+        System.out.println("Received password: " + member.getPassword());
 
         String referer = session.getAttribute("referer").toString();
         try {
             boolean authorised = memberService.authorise(member.getId(), password);
             if (authorised) {
-                session.setAttribute("isAuthorised", true); // Store auth status in session
+                session.setAttribute("isAuthorised", true);
                 String safeReferer = (referer != null) ? referer : "/dashboard";
                 model.addAttribute("message", true);
                 return "redirect:" + safeReferer;
             } else {
                 model.addAttribute("error", "Invalid password. Please try again.");
-                return "authorise"; // Reload the page with the error
+                return "authorise";
             }
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred: " + e.getMessage());
-            return "authorise"; // Reload the page with the error
+            return "authorise";
         }
     }
 
@@ -106,30 +87,24 @@ public class MemberController {
                            @RequestParam String dateOfBirth,
                            Model model) {
         try {
-            // Find the parent member
             Member parent = memberService.findMember();
-            // Create and save the new child
             ChildMember child = new ChildMember();
-            // Format the first and last names
             String formattedFirstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
             String formattedLastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
             LocalDate dob = LocalDate.parse(dateOfBirth);
 
-            child.setFirstName(formattedFirstName);
-            child.setLastName(formattedLastName);
+            child.setFirstName(formattedFirstName.trim());
+            child.setLastName(formattedLastName.trim());
             child.setDateOfBirth(dob);
             child.setParent(parent);
-
-            // Save the child to the database
 
             childMemberRepository.save(child);
             return "redirect:/dashboard";
 
         } catch (Exception e) {
-            // Handle errors
             e.printStackTrace();
             model.addAttribute("error", "An error occurred: " + e.getMessage());
-            return "error"; // Return an error page if something goes wrong
+            return "error";
         }
     }
 

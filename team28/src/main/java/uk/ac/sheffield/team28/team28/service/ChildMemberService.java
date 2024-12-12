@@ -128,7 +128,6 @@ public class ChildMemberService {
         else if (childMember.getBand() == BandInPractice.None) {
             childMember.setBand(BandInPractice.Training);
         }
-        // Save updated member
         childMemberRepository.save(childMember);
         return childMember;
     }
@@ -148,4 +147,22 @@ public class ChildMemberService {
         childMemberRepository.save(childMember);
         return childMember;
     }
+
+    public boolean canAccessChildDashboard(Long childId, String userEmail) {
+
+        Optional<ChildMember> childOpt = childMemberRepository.findById(childId);
+        if (childOpt.isEmpty()) {
+            return false;
+        }
+    
+        ChildMember child = childOpt.get();
+    
+        if (child.getParent() == null) {
+            return false;
+        }
+    
+        boolean accessGranted = userEmail.equalsIgnoreCase(child.getParent().getEmail());    
+        return accessGranted;
+    }
+    
 }

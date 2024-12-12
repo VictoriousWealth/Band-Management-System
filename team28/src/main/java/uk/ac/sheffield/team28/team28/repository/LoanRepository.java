@@ -12,6 +12,8 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     List<Loan> findByMemberId(Long memberId);
     List<Loan> findByItemId(Long itemId);
 
+    List<Loan> findByChildMemberId(Long childMemberId);
+
     @Query("SELECT CASE WHEN COUNT(l) > 0 THEN TRUE ELSE FALSE END " +
             "FROM Loan l WHERE l.member.id = :memberId AND l.returnDate IS NULL")
     boolean memberHasActiveLoans(@Param("memberId") Long memberId);

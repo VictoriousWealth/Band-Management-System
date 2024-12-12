@@ -79,4 +79,9 @@ public class Item {
     public void setNote(String note) {
         this.note = note;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

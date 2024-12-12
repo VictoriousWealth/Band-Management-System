@@ -38,20 +38,20 @@
         }
 
         .floating-buttons button {
-            background-color: navy; /* Changes the button color to navy */
-            color: white; /* Ensures the text is readable */
-            border: none; /* Optional: removes any border */
-            padding: 5px 15px; /* Adjusts padding for better appearance */
-            border-radius: 5px; /* Adds rounded corners */
-            font-size: 16px; /* Sets a readable font size */
-            cursor: pointer; /* Changes cursor to pointer on hover */
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: adds a slight shadow */
+            background-color: navy;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
             width: 150px;
             height: 50px;
         }
 
         .floating-buttons button:hover {
-            background-color: darkblue; /* Changes to a slightly darker navy on hover */
+            background-color: darkblue;
         }
 
 
@@ -95,7 +95,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Rows will be dynamically added here -->
+
                     </tbody>
                 </table>
 
@@ -154,11 +154,11 @@
                         <div class="form-group">
                             <label for="playlist">Select Music for Playlist</label>
                             <select id="playlist" name="playlist" class="form-control" multiple>
-                                <!-- Dynamic options will be loaded here -->
+
                             </select>
                             <small class="form-text text-muted">Hold Ctrl (Windows) or Command (Mac) to select multiple items.</small>
                         </div>
-                        
+
                         <button type="button" class="btn btn-success" onclick="submitPerformance()">Save Performance</button>
                         <button type="button" class="btn btn-secondary" onclick="hideCreatePerformanceForm()">Cancel</button>
                     </form>
@@ -222,7 +222,7 @@
                     </tbody>
                 </table>
 
-                <!-- Button to add instruments to inventory -->
+
                 <button class="btn btn-primary" data-toggle="modal" data-target="#addInstrument">
                     Add Instrument</button>
 
@@ -365,13 +365,13 @@
                         </div>
                     </div>
                 </div>
+                <!--Miscellaneous Item Table displayed with its buttons(buttons dont work yet)-->
                 <h3>Miscellaneous Items</h3>
                 <table class="table table-bordered">
                     <thead>
                     <tr>
                         <th>Item Name</th>
                         <th>Make</th>
-                        <th>Serial Number</th>
                         <th>In Storage</th>
                         <th>Action</th>
                         <th>Quantity</th>
@@ -381,36 +381,37 @@
                     </thead>
                     <tbody>
                     <tr th:each="misc : ${miscs}">
-                        <td th:text="${misc.item.nameTypeOrTitle}"></td>
-                        <td th:text="${misc.item.makeOrComposer}"></td>
-                        <td th:text="${misc.miscSerialNumber}"></td>
+                        <td th:text="${misc.miscItem.nameTypeOrTitle}"></td>
+                        <td th:text="${misc.miscItem.makeOrComposer}"></td>
                         <td>
-                            <span th:if="${misc.item?.inStorage}" class="badge badge-success">Yes</span>
-                            <span th:if="${!misc.item?.inStorage}" class="badge badge-danger">No</span>
+                            <span th:if="${misc.miscItem?.inStorage}" class="badge badge-success">Yes</span>
+                            <span th:if="${!misc.miscItem?.inStorage}" class="badge badge-danger">No</span>
                         </td>
 
                         <td>
                         <button class="btn btn-primary"
                                 data-toggle="modal"
                                 data-target="#editMiscModal"
-                                th:attr="data-id=${misc.id}, data-inStorage=${misc.item.inStorage}"
-                                onclick="populateEditForm(this)"> Edit </button>
+                                th:attr="data-id=${misc.id},data-name=${misc.miscItem.nameTypeOrTitle},data-make=${misc.miscItem.makeOrComposer},data-quantity=${misc.miscQuantity}"
+
+                                onclick="populateMiscEditForm(this)"> Edit </button>
                         </td>
                         <td th:text="${misc.miscQuantity}"></td>
                         <td>
                             <button class="btn btn-primary"
                                     data-toggle="modal"
-                                    data-target="#loanModal"
+                                    data-target="#miscLoanModal"
                                     th:attr="data-id=${misc.id}"
-                                    data-action="loan"
+                                    data-itemType ="misc"
+                                    data-action="miscLoan"
                                     onclick="setAction(this)">Loan</button>
                         </td>
                         <td>
                             <button class="btn btn-warning"
                                     data-toggle="modal"
-                                    data-target="#returnModal"
+                                    data-target="#miscReturnModal"
                                     th:attr="data-id=${misc.id}"
-                                    data-action="return"
+                                    data-action="miscReturn"
                                     onclick="setAction(this)">Return</button>
                         </td>
                     </tr>

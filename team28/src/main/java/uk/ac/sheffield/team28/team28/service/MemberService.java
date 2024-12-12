@@ -24,9 +24,6 @@ import uk.ac.sheffield.team28.team28.repository.OrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Pattern;
 @Service
 public class MemberService {
@@ -139,22 +136,21 @@ public class MemberService {
         return member;
     }
 
-    public Member addMemberToBand(Long memberId, BandInPractice newBand) throws Exception {
+    public Member addMemberToBand(Long memberId, BandInPractice band) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
 
-        if (member.getBand() == newBand) {
+        if (member.getBand() == band) {
             throw new Exception("Member is already in this band.");
         }
         if (member.getBand() == BandInPractice.None) {
-            member.setBand(newBand);
+            member.setBand(band);
         } else if (member.getBand() != BandInPractice.Both) {
             member.setBand(BandInPractice.Both);
         } else {
             throw new Exception("Member is already in both bands.");
         }
 
-        // Save updated member
         memberRepository.save(member);
         return member;
     }
@@ -174,16 +170,15 @@ public class MemberService {
 
         } else
             throw new Exception("Member is already not assigned to any band.");
-        //Save changes
         memberRepository.save(member);
         return member;
     }
 
     public List<Member> getCommitteeMembers() {
-        return memberRepository.findByMemberType(MemberType.COMMITTEE); //Currently set to ADULT since no COMMITTEE
+        return memberRepository.findByMemberType(MemberType.COMMITTEE);
     }
     public List<Member> getAdultMembers() {
-        return memberRepository.findByMemberType(MemberType.ADULT); //Currently set to ADULT since no COMMITTEE
+        return memberRepository.findByMemberType(MemberType.ADULT);
     }
     public List<Member> getAllMembersBands() {
         List<Member> allMembers = new ArrayList<>();
@@ -193,14 +188,14 @@ public class MemberService {
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
 
-        return allMembers; //Currently set to ADULT since no COMMITTEE
+        return allMembers;
     }
     public List<Member> getTrainingBandMembers() {
         List<Member> allMembers = new ArrayList<>();
 
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Training));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
-        return allMembers; //Currently set to ADULT since no COMMITTEE
+        return allMembers;
     }
 
     public List<Member> getSeniorBandMembers() {
@@ -208,15 +203,13 @@ public class MemberService {
 
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
-        return allMembers; //Currently set to ADULT since no COMMITTEE
+        return allMembers;
     }
 
 
     public boolean authorise(Long memberId, String password) throws Exception {
-        //return true;
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
-        // Compare the hashed password with the provided password
         return passwordEncoder.matches(password,member.getPassword());
 
     }
@@ -279,17 +272,13 @@ public class MemberService {
         String firstName = nameParts[0];
         String lastName = nameParts[nameParts.length - 1];
 
-        // Query the repository by first name
         List<Member> membersWithFirstName = memberRepository.findByFirstName(firstName);
 
-        // Verify that the last name matches
         for (Member member : membersWithFirstName) {
             if (member.getLastName().equalsIgnoreCase(lastName)) {
                 return member;
             }
         }
-
-        // If no match is found
         throw new IllegalArgumentException("No member found with the full name: " + memberName);
     }
 
@@ -302,7 +291,6 @@ public class MemberService {
         } else
             throw new Exception("Member cannot be demoted.");
 
-        // Save updated member
         memberRepository.save(member);
         return member;
     }
@@ -337,5 +325,18 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("No member found with username: " + username));
 
         return member.getId();
+    }
+
+    public String getAuthenticatedUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        System.out.println("Authenticated User Email: " + authentication.getName());
+
+
+        return authentication.getName();
     }
 }

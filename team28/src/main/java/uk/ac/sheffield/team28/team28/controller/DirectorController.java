@@ -1,6 +1,5 @@
 package uk.ac.sheffield.team28.team28.controller;
-//todo: Children should not be able to use their (adult proxy) account. Therefore the second part of this question is not relevant.
-// TODO:multiple safeguards in place so that this is not accidentally done.
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,22 +22,22 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 
-@Controller // Use @Controller instead of @RestController for Thymeleaf views
+@Controller
 @RequestMapping("/director")
 public class DirectorController {
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository; // Add this field
+    private final MemberRepository memberRepository;
     private final ChildMemberService childMemberService;
-    private final ChildMemberRepository childMemberRepository; // Add this field
+    private final ChildMemberRepository childMemberRepository;
 
 
 
-    @Autowired // Constructor injection
+    @Autowired
     public DirectorController(MemberService memberService, MemberRepository memberRepository, ChildMemberRepository childMemberRepository, ChildMemberService childMemberService) {
 
         this.memberService = memberService;
-        this.memberRepository = memberRepository; // Initialize it in the constructor
+        this.memberRepository = memberRepository;
         this.childMemberRepository = childMemberRepository;
         this.childMemberService = childMemberService;
     }
@@ -145,8 +144,6 @@ public class DirectorController {
         List<Member> nonBandMembers = memberService.getAllMembersBands();
         List<Member> seniorBandMembers = memberService.getSeniorBandMembers();
         nonBandMembers.removeAll(seniorBandMembers);
-
-//        //List<Member> committeeMembers = memberService.getCommitteeMembers();
         model.addAttribute("nonBandMembers", nonBandMembers);
         model.addAttribute("seniorBandMembers", seniorBandMembers);
         model.addAttribute("memberType", memberService.findMember().getMemberType().toString());
@@ -157,15 +154,15 @@ public class DirectorController {
 
 
 
-    @PostMapping("/removeFromBand/{memberId}/{newBand}")
-    public String removeMemberFromBand(@PathVariable Long memberId, @PathVariable BandInPractice newBand, @RequestParam(value = "redirectTo", required = false) String redirectTo, RedirectAttributes redirectAttributes) {
+    @PostMapping("/removeFromBand/{memberId}/{band}")
+    public String removeMemberFromBand(@PathVariable Long memberId, @PathVariable BandInPractice band, @RequestParam(value = "redirectTo", required = false) String redirectTo, RedirectAttributes redirectAttributes) {
         try {
-            memberService.removeMemberFromBand(memberId, newBand);
+            memberService.removeMemberFromBand(memberId, band);
             redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
             redirectAttributes.addAttribute("error", true);
         }
-        return "redirect:" + (redirectTo != null ? redirectTo : "/director" + (newBand==BandInPractice.Training? "/trainingBand" : "/seniorBand"));
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director" + (band==BandInPractice.Training? "/trainingBand" : "/seniorBand"));
     }
 
     @PostMapping("/addToBandByEmail")
@@ -174,17 +171,17 @@ public class DirectorController {
                                          @RequestParam(value = "redirectTo", required = false) String redirectTo,
                                          RedirectAttributes redirectAttributes) {
         try {
-            // Fetch the member by email
+            if (email.equals("director@test.com")) {
+                throw new RuntimeException("Can't add director to band");
+            }
             Member member = memberRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("Member not found with email: " + email));
-            // Update the member's band
             memberService.addMemberToBand(member.getId(), band);
-            // Redirect back to the Training Band page
             redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
             redirectAttributes.addAttribute("error", true);
         }
-        return "redirect:" + (redirectTo != null ? redirectTo : "/director");
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director" + (band==BandInPractice.Training? "/trainingBand" : "/seniorBand"));
     }
 
 
@@ -192,34 +189,38 @@ public class DirectorController {
 
 
     @PostMapping("/addChildToBandByName")
-    public ResponseEntity<String> addChildToBandByName(@RequestParam String fullName) {
+    public String addChildToBandByName(@RequestParam String fullName, @RequestParam(value = "redirectTo", required = false) String redirectTo,RedirectAttributes redirectAttributes) {
         try {
-            String [] names = fullName.split(" ");
+            String [] names = fullName.trim().split(" ");
             String firstName = names[0];
             String lastName = names[names.length - 1];
             String fullFirstName = Character.toUpperCase(firstName.charAt(0)) + firstName.substring(1).toLowerCase();
             String fullLastName = lastName.isEmpty() ? "" : Character.toUpperCase(lastName.charAt(0)) + lastName.substring(1).toLowerCase();
             String newFullName = fullFirstName + " " + fullLastName;
-            // Fetch the member by email
-            ChildMember childMember = childMemberRepository.findByName(newFullName)
-                    .orElseThrow(() -> new RuntimeException("Member not found with email: " + fullName));
-            // Update the member's band
+
+            ChildMember childMember = childMemberService.getChildByFullName(newFullName)
+                    .orElseThrow(() -> new RuntimeException("Member not found with name:" + fullName));
+
             childMemberService.addChildMemberToBand(childMember.getId());
-            // Redirect back to the Training Band page
-            return ResponseEntity.ok("Member added successfully!");
+            redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found!");
+            System.err.println("Error occurred: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addAttribute("error", true);
         }
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director/trainingBand");
+
     }
 
     @PostMapping("/removeChildFromBand/{childMemberId}")
-    public ResponseEntity<String> removeMemberFromBand(@PathVariable Long childMemberId) {
+    public String removeMemberFromBand(@PathVariable Long childMemberId, @RequestParam(value = "redirectTo", required = false) String redirectTo,RedirectAttributes redirectAttributes) {
         try {
             childMemberService.removeChildMemberFromBand(childMemberId);
-            return ResponseEntity.ok("Member added successfully!");
+            redirectAttributes.addAttribute("success", true);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found!");
+            redirectAttributes.addAttribute("error", true);
         }
+        return "redirect:" + (redirectTo != null ? redirectTo : "/director/trainingBand");
     }
 
     @PostMapping("/addToCommitteeByEmail")

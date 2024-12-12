@@ -10,8 +10,6 @@ public class MiscDto {
     private String miscName;
     @NotBlank(message="Item make can not be left blank")
     private String miscMake;
-    @NotBlank(message= "Serial number can not be left blank")
-    private String miscSerialNumber;
     @NotNull
     private Integer miscQuantity;
     @NotNull
@@ -21,11 +19,10 @@ public class MiscDto {
 
 
     public MiscDto() {}
-    public MiscDto(long miscId, String miscName, String miscMake, String miscSerialNumber,int quantity, boolean inStorage,String miscNote) {
+    public MiscDto(long miscId, String miscName, String miscMake, int quantity, boolean inStorage,String miscNote) {
         this.miscId = miscId;
         this.miscName = miscName;
         this.miscMake = miscMake;
-        this.miscSerialNumber = miscSerialNumber;
         this.miscQuantity = quantity;
         this.inStorage = inStorage;
         this.miscNote = miscNote;
@@ -59,12 +56,6 @@ public class MiscDto {
     }
     public int getMiscQuantity() {
         return miscQuantity;
-    }
-    public String getMiscSerialNumber() {
-        return miscSerialNumber;
-    }
-    public void setMiscSerialNumber(String miscSerialNumber) {
-        this.miscSerialNumber = miscSerialNumber;
     }
     public int setQuantity(int quantity) {
         this.miscQuantity = quantity;

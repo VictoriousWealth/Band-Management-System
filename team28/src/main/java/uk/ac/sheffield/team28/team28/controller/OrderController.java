@@ -2,11 +2,12 @@ package uk.ac.sheffield.team28.team28.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.sheffield.team28.team28.model.Order;
 import uk.ac.sheffield.team28.team28.service.OrderService;
 
-@RestController
+@Controller
 @RequestMapping("/orders")
 public class OrderController {
     private final OrderService orderService;
@@ -16,12 +17,12 @@ public class OrderController {
     }
 
     @PostMapping("/changeOrderStatus")
-    public ResponseEntity<Order> changeOrderStatus(@RequestParam("orderId") Long orderId) {
+    public String changeOrderStatus(@RequestParam("orderId") Long orderId) {
         try {
             orderService.changeOrderStatus(orderId);
-            return ResponseEntity.ok(null);
+            return "redirect:/committee/dashboard";
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return "error";
         }
     }
 }
