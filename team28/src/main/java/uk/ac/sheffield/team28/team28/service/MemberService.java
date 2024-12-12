@@ -290,6 +290,7 @@ public class MemberService {
         // If no match is found
         throw new IllegalArgumentException("No member found with the full name: " + memberName);
     }
+
     public Member demoteMemberWithId(Long memberId) throws Exception {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));

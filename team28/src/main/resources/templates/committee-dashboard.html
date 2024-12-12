@@ -185,7 +185,7 @@
                         <th>Serial Number</th>
                         <th>In Storage</th>
                         <th>Note</th>
-                        <th>Action</th>
+                        <th>Edit</th>
                         <th>Loan/Return</th>
                     </tr>
                     </thead>
@@ -203,8 +203,14 @@
                             <button class="btn btn-primary"
                                     data-toggle="modal"
                                     data-target="#editInstrumentModal"
+                                    th:if="${instrument.item.inStorage}"
                                     th:attr="data-id=${instrument.id}, data-inStorage=${instrument.item.inStorage}"
                                     onclick="populateEditForm(this)"> Edit </button>
+
+                            <!-- Stops editing while item is on loan -->
+                            <span th:if="${!instrument.item.inStorage}" class="text-danger">
+                                On loan
+                            </span>
                         </td>
                         <td>
                             <button class="btn btn-primary"
