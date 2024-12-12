@@ -28,6 +28,7 @@ public class OrderService {
         Order order = orderRepository.findById(orderId).orElseThrow(() ->
                 new Exception("Order not found with ID: " + orderId));
         order.setIsFulfilled(true);
+        orderRepository.save(order);
     }
 
     public void save(OrderDto dto) {

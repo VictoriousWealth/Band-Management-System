@@ -13,17 +13,14 @@ public class Misc {
     @OneToOne
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
-    @Column
-    private String miscSerialNumber;
-    @Column
+    @Column(name = "quantity")
     private Integer miscQuantity;
 
     //Getters and setters
     public Misc(){}
 
-    public Misc(Item item, String miscSerialNumber, Integer miscQuantity) {
+    public Misc(Item item, Integer miscQuantity) {
         this.item = item;
-        this.miscSerialNumber = miscSerialNumber;
         this.miscQuantity = miscQuantity;
     }
 
@@ -44,9 +41,10 @@ public class Misc {
         return miscSerialNumber;
     }
 
-    public void setMiscSerialNumber(String miscSerialNumber){
-        this.miscSerialNumber = miscSerialNumber;
+    public Integer getMiscQuantity() {
+        return miscQuantity;
     }
+
     public void setMiscQuantity(Integer miscQuantity){
         this.miscQuantity = miscQuantity;
     }

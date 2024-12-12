@@ -29,7 +29,6 @@ public class MiscService {
         Item savedItem = itemRepository.save(item);
 
         Misc misc = new Misc();
-        misc.setMiscSerialNumber(dto.getMiscSerialNumber());
         misc.setMiscItem(savedItem);
        // System.out.println(dto.getMiscQuantity());
         misc.setMiscQuantity(dto.getMiscQuantity());
@@ -49,7 +48,6 @@ public class MiscService {
         item.setNote(dto.getMiscNote());
 
         Item savedItem = itemRepository.save(item);
-        misc.setMiscSerialNumber(dto.getMiscSerialNumber());
         misc.setMiscItem(savedItem);
 
         miscRepository.save(misc);

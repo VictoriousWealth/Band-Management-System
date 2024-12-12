@@ -371,7 +371,6 @@
                     <tr>
                         <th>Item Name</th>
                         <th>Make</th>
-                        <th>Serial Number</th>
                         <th>In Storage</th>
                         <th>Action</th>
                         <th>Quantity</th>
@@ -381,19 +380,18 @@
                     </thead>
                     <tbody>
                     <tr th:each="misc : ${miscs}">
-                        <td th:text="${misc.item.nameTypeOrTitle}"></td>
-                        <td th:text="${misc.item.makeOrComposer}"></td>
-                        <td th:text="${misc.miscSerialNumber}"></td>
+                        <td th:text="${misc.miscItem.nameTypeOrTitle}"></td>
+                        <td th:text="${misc.miscItem.makeOrComposer}"></td>
                         <td>
-                            <span th:if="${misc.item?.inStorage}" class="badge badge-success">Yes</span>
-                            <span th:if="${!misc.item?.inStorage}" class="badge badge-danger">No</span>
+                            <span th:if="${misc.miscItem?.inStorage}" class="badge badge-success">Yes</span>
+                            <span th:if="${!misc.miscItem?.inStorage}" class="badge badge-danger">No</span>
                         </td>
 
                         <td>
                         <button class="btn btn-primary"
                                 data-toggle="modal"
                                 data-target="#editMiscModal"
-                                th:attr="data-id=${misc.id}, data-inStorage=${misc.item.inStorage}"
+                                th:attr="data-id=${misc.id}, data-inStorage=${misc.miscItem.inStorage}"
                                 onclick="populateEditForm(this)"> Edit </button>
                         </td>
                         <td th:text="${misc.miscQuantity}"></td>
