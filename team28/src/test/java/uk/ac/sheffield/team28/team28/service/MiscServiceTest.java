@@ -35,7 +35,6 @@ class MiscServiceTest {
         miscDto = new MiscDto();
         miscDto.setMiscName("Guitar");
         miscDto.setMiscMake("Peugot");
-        miscDto.setMiscSerialNumber("795644598");
         miscDto.setMiscId(29L);
         miscDto.setMiscNote("Green umbrella");
         miscDto.setQuantity(8008);
