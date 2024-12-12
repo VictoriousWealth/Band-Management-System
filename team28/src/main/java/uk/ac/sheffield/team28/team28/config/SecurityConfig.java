@@ -30,7 +30,7 @@ public class SecurityConfig {
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/auth/register", "/auth/login", "/", "/js/registrationFormJS.js", "/css/style.css").permitAll() // Public access to register and login
                 .requestMatchers("/dashboard").authenticated()
-                .requestMatchers("/committee/**").hasRole("Committee")
+                .requestMatchers("/committee/**").hasAnyRole("Committee", "Director")
                 .requestMatchers("/director/**").hasRole("Director")
                 .requestMatchers("/child/dashboard/**").authenticated()
                 .anyRequest().authenticated()                       // Require authentication for all other endpoints
