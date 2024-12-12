@@ -151,7 +151,6 @@ public class MemberService {
             throw new Exception("Member is already in both bands.");
         }
 
-        // Save updated member
         memberRepository.save(member);
         return member;
     }
@@ -171,16 +170,15 @@ public class MemberService {
 
         } else
             throw new Exception("Member is already not assigned to any band.");
-        //Save changes
         memberRepository.save(member);
         return member;
     }
 
     public List<Member> getCommitteeMembers() {
-        return memberRepository.findByMemberType(MemberType.COMMITTEE); //Currently set to ADULT since no COMMITTEE
+        return memberRepository.findByMemberType(MemberType.COMMITTEE);
     }
     public List<Member> getAdultMembers() {
-        return memberRepository.findByMemberType(MemberType.ADULT); //Currently set to ADULT since no COMMITTEE
+        return memberRepository.findByMemberType(MemberType.ADULT);
     }
     public List<Member> getAllMembersBands() {
         List<Member> allMembers = new ArrayList<>();
@@ -190,14 +188,14 @@ public class MemberService {
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
 
-        return allMembers; //Currently set to ADULT since no COMMITTEE
+        return allMembers;
     }
     public List<Member> getTrainingBandMembers() {
         List<Member> allMembers = new ArrayList<>();
 
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Training));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
-        return allMembers; //Currently set to ADULT since no COMMITTEE
+        return allMembers;
     }
 
     public List<Member> getSeniorBandMembers() {
@@ -205,15 +203,13 @@ public class MemberService {
 
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Senior));
         allMembers.addAll(memberRepository.findByBand(BandInPractice.Both));
-        return allMembers; //Currently set to ADULT since no COMMITTEE
+        return allMembers;
     }
 
 
     public boolean authorise(Long memberId, String password) throws Exception {
-        //return true;
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new Exception("Member not found with ID: " + memberId));
-        // Compare the hashed password with the provided password
         return passwordEncoder.matches(password,member.getPassword());
 
     }
@@ -295,7 +291,6 @@ public class MemberService {
         } else
             throw new Exception("Member cannot be demoted.");
 
-        // Save updated member
         memberRepository.save(member);
         return member;
     }

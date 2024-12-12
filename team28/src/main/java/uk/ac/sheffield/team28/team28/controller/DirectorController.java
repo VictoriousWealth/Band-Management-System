@@ -1,6 +1,5 @@
 package uk.ac.sheffield.team28.team28.controller;
-//todo: Children should not be able to use their (adult proxy) account. Therefore the second part of this question is not relevant.
-// TODO:multiple safeguards in place so that this is not accidentally done.
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,22 +22,22 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 
-@Controller // Use @Controller instead of @RestController for Thymeleaf views
+@Controller
 @RequestMapping("/director")
 public class DirectorController {
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository; // Add this field
+    private final MemberRepository memberRepository;
     private final ChildMemberService childMemberService;
-    private final ChildMemberRepository childMemberRepository; // Add this field
+    private final ChildMemberRepository childMemberRepository;
 
 
 
-    @Autowired // Constructor injection
+    @Autowired
     public DirectorController(MemberService memberService, MemberRepository memberRepository, ChildMemberRepository childMemberRepository, ChildMemberService childMemberService) {
 
         this.memberService = memberService;
-        this.memberRepository = memberRepository; // Initialize it in the constructor
+        this.memberRepository = memberRepository;
         this.childMemberRepository = childMemberRepository;
         this.childMemberService = childMemberService;
     }
