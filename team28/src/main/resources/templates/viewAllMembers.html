@@ -18,7 +18,6 @@
 
         <div class="container mt-4">
 
-                <!-- Alert for Success or Error -->
                 <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
                     Error: Unable to delete the member or child member due to active loans.
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -32,7 +31,6 @@
                     </button>
                 </div>
 
-                <!-- Members Table -->
                 <h2 class="text-center mb-4">Members</h2>
                 <table class="table table-bordered">
                     <thead>
@@ -56,7 +54,6 @@
                             <button type="button" class="btn btn-danger btn-sm"
                                     data-toggle="modal" th:data-target="'#deleteModal-' + ${member.id}">Remove</button>
 
-                            <!-- Confirmation Modal -->
                             <div class="modal fade" th:id="'deleteModal-' + ${member.id}" tabindex="-1" role="dialog"
                                  aria-labelledby="deleteModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -86,7 +83,6 @@
                     </tbody>
                 </table>
 
-                <!-- Child Members Table -->
                 <h2 class="text-center mb-4">Child Members</h2>
                 <table class="table table-bordered">
                     <thead>
@@ -106,7 +102,6 @@
                             <button type="button" class="btn btn-danger btn-sm"
                                     data-toggle="modal" th:data-target="'#deleteChildModal-' + ${child.id}">Remove</button>
 
-                            <!-- Confirmation Modal -->
                             <div class="modal fade" th:id="'deleteChildModal-' + ${child.id}" tabindex="-1" role="dialog"
                                  aria-labelledby="deleteChildModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">

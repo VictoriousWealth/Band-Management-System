@@ -17,7 +17,6 @@
 </nav>
     <div class="container mt-4">
         <h2 class="text-center mb-4">Committee Members</h2>
-        <!-- Alert for Success or Error -->
         <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
             Error: This member does not exist
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -44,7 +43,6 @@
             </button>
         </div>
 
-<!--         Form to add a committee member -->
         <form th:action="@{/director/addToCommitteeByEmail}" method="post" class="mb-4">
             <div class="form-group">
                 <label for="email">Add Member by Email:</label>
@@ -54,7 +52,6 @@
         </form>
 
 
-        <!-- Display a list of committee members -->
         <table class="table table-bordered">
             <thead>
             <tr>

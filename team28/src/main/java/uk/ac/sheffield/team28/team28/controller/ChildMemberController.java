@@ -1,6 +1,5 @@
 package uk.ac.sheffield.team28.team28.controller;
 
-//import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,17 +34,14 @@ public class ChildMemberController {
     @PreAuthorize("@childMemberService.canAccessChildDashboard(#childMemberId, authentication.name)")
     @GetMapping("/dashboard/{childMemberId}")
     public String childDashboard(Model model, @PathVariable Long childMemberId) throws Exception{
-        // Handle the logic for displaying the child's dashboard
         model.addAttribute("childMemberId", childMemberId);
 
-        //Get child member object
         ChildMember member = childMemberService.getChildById(childMemberId);
 
         List<Loan> memberLoans = loanService.getActiveLoansByChildMemberId(member.getId());
         model.addAttribute("memberLoans", memberLoans);
         System.out.println("loans: " + memberLoans);
 
-        //Get Music
         BandInPractice band = member.getBand();
         if (band != BandInPractice.None) {
             List<Music> music =

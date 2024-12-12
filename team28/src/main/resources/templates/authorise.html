@@ -18,11 +18,9 @@
 <div class="modal">
         <div class="modal-content">
             <h2>Authorisation Required</h2>
-            <!-- Display error message if it exists -->
             <div th:if="${error}" class="alert alert-danger">
                 <p th:text="${error}"></p>
             </div>
-            <!-- Display success message if it exists -->
             <div th:if="${message}" class="alert alert-success">
                 <p th:text="${message}"></p>
             </div>

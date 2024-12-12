@@ -48,7 +48,6 @@ public class ChildMemberService {
             }
         }
         String result = capitalizedFullName.toString().trim();
-        System.out.println("---------------------------------- " + result);
         return childMemberRepository.findByName(result);
     }
     public List<ChildMember> getChildByParent(Member parent){
@@ -129,7 +128,6 @@ public class ChildMemberService {
         else if (childMember.getBand() == BandInPractice.None) {
             childMember.setBand(BandInPractice.Training);
         }
-        // Save updated member
         childMemberRepository.save(childMember);
         return childMember;
     }
