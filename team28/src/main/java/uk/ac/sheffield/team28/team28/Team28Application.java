@@ -15,7 +15,6 @@ import java.util.Optional;
 public class Team28Application {
 
 	public static void main(String[] args) {
-		//TODO: HardCode director
 		SpringApplication.run(Team28Application.class, args);
 	}
 

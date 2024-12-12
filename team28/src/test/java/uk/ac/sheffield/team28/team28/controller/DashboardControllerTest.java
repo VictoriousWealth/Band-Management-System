@@ -92,7 +92,8 @@ public class DashboardControllerTest {
 
     @MockBean
     MiscRepository miscRepository;
-
+    @MockBean
+    private PerformanceService performanceService;
 
     @BeforeEach
     public void setup() {
