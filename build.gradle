@@ -36,13 +36,8 @@ test {
     useJUnitPlatform()
 }
 
-// bootJar configuration remains
+// Explicitly set the main class in the bootJar task
 bootJar {
-    // This task will package your app into an executable JAR
-}
-
-// Use the springBoot block to set the main class
-springBoot {
-    mainClass.set('uk.ac.sheffield.team28.team28.Team28Application')  // Correct main class path
+    mainClass.set('uk.ac.sheffield.team28.team28.Team28Application')  // Fully qualified main class
 }
 
