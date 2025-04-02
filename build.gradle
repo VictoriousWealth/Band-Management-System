@@ -36,8 +36,13 @@ test {
     useJUnitPlatform()
 }
 
-// Updated section for Spring Boot 3.x
+// bootJar configuration remains
+bootJar {
+    // This task will package your app into an executable JAR
+}
+
+// Use the springBoot block to set the main class
 springBoot {
-    mainClass.set('uk.ac.sheffield.team28.Team28Application') // Replace with your main class
+    mainClass.set('uk.ac.sheffield.team28.team28.Team28Application')  // Correct main class path
 }
 
