@@ -1,5 +1,3 @@
-Of course\! Here's a complete documentation explaining the "Band Management System" codebase.
-
 This document provides a comprehensive overview of the Band Management System, a Java Spring Boot application designed for managing the members, inventory, and activities of a musical band.
 
 -----
